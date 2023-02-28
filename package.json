@@ -30,7 +30,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "sass": "node-sass 'src/components/**/*.scss' -o 'src/components/' --output-style compressed --source-map true",
+    "watch-sass": "node-sass 'src/components/**/*.scss' -o 'src/components/' --output-style compressed --source-map true --watch"
   },
   "eslintConfig": {
     "extends": [
@@ -51,8 +53,10 @@
     ]
   },
   "devDependencies": {
+    "glob": "^9.0.1",
     "husky": "^8.0.0",
     "msw": "^1.1.0",
+    "node-sass": "^7.0.3",
     "prettier": "^2.8.4"
   }
 }
