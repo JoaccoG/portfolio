@@ -8,12 +8,17 @@
       "sizes": "64x64 32x32 24x24 16x16"
     },
     {
-      "src": "assets/logo-192.png",
+      "src": "assets/img/logo-96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "assets/img/logo-192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "assets/logo-512.png",
+      "src": "assets/img/logo-512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
