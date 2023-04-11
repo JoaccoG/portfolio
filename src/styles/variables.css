@@ -1,5 +1,3 @@
-@import url('./fonts.css');
-
 :root {
   /* ---------->>> Colors <<<---------- */
   /* ---> Primary <--- */
@@ -37,13 +35,6 @@
   --margin-xl: 2.5rem;
   --margin-xxl: 3rem;
   --margin-xxxl: 4rem;
-
-  /* ---------->>> Font families & weights <<<---------- */
-  --font-firacode-light: 'FiraCode-Light', monospace;
-  --font-firacode-regular: 'FiraCode-Regular', monospace;
-  --font-firacode-medium: 'FiraCode-Medium', monospace;
-  --font-firacode-semibold: 'FiraCode-SemiBold', monospace;
-  --font-firacode-bold: 'FiraCode-Bold', monospace;
 
   /* ---------->>> Font sizes <<<---------- */
   --font-size-xxxs: 0.75rem;
