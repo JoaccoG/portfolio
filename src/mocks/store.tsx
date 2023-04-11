@@ -1,3 +1,4 @@
+import React from 'react';
 import { PreloadedState } from '@reduxjs/toolkit';
 import { render, RenderOptions } from '@testing-library/react';
 import { PropsWithChildren } from 'react';
@@ -13,10 +14,10 @@ export const renderWithProviders = (
   ui: React.ReactElement,
   {
     preloadedState = {
-      counter: {
-        value: 0,
-        status: 'idle',
-      },
+      // counter: {
+      //   value: 0,
+      //   status: 'idle',
+      // },
     },
     store = setupStore(preloadedState),
     ...renderOptions

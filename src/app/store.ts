@@ -5,16 +5,15 @@ import {
   PreloadedState,
   combineReducers,
 } from '@reduxjs/toolkit';
-import counterReducer from '../features/zExample/counterSlice';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    //counter: counterReducer,
   },
 });
 
 const rootReducers = combineReducers({
-  counter: counterReducer,
+  //counter: counterReducer,
 });
 
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
