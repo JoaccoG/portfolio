@@ -1,0 +1,72 @@
+:root {
+  /* ---------->>> Colors <<<---------- */
+  /* ---> Primary <--- */
+  --color-primary-light: hsl(211, 34%, 18%);
+  --color-primary-regular: hsl(207, 95%, 8%);
+  --color-primary-medium: hsl(208, 94%, 7%);
+  --color-primary-dark: hsl(208, 87%, 3%);
+  /* ---> Secondary <--- */
+  --color-secondary-white: hsl(0, 0%, 100%);
+  --color-secondary-gray: hsl(210, 22%, 48%);
+  --color-secondary-cyan: hsl(174, 45%, 43%);
+  --color-secondary-blue: hsl(233, 57%, 55%);
+  /* ---> Accent <--- */
+  --color-accent-orange: hsl(26, 99%, 68%);
+  --color-accent-teal: hsl(162, 66%, 56%);
+  --color-accent-pink: hsl(7, 69%, 72%);
+  --color-accent-purple: hsl(284, 57%, 71%);
+
+  /* ---------->>> Paddings <<<---------- */
+  --padding-xxs: 0.5rem;
+  --padding-xs: 0.75rem;
+  --padding-s: 1rem;
+  --padding-m: 1.5rem;
+  --padding-l: 2rem;
+  --padding-xl: 2.5rem;
+  --padding-xxl: 3rem;
+  --padding-xxxl: 4rem;
+
+  /* ---------->>> Margins <<<---------- */
+  --margin-xxs: 0.5rem;
+  --margin-xs: 0.75rem;
+  --margin-s: 1rem;
+  --margin-m: 1.5rem;
+  --margin-l: 2rem;
+  --margin-xl: 2.5rem;
+  --margin-xxl: 3rem;
+  --margin-xxxl: 4rem;
+
+  /* ---------->>> Font Families & Weights <<<---------- */
+  --font-firacode-light: 'FiraCode-Light', sans-serif;
+  --font-firacode-regular: 'FiraCode-Regular', sans-serif;
+  --font-firacode-medium: 'FiraCode-Medium', sans-serif;
+  --font-firacode-semibold: 'FiraCode-SemiBold', sans-serif;
+  --font-firacode-bold: 'FiraCode-Bold', sans-serif;
+
+  /* ---------->>> Font Sizes <<<---------- */
+  --font-size-xxxs: 0.75rem;
+  --font-size-xxs: 0.875rem;
+  --font-size-xs: 1rem;
+  --font-size-s: 1.125rem;
+  --font-size-m: 1.25rem;
+  --font-size-l: 1.5rem;
+  --font-size-xl: 2rem;
+  --font-size-xxl: 2.5rem;
+  --font-size-xxxl: 3rem;
+  --font-size-xxxxl: 4rem;
+
+  /* ---------->>> Borders Radius <<<---------- */
+  --border-none: 0px;
+  --border-xs: 8px;
+  --border-s: 16px;
+  --border-m: 40px;
+  --border-l: 100px;
+  --border-xl: 50%;
+
+  /* ---------->>> Transitions Duration <<<---------- */
+  --transition-xs: all 50ms ease-in-out;
+  --transition-s: all 100ms ease-in-out;
+  --transition-m: all 200ms ease-in-out;
+  --transition-l: all 300ms ease-in-out;
+  --transition-xl: all 500ms ease-in-out;
+}
