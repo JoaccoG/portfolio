@@ -1,0 +1,36 @@
+/* ---------->>> FiraCode <<<---------- */
+@font-face {
+  font-family: 'FiraCode';
+  src: local('FiraCode'), url('/public/assets/fonts/FiraCode-Light.ttf'),
+    format('truetype');
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'FiraCode';
+  src: local('FiraCode'), url('/public/assets/fonts/FiraCode-Regular.ttf'),
+    format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'FiraCode';
+  src: local('FiraCode'), url('/public/assets/fonts/FiraCode-Medium.ttf'),
+    format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'FiraCode';
+  src: local('FiraCode'), url('/public/assets/fonts/FiraCode-SemiBold.ttf'),
+    format('truetype');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'FiraCode';
+  src: local('FiraCode'), url('/public/assets/fonts/FiraCode-Bold.ttf'),
+    format('truetype');
+  font-weight: 700;
+  font-display: swap;
+}
