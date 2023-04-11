@@ -1,3 +1,5 @@
+@import url('./fonts.css');
+
 :root {
   /* ---------->>> Colors <<<---------- */
   /* ---> Primary <--- */
@@ -36,14 +38,14 @@
   --margin-xxl: 3rem;
   --margin-xxxl: 4rem;
 
-  /* ---------->>> Font Families & Weights <<<---------- */
-  --font-firacode-light: 'FiraCode-Light', sans-serif;
-  --font-firacode-regular: 'FiraCode-Regular', sans-serif;
-  --font-firacode-medium: 'FiraCode-Medium', sans-serif;
-  --font-firacode-semibold: 'FiraCode-SemiBold', sans-serif;
-  --font-firacode-bold: 'FiraCode-Bold', sans-serif;
+  /* ---------->>> Font families & weights <<<---------- */
+  --font-firacode-light: 'FiraCode-Light', monospace;
+  --font-firacode-regular: 'FiraCode-Regular', monospace;
+  --font-firacode-medium: 'FiraCode-Medium', monospace;
+  --font-firacode-semibold: 'FiraCode-SemiBold', monospace;
+  --font-firacode-bold: 'FiraCode-Bold', monospace;
 
-  /* ---------->>> Font Sizes <<<---------- */
+  /* ---------->>> Font sizes <<<---------- */
   --font-size-xxxs: 0.75rem;
   --font-size-xxs: 0.875rem;
   --font-size-xs: 1rem;
@@ -55,7 +57,7 @@
   --font-size-xxxl: 3rem;
   --font-size-xxxxl: 4rem;
 
-  /* ---------->>> Borders Radius <<<---------- */
+  /* ---------->>> Borders radius <<<---------- */
   --border-none: 0px;
   --border-xs: 8px;
   --border-s: 16px;
@@ -63,7 +65,7 @@
   --border-l: 100px;
   --border-xl: 50%;
 
-  /* ---------->>> Transitions Duration <<<---------- */
+  /* ---------->>> Transitions duration <<<---------- */
   --transition-xs: all 50ms ease-in-out;
   --transition-s: all 100ms ease-in-out;
   --transition-m: all 200ms ease-in-out;
