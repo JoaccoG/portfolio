@@ -62,6 +62,7 @@ export const WIPContainer = styled.article`
         font-weight: 300;
       }
       .wip-content__text--github {
+        color: var(--color-secondary-white);
         margin: var(--margin-xl) 0 var(--margin-xxxl);
         text-align: center;
       }
@@ -95,6 +96,27 @@ export const WIPContainer = styled.article`
       .wip-content__text {
         p {
           font-size: var(--font-size-m);
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 374px) {
+    .wip__content {
+      .wip-content__title {
+        span {
+          font-size: var(--font-size-xxs);
+        }
+        h1 {
+          font-size: var(--font-size-xl);
+        }
+        h2 {
+          font-size: var(--font-size-m);
+        }
+      }
+      .wip-content__text {
+        p {
+          font-size: var(--font-size-xxs);
         }
       }
     }
