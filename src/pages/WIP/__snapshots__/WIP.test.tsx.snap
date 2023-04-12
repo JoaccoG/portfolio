@@ -72,7 +72,7 @@ Object {
                 >
                   githubProfile
                 </span>
-                 =
+                  =
                  
                 <span
                   class="snippet__code"
@@ -171,7 +171,7 @@ Object {
               >
                 githubProfile
               </span>
-               =
+                =
                
               <span
                 class="snippet__code"
