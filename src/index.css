@@ -1,5 +1,6 @@
 @import url('./styles/fonts.css');
 @import url('./styles/variables.css');
+@import url('./styles/classes.css');
 
 /* ---------->>> Resets <<<---------- */
 *,
@@ -25,6 +26,6 @@ html {
 }
 
 body {
-  color: var(--color-secondary-gray);
+  color: var(--color-secondary-white);
   background-color: var(--color-primary-regular);
 }
