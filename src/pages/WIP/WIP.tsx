@@ -19,13 +19,12 @@ const WIP = () => {
               &#47;&#47; shape into a masterpiece. <br />
               &#47;&#47; I'm adding brushstrokes and <br />
               &#47;&#47; refining the details to make it <br />
-              &#47;&#47; truly reflect my style.
-            </p>
-            <p>
+              &#47;&#47; truly reflect my style. <br />
               &#47;&#47; Stay tuned for the big reveal! <br />
               &#47;&#47; I promise it will be worth the <br />
               &#47;&#47; wait and, who knows, maybe one <br />
               &#47;&#47; day it will hang in a museum! <br />
+              &#47;&#47; ... <br />
               &#47;&#47; Or, at least, on a manager's "hired" wall.
             </p>
             <p className="wip-content__text--github">
