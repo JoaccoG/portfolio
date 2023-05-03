@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import './CodeComment.css';
 
 interface CodeCommentProps {
   text: string;
 }
 
-const CodeComment: React.FC<CodeCommentProps> = ({ text }) => {
+const CodeComment: FC<CodeCommentProps> = ({ text }) => {
   const [lines, setLines] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const hiddenRef = useRef<HTMLDivElement | null>(null);
@@ -14,12 +14,10 @@ const CodeComment: React.FC<CodeCommentProps> = ({ text }) => {
     if (!hiddenRef.current || !containerRef.current) {
       return;
     }
-
     const containerWidth = containerRef.current.clientWidth;
     const words = text.split(' ');
     let currentLine = '';
     let tempLines: string[] = [];
-
     words.forEach((word) => {
       hiddenRef.current!.innerText = currentLine + word + ' ';
       if (hiddenRef.current!.clientWidth <= containerWidth) {
@@ -29,7 +27,6 @@ const CodeComment: React.FC<CodeCommentProps> = ({ text }) => {
         currentLine = word + ' ';
       }
     });
-
     tempLines.push(currentLine.trim());
     setLines(tempLines);
   };
@@ -39,13 +36,10 @@ const CodeComment: React.FC<CodeCommentProps> = ({ text }) => {
     const resizeObserver = new ResizeObserver(() => {
       updateLines();
     });
-
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
+    if (current) {
+      resizeObserver.observe(current);
     }
-
     updateLines();
-
     return () => {
       if (current) {
         resizeObserver.unobserve(current);
