@@ -10,12 +10,13 @@ const CodeComment: FC<CodeCommentProps> = ({ text }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const hiddenRef = useRef<HTMLDivElement | null>(null);
 
+  /* Due to how jsdom works (Jest's environment) works, Cypress */
+  /* tests were made to test and cover the component funcionality */
+  /* istanbul ignore next */
   useEffect(() => {
     const { current } = containerRef;
 
     const updateLines = () => {
-      /* Cypress test made to cover the next if case */
-      /* istanbul ignore if */
       if (!hiddenRef.current || !current) {
         return;
       }
@@ -26,8 +27,6 @@ const CodeComment: FC<CodeCommentProps> = ({ text }) => {
       words.forEach((word) => {
         hiddenRef.current!.innerText = '// ' + currentLine + word + ' ';
 
-        /* Cypress test made to cover the else case of the next if */
-        /* istanbul ignore else */
         if (hiddenRef.current!.clientWidth <= containerWidth) {
           currentLine += word + ' ';
         } else {
@@ -39,8 +38,6 @@ const CodeComment: FC<CodeCommentProps> = ({ text }) => {
       setLines(tempLines);
     };
 
-    /* Cypress test made to cover this line */
-    /* istanbul ignore next */
     const resizeObserver = new ResizeObserver(() => {
       updateLines();
     });
