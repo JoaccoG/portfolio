@@ -1,3 +1,4 @@
+import CodeComment from '../../shared/CodeComment/CodeComment';
 import { MainContainer, WIPContainer } from './WIP.styled';
 
 const WIP = () => {
@@ -11,22 +12,7 @@ const WIP = () => {
             <h2>&gt; Full Stack Developer</h2>
           </div>
           <div className="wip-content__text">
-            <p>
-              &#47;&#47; My portfolio is currently like a <br />
-              &#47;&#47; work-in-progress painting: messy <br />
-              &#47;&#47; with some bright spots and some <br />
-              &#47;&#47; rough edges, but slowly taking <br />
-              &#47;&#47; shape into a masterpiece. <br />
-              &#47;&#47; I'm adding brushstrokes and <br />
-              &#47;&#47; refining the details to make it <br />
-              &#47;&#47; truly reflect my style. <br />
-              &#47;&#47; Stay tuned for the big reveal! <br />
-              &#47;&#47; I promise it will be worth the <br />
-              &#47;&#47; wait and, who knows, maybe one <br />
-              &#47;&#47; day it will hang in a museum! <br />
-              &#47;&#47; ... <br />
-              &#47;&#47; Or, at least, on a manager's "hired" wall.
-            </p>
+            <CodeComment text="My portfolio is currently like a WIP painting: messy, with some bright spots and some rough edges, but slowly taking shape into a masterpiece. I'm adding brushstrokes and refining the details to make it truly reflect my style. Stay tuned for the big reveal! I promise it will be worth the wait and, who knows, maybe one day it will hang in a museum like paintings! Or, at least, on a manager's hired wall. " />
             <p className="wip-content__text--github">
               <span className="snippet__declaration">const</span>{' '}
               <span className="snippet__name">githubProfile</span> ={' '}
