@@ -40,5 +40,4 @@ ehthumbs.db
 Thumbs.db
 
 # miscelaneous
-src/features/zExample
 cypress/e2e/examples
