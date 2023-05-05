@@ -1,10 +1,9 @@
-<h1 align="center">
-  <br>
-  Full Stack Developer Portfolio
-</h1>
+<div align="center">
+  <h1>Joaquín Godoy Portfolio</h1>
+  <img src='https://readme-typing-svg.herokuapp.com?font=ubuntu&color=ffffff&center=true&lines=Full+Stack+Developer;Enthusiastic+Programmer;Clean+Code+Follower;Passionate+Coder;Pragmatic+Programmer'/>
+</div>
 <p align="center">
-  Welcome to my portfolio repository! I'm a passionate Full Stack Developer and among my most important skills you will find advanced knowledge in
-  <a href="https://developer.mozilla.org/en-US/docs/Glossary/Algorithm">Algorithms</a> -
+  Welcome to my portfolio repository! I'm a passionate Full Stack Developer and among my skills you will find advanced knowledge in
   <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object-oriented_programming">OOP</a> -
   <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Arrays Handling</a> -
   <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous">Asynchronous Programming</a> -
@@ -13,11 +12,18 @@
   <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">JavaScript</a> -
   <a href="https://www.typescriptlang.org/">TypeScript</a> -
   <a href="https://react.dev/">React</a> -
-  <a href="https://nodejs.org/en/docs">NodeJS</a> -
-  <a href="https://expressjs.com/">ExpressJS</a> -
-  <a href="https://www.mongodb.com/docs/">MongoDB</a>.<br><br>
+  <a href="https://redux.js.org/">Redux</a> -
+  <a href="https://nodejs.org/en/docs">Node</a> -
+  <a href="https://expressjs.com/">Express</a> -
+  <a href="https://www.mongodb.com/docs/">MongoDB</a> -
+  <a href="https://jestjs.io/">Jest</a>.<br><br>
   Check out my <a href="https://www.joaquingodoy.com">portfolio</a> to see some of my latest work, including projects like <a href="https://github.com/JoaccoG/game-of-life">The Game Of Life</a>, the famous <a href="https://github.com/JoaccoG/poke-api">Poke API</a> and a Full Stack project based on a social network app for gamers called <a href="https://github.com/JoaccoG/players-nation-frontend">Players Nation</a>.<br><br>
-  Let's collaborate and build something great together!<br><br>
+  Interested on contributing to open-source projects to improve my skills, support the community and work together with developers from all over the world, so if you have something in mind let's chat and build something great together!<br><br>
+</p>
+
+---
+
+<p align="center">
   <a href="#technologies-used">Technologies</a> •
   <a href="#sonarcloud">SonarCloud</a> •
   <a href="#demo">Demo</a> •
@@ -34,15 +40,14 @@
 
 > **Backend** <br> ![NodeJS](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white) ![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white) ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 
-> **Testing and tools** <br> ![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white) ![Cypress](https://img.shields.io/badge/Cypress-17202C?style=for-the-badge&logo=cypress&logoColor=white) ![Eslint](https://img.shields.io/badge/eslint-3A33D1?style=for-the-badge&logo=eslint&logoColor=white) ![Prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E) ![SonarLint](https://img.shields.io/badge/SonarLint-CB2029?style=for-the-badge&logo=sonarlint&logoColor=white) ![Lighthouse](https://img.shields.io/badge/Lighthouse-F44B21?style=for-the-badge&logo=Lighthouse&logoColor=white)
+> **Testing and Code Quality** <br> ![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white) ![Cypress](https://img.shields.io/badge/Cypress-17202C?style=for-the-badge&logo=cypress&logoColor=white) ![Eslint](https://img.shields.io/badge/eslint-3A33D1?style=for-the-badge&logo=eslint&logoColor=white) ![Prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E) ![SonarLint](https://img.shields.io/badge/SonarLint-CB2029?style=for-the-badge&logo=sonarlint&logoColor=white)
 
 <br>
 
 # SonarCloud
 
-SonarCloud is a cloud-based code quality and security service for continuous inspection of code quality to perform automatic reviews with static analysis of code to detect bugs, code smells and security vulnerabilities on 20+ programming languages. It can integrate with your existing workflow to enable continuous code inspection across your project branches and pull requests.<br>
-Here are the (real-time) badges with all SonarCloud scans:<br><br>
-![SonarCloud](https://img.shields.io/badge/Sonar%20cloud-F3702A?style=for-the-badge&logo=sonarcloud&logoColor=white)<br>
+I use code quality tools like SonarCloud in my projects to ensure consistency, detect potential issues, and maintain a high level of quality and clean code in my work.<br><br>
+These are the badges with the scans results:<br><br>
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=JoaccoG_portfolio&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=JoaccoG_portfolio)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=JoaccoG_portfolio&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=JoaccoG_portfolio)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=JoaccoG_portfolio&metric=coverage)](https://sonarcloud.io/summary/new_code?id=JoaccoG_portfolio)<br>
@@ -62,7 +67,8 @@ Here are the (real-time) badges with all SonarCloud scans:<br><br>
 You can see the development production [clicking here](https://joaquingodoy.netlify.app/).<br>
 You can see the actual portfolio [clicking here](https://joaquingodoy.com/).<br>
 
-_Please be patient if the first request take a while, the API server is probably **sleeping** and has a hard time starting up!_
+_Please be patient if the first request take a while._<br>
+_The API server is probably **sleeping** and has a hard time starting up!_
 
 <br>
 
