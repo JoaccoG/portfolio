@@ -10,8 +10,8 @@ const CodeComment: FC<CodeCommentProps> = ({ text }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const hiddenRef = useRef<HTMLDivElement | null>(null);
 
-  /* Due to how jsdom works (Jest's environment) works, Cypress */
-  /* tests were made to test and cover the component funcionality */
+  /* Due to how Jest environment (jsom) works, Cypress tests */
+  /* were made to test and cover the component funcionality */
   /* istanbul ignore next */
   useEffect(() => {
     const { current } = containerRef;
@@ -60,16 +60,19 @@ const CodeComment: FC<CodeCommentProps> = ({ text }) => {
       ref={containerRef}
       data-testid="code-comment-container"
     >
-      {lines.map((line, index) => (
-        <div
-          key={index}
-          className="code-comment-line"
-          data-testid="code-comment-line"
-        >
-          <span className="code-comment-prefix">&#47;&#47; </span>
-          <span>{line}</span>
-        </div>
-      ))}
+      {lines.map((line, index) => {
+        const key = `${index}-${line}`;
+        return (
+          <div
+            key={key}
+            className="code-comment-line"
+            data-testid="code-comment-line"
+          >
+            <span className="code-comment-prefix">&#47;&#47; </span>
+            <span>{line}</span>
+          </div>
+        );
+      })}
       <div className="code-comment-hidden" ref={hiddenRef}></div>
     </CodeCommentContainer>
   );
