@@ -14,6 +14,8 @@ const CodeComment: FC<CodeCommentProps> = ({ text }) => {
     const { current } = containerRef;
 
     const updateLines = () => {
+      /* Cypress test made to cover the next if case */
+      /* istanbul ignore if */
       if (!hiddenRef.current || !current) {
         return;
       }
@@ -23,6 +25,9 @@ const CodeComment: FC<CodeCommentProps> = ({ text }) => {
       let tempLines: string[] = [];
       words.forEach((word) => {
         hiddenRef.current!.innerText = '// ' + currentLine + word + ' ';
+
+        /* Cypress test made to cover the else case of the next if */
+        /* istanbul ignore else */
         if (hiddenRef.current!.clientWidth <= containerWidth) {
           currentLine += word + ' ';
         } else {
@@ -34,6 +39,8 @@ const CodeComment: FC<CodeCommentProps> = ({ text }) => {
       setLines(tempLines);
     };
 
+    /* Cypress test made to cover this line */
+    /* istanbul ignore next */
     const resizeObserver = new ResizeObserver(() => {
       updateLines();
     });
@@ -52,9 +59,16 @@ const CodeComment: FC<CodeCommentProps> = ({ text }) => {
   }, [text]);
 
   return (
-    <CodeCommentContainer ref={containerRef}>
+    <CodeCommentContainer
+      ref={containerRef}
+      data-testid="code-comment-container"
+    >
       {lines.map((line, index) => (
-        <div key={index} className="code-comment-line">
+        <div
+          key={index}
+          className="code-comment-line"
+          data-testid="code-comment-line"
+        >
           <span className="code-comment-prefix">&#47;&#47; </span>
           <span>{line}</span>
         </div>
