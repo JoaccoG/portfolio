@@ -10,8 +10,8 @@ const CodeComment: FC<CodeCommentProps> = ({ text }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const hiddenRef = useRef<HTMLDivElement | null>(null);
 
-  /* Due to how Jest environment (jsom) works, Cypress tests */
-  /* were made to test and cover the component funcionality */
+  /* Due to how Jest environment (jsom) works, I was unable to test some of the component's functionality */
+  /* Cypress tests were made to test the missing covered lines */
   /* istanbul ignore next */
   useEffect(() => {
     const { current } = containerRef;
