@@ -6,11 +6,10 @@ const Header = () => {
   const [isOpen, toggleMenu] = useToggle(false);
 
   return (
-    <HeaderContainer>
+    <HeaderContainer isOpen={isOpen}>
       <HeaderButton
         className={isOpen ? 'open' : ''}
         type="button"
-        aria-label={isOpen ? 'Close menu' : 'Open menu'}
         onClick={() => toggleMenu()}
       >
         <span className="hamburger-btn__line" />
