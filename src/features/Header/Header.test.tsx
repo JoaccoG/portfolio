@@ -43,4 +43,19 @@ describe('Given a header component', () => {
       expect(screen.getByTestId('contact-link')).toHaveClass('active');
     });
   });
+
+  describe('When the user clicks on the hamburger button', () => {
+    test('Then the button class should change', () => {
+      renderWithProviders(
+        <MemoryRouter>
+          <Header />
+        </MemoryRouter>
+      );
+
+      const header = screen.getByRole('button');
+      expect(header).not.toHaveClass('open');
+      fireEvent.click(screen.getByRole('button'));
+      expect(header).toHaveClass('open');
+    });
+  });
 });
