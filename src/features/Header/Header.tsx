@@ -7,16 +7,18 @@ const Header = () => {
 
   return (
     <HeaderContainer isOpen={isOpen}>
-      <HeaderButton
-        className={isOpen ? 'open' : ''}
-        type="button"
-        onClick={() => toggleMenu()}
-      >
-        <span className="hamburger-btn__line" />
-        <span className="hamburger-btn__line" />
-        <span className="hamburger-btn__line" />
-      </HeaderButton>
-      <h1 className="logo">joaquin-godoy</h1>
+      <div className="header__hero">
+        <h1 className="logo">joaquin-godoy</h1>
+        <HeaderButton
+          className={isOpen ? 'open' : ''}
+          type="button"
+          onClick={() => toggleMenu()}
+        >
+          <span className="hamburger-btn__line" />
+          <span className="hamburger-btn__line" />
+          <span className="hamburger-btn__line" />
+        </HeaderButton>
+      </div>
       <nav>
         <ul className="navbar">
           <li className="navbar__item">
