@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { HeaderContainer, HeaderButton } from './Header.styled';
 import useToggle from '../../hooks/useToggle/useToggle';
 
@@ -8,7 +8,9 @@ const Header = () => {
   return (
     <HeaderContainer isOpen={isOpen}>
       <div className="header__hero">
-        <h1 className="logo">joaquin-godoy</h1>
+        <h1 className="logo">
+          <Link to={'./'}>joaquin-godoy</Link>
+        </h1>
         <HeaderButton
           className={isOpen ? 'open' : ''}
           type="button"
