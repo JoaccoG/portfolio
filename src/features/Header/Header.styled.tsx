@@ -33,7 +33,7 @@ export const HeaderButton = styled.button`
     -webkit-transform: translateY(-11px) rotate(-45deg);
   }
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 1024px) {
     display: none;
   }
 `;
@@ -57,7 +57,10 @@ export const HeaderContainer = styled.header<HeaderContainerProps>`
     background-color: var(--color-primary-regular);
     border-bottom: 1px solid var(--color-primary-light);
     .logo {
-      font-size: var(--font-size-m);
+      a {
+        color: var(--color-secondary-white);
+        font-size: var(--font-size-l);
+      }
     }
   }
   nav {
@@ -85,7 +88,57 @@ export const HeaderContainer = styled.header<HeaderContainerProps>`
         a {
           width: 100%;
           display: block;
+          color: var(--color-secondary-gray);
+          font-size: var(--font-size-s);
           padding: var(--padding-s);
+          border-bottom: 1px solid var(--color-primary-light);
+          transition: var(--transition-s);
+          &.active {
+            color: var(--color-accent-orange);
+          }
+          &:hover:not(.active) {
+            color: var(--color-secondary-white);
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-primary-light);
+    .header__hero {
+      width: 50%;
+      height: 60px;
+      position: static;
+      padding: 0;
+      border: none;
+      background-color: unset;
+      padding-left: var(--padding-xxl);
+    }
+    nav {
+      .navbar {
+        height: 60px;
+        width: 100%;
+        min-width: 656px;
+        position: static;
+        justify-content: flex-end;
+        flex-direction: row;
+        margin: 0;
+        background-color: unset;
+        backdrop-filter: unset;
+        border: none;
+        .navbar__item {
+          a {
+            width: 100%;
+            border: none;
+            padding: var(--padding-s) var(--padding-m);
+          }
+          & {
+            border-left: 1px solid var(--color-primary-light);
+          }
         }
       }
     }
