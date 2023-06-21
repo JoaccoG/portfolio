@@ -64,8 +64,8 @@ These are the badges with the scans results:<br><br>
 
 # Demo
 
-You can see the development production [clicking here](https://joaquingodoy.netlify.app/).<br>
-You can see the actual portfolio [clicking here](https://joaquingodoy.com/).<br>
+You can see the dev environment (latest changes) [clicking here](https://joaquingodoy.netlify.app/).<br>
+You can see the actual portfolio (production) [clicking here](https://joaquingodoy.com/).<br>
 
 _Please be patient if the first request take a while._<br>
 _The API server is probably **sleeping** and has a hard time starting up!_
