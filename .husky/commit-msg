@@ -20,5 +20,4 @@ while read line; do
 done < "${1}"
 
 echo -e "$SUCCESS_MESSAGE"
-
 exit 0

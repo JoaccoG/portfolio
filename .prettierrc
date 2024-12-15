@@ -10,7 +10,6 @@
   "bracketSameLine": true,
   "bracketSpacing": true,
   "endOfLine": "lf",
-  "jsxBracketSameLine": false,
   "quoteProps": "as-needed",
   "proseWrap": "always"
 }

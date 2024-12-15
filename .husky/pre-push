@@ -16,5 +16,4 @@ if ! git rev-parse --abbrev-ref HEAD | grep -qE '^((feature|bugfix|hotfix)\/[a-z
 fi
 
 echo -e "$SUCCESS_MESSAGE"
-
 exit 0

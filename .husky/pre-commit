@@ -6,8 +6,8 @@ YELLOW='\033[1;33m'
 RESET='\033[0m'
 START_MESSAGE="\n${YELLOW}(>)${RESET} ${GRAY}Running '${RESET}${YELLOW}pre-commit${RESET}${GRAY}' hook...${RESET}"
 SUCCESS_MESSAGE="${GREEN}(✔)${RESET} ${GRAY}Successfully executed '${RESET}${GREEN}pre-commit${RESET}${GRAY}' hook.${RESET}"
-ERROR_MESSAGE_ONE="${RED}(!)${RESET} ${GRAY}Found references of "${RESET}${RED}console.${RESET}${GRAY}". Remove them to commit.${RESET}\n"
-ERROR_MESSAGE_TWO="${RED}(!)${RESET} ${GRAY}Found references of "${RESET}${RED}debugger${RESET}${GRAY}". Remove them to commit.${RESET}\n"
+ERROR_MESSAGE_ONE="${RED}(!)${RESET} ${GRAY}Found references of '${RESET}${RED}console.${RESET}${GRAY}'. Remove them to commit.${RESET}\n"
+ERROR_MESSAGE_TWO="${RED}(!)${RESET} ${GRAY}Found references of '${RESET}${RED}debugger${RESET}${GRAY}'. Remove them to commit.${RESET}\n"
 
 echo -e "$START_MESSAGE"
 
@@ -15,25 +15,23 @@ FILES_PATTERN='\.(jsx?|tsx?)(\..+)?$'
 
 if git diff --cached --name-only | \
     grep -E $FILES_PATTERN | \
-    xargs grep --with-filename -n 'console\.[clear|dir|log|info|warn|error]' | \
+    grep -Hn 'console\.(clear|dir|log|info|warn|error)' | \
     grep -v '//';
 then
     echo -e "$ERROR_MESSAGE_ONE"
-    exit 1;
+    exit 1
 fi
 
 if git diff --cached --name-only | \
     grep -E $FILES_PATTERN | \
-    xargs grep --with-filename -n 'debugger' | \
+    grep -Hn 'debugger' | \
     grep -v '//';
 then
     echo -e "$ERROR_MESSAGE_TWO"
-    exit 1;
+    exit 1
 fi
-
-
-exec >/dev/tty 2>&1
 
 npx lint-staged
 
 echo -e "$SUCCESS_MESSAGE"
+exit 0

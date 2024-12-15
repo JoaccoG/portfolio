@@ -59,7 +59,6 @@ const eslintConfig = [
           trailingComma: 'none',
           arrowParens: 'always',
           bracketSpacing: true,
-          jsxBracketSameLine: false,
           endOfLine: 'lf'
         }
       ],
