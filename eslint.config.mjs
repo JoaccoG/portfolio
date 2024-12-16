@@ -17,6 +17,7 @@ const eslintConfig = [
       'next/typescript',
       'plugin:prettier/recommended'
     ],
+    plugins: ['@stylistic'],
     ignorePatterns: [
       'node_modules',
       '.next',
@@ -62,7 +63,13 @@ const eslintConfig = [
           endOfLine: 'lf'
         }
       ],
-      'import/no-anonymous-default-export': 'off'
+      'import/no-anonymous-default-export': 'off',
+      '@stylistic/padding-line-between-statements': [
+        'error',
+        { blankLine: 'always', prev: 'block-like', next: '*' }, // Adds a blank line after blocks (if, for, etc).
+        { blankLine: 'any', prev: 'expression', next: 'return' }, // Allows the return in an expression to have no blank line.
+        { blankLine: 'always', prev: '*', next: 'return' } // Adds a blank line before return statements.
+      ]
     },
     overrides: [
       {
