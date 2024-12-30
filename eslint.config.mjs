@@ -11,28 +11,16 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.config({
-    extends: [
-      'next',
-      'next/core-web-vitals',
-      'next/typescript',
-      'plugin:prettier/recommended'
-    ],
+    extends: ['next', 'next/core-web-vitals', 'next/typescript', 'plugin:prettier/recommended'],
     plugins: ['@stylistic'],
-    ignorePatterns: [
-      'node_modules',
-      '.next',
-      'out',
-      'public',
-      'coverage',
-      'build'
-    ],
+    ignorePatterns: ['node_modules', '.next', 'out', 'public', 'coverage', 'build'],
     rules: {
       quotes: ['error', 'single'],
       semi: ['error', 'always'],
       'max-len': [
         'error',
         {
-          code: 80,
+          code: 120,
           ignoreComments: true,
           ignoreTrailingComments: true,
           ignoreUrls: true,
@@ -55,7 +43,7 @@ const eslintConfig = [
       'prettier/prettier': [
         'error',
         {
-          printWidth: 80,
+          printWidth: 120,
           singleQuote: true,
           trailingComma: 'none',
           arrowParens: 'always',
@@ -66,9 +54,9 @@ const eslintConfig = [
       'import/no-anonymous-default-export': 'off',
       '@stylistic/padding-line-between-statements': [
         'error',
-        { blankLine: 'always', prev: 'block-like', next: '*' }, // Adds a blank line after blocks (if, for, etc).
-        { blankLine: 'any', prev: 'expression', next: 'return' }, // Allows the return in an expression to have no blank line.
-        { blankLine: 'always', prev: '*', next: 'return' } // Adds a blank line before return statements.
+        { blankLine: 'always', prev: 'block-like', next: '*' },
+        { blankLine: 'any', prev: 'expression', next: 'return' },
+        { blankLine: 'always', prev: '*', next: 'return' }
       ]
     },
     overrides: [

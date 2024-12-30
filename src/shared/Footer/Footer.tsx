@@ -7,39 +7,21 @@ const Footer = () => {
       <nav aria-label="Social links">
         <ul>
           <li>
-            <a
-              href="https://www.linkedin.com/in/joaquin--godoy/"
-              target="_blank"
-              rel="noopener noreferrer">
-              <Image
-                src="/images/footer/icon-linkedin.svg"
-                alt="LinkedIn icon"
-                width={16}
-                height={16}
-              />
+            <a href="https://www.linkedin.com/in/joaquin--godoy/" target="_blank" rel="noopener noreferrer">
+              <Image src="/images/footer/icon-linkedin.svg" alt="LinkedIn icon" width={16} height={16} />
               LinkedIn
             </a>
           </li>
           <li>
-            <a
-              href="https://github.com/JoaccoG"
-              target="_blank"
-              rel="noopener noreferrer">
-              <Image
-                src="/images/footer/icon-github.svg"
-                alt="GitHub icon"
-                width={16}
-                height={16}
-              />
+            <a href="https://github.com/JoaccoG" target="_blank" rel="noopener noreferrer">
+              <Image src="/images/footer/icon-github.svg" alt="GitHub icon" width={16} height={16} />
               GitHub
             </a>
           </li>
         </ul>
       </nav>
       <address>
-        <small>
-          Made by Joaquín Godoy &copy; {getDate().year} - All rights reserved.
-        </small>
+        <small>Made by Joaquín Godoy &copy; {getDate().year} - All rights reserved.</small>
       </address>
     </footer>
   );
