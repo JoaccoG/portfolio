@@ -13,7 +13,7 @@ const eslintConfig = [
   ...compat.config({
     extends: ['next', 'next/core-web-vitals', 'next/typescript', 'plugin:prettier/recommended'],
     plugins: ['@stylistic'],
-    ignorePatterns: ['node_modules', '.next', 'out', 'public', 'coverage', 'build'],
+    ignorePatterns: ['node_modules', '.next', '.vscode', '.idea', 'coverage', 'build', 'dist', 'public'],
     rules: {
       quotes: ['error', 'single'],
       semi: ['error', 'always'],
