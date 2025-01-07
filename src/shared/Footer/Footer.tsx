@@ -1,3 +1,4 @@
+'use client';
 import Image from 'next/image';
 import { getDate } from '@/utils';
 
@@ -21,7 +22,7 @@ const Footer = () => {
         </ul>
       </nav>
       <address>
-        <small>Made by Joaquín Godoy &copy; {getDate().year} - All rights reserved.</small>
+        <small>&copy; {getDate().year} Joaquín Godoy</small>
       </address>
     </footer>
   );

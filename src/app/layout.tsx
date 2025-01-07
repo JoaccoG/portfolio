@@ -1,17 +1,22 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
-import { ReduxProvider } from '@/store/provider';
+import { Fira_Code, Inter } from 'next/font/google';
+import ReduxProvider from '@/store/provider';
+import StyledThemeProvider from '@/styles/provider';
 import Footer from '@/shared/Footer/Footer';
-import './globals.css';
+import '@/styles/globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin']
+const firaCode = Fira_Code({
+  variable: '--font-family-fira-code',
+  subsets: ['latin'],
+  display: 'swap',
+  adjustFontFallback: false
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin']
+const inter = Inter({
+  variable: '--font-family-inter',
+  subsets: ['latin'],
+  display: 'swap',
+  adjustFontFallback: false
 });
 
 export const metadata: Metadata = {
@@ -22,9 +27,13 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <ReduxProvider>{children}</ReduxProvider>
-        <Footer />
+      <body className={`${firaCode.variable} ${inter.variable}`}>
+        <StyledThemeProvider>
+          <ReduxProvider>
+            <main>{children}</main>
+            <Footer />
+          </ReduxProvider>
+        </StyledThemeProvider>
       </body>
     </html>
   );

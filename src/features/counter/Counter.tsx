@@ -1,22 +1,26 @@
 'use client';
-
 import type { RootState } from '@/store/store';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { increment, decrement, incrementByAmount, decrementByAmount, reset } from '@/features/counter/counterSlice';
+import styled from 'styled-components';
+
+const WrapperToTestThemeToggle = styled.div`
+  background-color: ${(props) => props.theme.backgroundColor};
+  color: ${(props) => props.theme.textColor};
+`;
 
 const Counter = () => {
-  const counterValue = useAppSelector((state: RootState): number => state.counter.value);
+  const counter = useAppSelector((state: RootState): number => state.counter.value);
   const dispatch = useAppDispatch();
 
   return (
     <section aria-labelledby="counter-section">
       <header>
-        <h1 id="counter-section">Counter: {counterValue}</h1>
+        <h1 id="counter-section">Counter: {counter}</h1>
       </header>
 
       <article>
-        <p>Use the buttons below to control the counter value:</p>
-        <div>
+        <WrapperToTestThemeToggle>
           <button onClick={() => dispatch(increment())} aria-label="Increment counter">
             Increment
           </button>
@@ -36,7 +40,7 @@ const Counter = () => {
           <button onClick={() => dispatch(reset())} aria-label="Reset counter">
             Reset
           </button>
-        </div>
+        </WrapperToTestThemeToggle>
       </article>
     </section>
   );
