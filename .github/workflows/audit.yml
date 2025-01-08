@@ -1,0 +1,52 @@
+name: Code audit
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  audit:
+    name: Code audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: (>) Git checkout.
+        uses: actions/checkout@v3
+
+      - name: (>) Cache Node Modules.
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: (>) Check if ".editorconfig" exists.
+        uses: andstor/file-existence-action@v1
+        with:
+          files: '.editorconfig'
+
+      - name: (>) EditorConfig validation.
+        uses: snow-actions/eclint@v1.0.1
+
+      - name: (>) Ensure node_modules is ignored by Git.
+        uses: dkershner6/gitignore-parser@v1
+        with:
+          must_deny: 'node_modules'
+
+      - name: (>) Install dependencies.
+        run: npm ci
+
+      - name: (>) ESLint validation.
+        run: npx eslint --ignore-path .gitignore .
+
+      - name: (>) Check commit message length.
+        uses: gsactions/commit-message-checker@v1
+        with:
+          pattern: '^[^#].{8,120}'
+          error: 'The commit message must have between 8 and 120 characters.'
+          excludeDescription: 'true'
+          excludeTitle: 'true'
+          checkAllCommitMessages: 'true'
