@@ -1,5 +1,5 @@
-import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
+import { render } from '@testing-library/react';
 import { createTestStore } from '@/store/testStore';
 import type { RootState } from '@/store/store';
 

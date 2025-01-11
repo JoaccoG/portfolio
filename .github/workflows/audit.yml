@@ -29,7 +29,7 @@ jobs:
           files: '.editorconfig'
 
       - name: (>) EditorConfig validation.
-        uses: snow-actions/eclint@v1.0.1
+        run: npx eclint check src/** mocks/**
 
       - name: (>) Ensure node_modules is ignored by Git.
         uses: dkershner6/gitignore-parser@v1

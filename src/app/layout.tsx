@@ -3,6 +3,10 @@ import { Fira_Code, Inter } from 'next/font/google';
 import ReduxProvider from '@/store/provider';
 import StyledThemeProvider from '@/styles/provider';
 import Footer from '@/shared/Footer/Footer';
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 import '@/styles/globals.css';
 
 const firaCode = Fira_Code({
