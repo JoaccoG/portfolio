@@ -17,25 +17,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: (>) Check commit message length
-        uses: gsactions/commit-message-checker@v1
-        with:
-          pattern: '^[^#].{8,120}'
-          error: 'The commit message must have between 8 and 120 characters.'
-          excludeDescription: 'true'
-          excludeTitle: 'true'
-          checkAllCommitMessages: 'true'
-
-      - name: (>) Check that ".editorconfig" exists
-        uses: andstor/file-existence-action@v1
-        with:
-          files: '.editorconfig'
-
-      - name: (>) Check "node_modules" is ignored
-        uses: dkershner6/gitignore-parser@v1
-        with:
-          must_deny: 'node_modules'
-
       - name: (>) Cache "node_modules"
         uses: actions/cache@v3
         with:
@@ -44,11 +25,30 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: (!) Install dependencies
-        run: npm ci
+      - name: (>) Check that ".editorconfig" exists
+        uses: andstor/file-existence-action@v1
+        with:
+          files: '.editorconfig'
 
-      - name: (!) EditorConfig validation
+      - name: (>) EditorConfig validation
         run: npx eclint check src/** mocks/**
 
-      - name: (!) ESLint validation
+      - name: (>) Check "node_modules" is ignored
+        uses: dkershner6/gitignore-parser@v1
+        with:
+          must_deny: 'node_modules'
+
+      - name: (>) Install dependencies
+        run: npm ci
+
+      - name: (>) ESLint validation
         run: npx eslint .
+
+      - name: (>) Check commit message length
+        uses: gsactions/commit-message-checker@v1
+        with:
+          pattern: '^[^#].{8,120}'
+          error: 'The commit message must have between 8 and 120 characters.'
+          excludeDescription: 'true'
+          excludeTitle: 'true'
+          checkAllCommitMessages: 'true'
