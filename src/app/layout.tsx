@@ -1,12 +1,9 @@
 import type { Metadata } from 'next';
 import { Fira_Code, Inter } from 'next/font/google';
-import ReduxProvider from '@/store/provider';
 import StyledThemeProvider from '@/styles/provider';
+import ReduxProvider from '@/store/provider';
 import Footer from '@/shared/Footer/Footer';
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+import ParticlesComponent from '@/shared/ParticlesContainer/ParticlesContainer';
 import '@/styles/globals.css';
 
 const firaCode = Fira_Code({
@@ -34,7 +31,10 @@ const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
       <body className={`${firaCode.variable} ${inter.variable}`}>
         <StyledThemeProvider>
           <ReduxProvider>
-            <main>{children}</main>
+            <main>
+              {children}
+              <ParticlesComponent id="particlesContainer" />
+            </main>
             <Footer />
           </ReduxProvider>
         </StyledThemeProvider>

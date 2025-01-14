@@ -1,9 +1,9 @@
 :root {
-  /* Primary colors */
+  /* Colors */
   --color-primary: #011221;
   --color-primary-dark: #01080e;
   --color-primary-light: #011627;
-  --color-neutral-gray: #607b96;
+  --color-neutral-gray: #556e86;
   --color-neutral-white: #ffffff;
   --color-accent-blue: #4d5bce;
   --color-accent-aqua: #3c9d93;
@@ -81,12 +81,13 @@
   --transition-slower: 0.8s;
   --transition-slowest: 1s;
 
-  /* Z-index */
+  /* Z indexes */
   --z-index-1: 100;
   --z-index-2: 200;
   --z-index-3: 300;
   --z-index-4: 400;
   --z-index-5: 500;
+  --z-index-negative: -1;
 }
 
 *,
@@ -99,13 +100,25 @@
 
 html,
 body {
-  color: var(--color-neutral-white);
-  background: var(--color-primary-dark);
+  color: var(--color-neutral-gray);
   font-size: var(--font-size-s);
   font-weight: var(--font-weight-regular);
   font-family: var(--font-family-fira-code);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  min-height: 90vh;
+  @media screen and (min-width: 768px) {
+    min-height: 85vh;
+  }
+  #particlesContainer {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: var(--z-index-negative);
+  }
 }
 
 img,

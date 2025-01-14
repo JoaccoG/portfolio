@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { type Theme, light, dark } from './theme';
@@ -26,14 +25,14 @@ const StyledThemeProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
-  const toggleTheme = (): void => {
-    setTheme(theme === light ? dark : light);
-  };
+  // const toggleTheme = (): void => {
+  //   setTheme(theme === light ? dark : light);
+  // };
 
   return (
     <ThemeProvider theme={theme}>
       {children}
-      <button onClick={toggleTheme}>Toggle Theme</button>
+      {/* <button onClick={toggleTheme}>Toggle Theme</button> */}
     </ThemeProvider>
   );
 };
