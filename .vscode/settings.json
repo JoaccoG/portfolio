@@ -1,0 +1,15 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "typescriptreact",
+    "javascriptreact"
+  ],
+  "sonarlint.connectedMode.project": {
+    "connectionId": "portfolio",
+    "projectKey": "JoaccoG_portfolio"
+  }
+}
