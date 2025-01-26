@@ -1,19 +1,23 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { FlatCompat } from '@eslint/eslintrc';
+import react from 'eslint-plugin-react';
+import prettier from 'eslint-plugin-prettier';
+import stylistic from '@stylistic/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
+import globals from 'globals';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname
-});
-
-const eslintConfig = [
-  ...compat.config({
-    extends: ['next', 'next/core-web-vitals', 'next/typescript', 'plugin:prettier/recommended'],
-    plugins: ['@stylistic'],
-    ignorePatterns: ['node_modules', 'coverage', 'build', 'dist', 'public', '.vscode', '.idea'],
+export default [
+  {
+    ignores: ['node_modules', 'dist', 'build', 'coverage', '.next', 'public']
+  },
+  {
+    files: ['**/*.{ts,tsx,js,jsx}'],
+    plugins: { react, prettier, stylistic },
+    settings: { react: { version: 'detect' } },
+    languageOptions: {
+      parser: tsParser,
+      sourceType: 'module',
+      ecmaVersion: 'latest',
+      globals: globals.browser
+    },
     rules: {
       quotes: ['error', 'single'],
       semi: ['error', 'always'],
@@ -52,20 +56,12 @@ const eslintConfig = [
         }
       ],
       'import/no-anonymous-default-export': 'off',
-      '@stylistic/padding-line-between-statements': [
+      'stylistic/padding-line-between-statements': [
         'error',
         { blankLine: 'always', prev: 'block-like', next: '*' },
         { blankLine: 'any', prev: 'expression', next: 'return' },
         { blankLine: 'always', prev: '*', next: 'return' }
       ]
-    },
-    overrides: [
-      {
-        files: ['*.ts', '*.tsx'],
-        rules: {}
-      }
-    ]
-  })
+    }
+  }
 ];
-
-export default eslintConfig;
