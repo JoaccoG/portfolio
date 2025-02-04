@@ -6,7 +6,18 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['node_modules', 'dist', 'build', 'coverage', '.next', 'public']
+    ignores: [
+      'node_modules',
+      'public',
+      'coverage',
+      'build',
+      'dist',
+      'package-lock.json',
+      'yarn.lock',
+      '.vscode',
+      '.idea',
+      '*.log'
+    ]
   },
   {
     files: ['**/*.{ts,tsx,js,jsx}'],
