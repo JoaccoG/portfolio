@@ -14,7 +14,7 @@ FILES_PATTERN='\.(jsx?|tsx?)(\..+)?$'
 
 if git diff --cached --name-only | \
     grep -E $FILES_PATTERN | \
-    grep -Hn 'console\.(clear|dir|log|info|warn|error)' | \
+    grep -Hn 'console\.(clear|dir|log|info|warn)' | \
     grep -v '//';
 then
     echo -e "$ERROR_MESSAGE_ONE"

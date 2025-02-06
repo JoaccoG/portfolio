@@ -7,7 +7,10 @@ export default defineConfig({
     setupFiles: './src/tests/setup.ts',
     coverage: {
       reporter: ['text', 'lcov'],
-      reportsDirectory: 'coverage'
+      reportsDirectory: 'coverage',
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/**/*.test.{ts,tsx}', 'src/**/*.d.ts', 'src/main.tsx', 'src/tests/**', 'src/types/**'],
+      all: true
     }
   }
 });
