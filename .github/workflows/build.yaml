@@ -18,14 +18,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: (>) Check "GitHub Secrets" exists
+      - name: (>) Check secrets exists
         run: |
           if [[ -z "${{ secrets.SONAR_TOKEN }}" ]]; then
             echo "Error: SONAR_TOKEN is not set."
             exit 1
           fi
 
-      - name: (>) Cache "pnpm"
+      - name: (>) Cache pnpm
         uses: actions/cache@v4
         with:
           path: ~/.pnpm-store
@@ -53,4 +53,4 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args: -Dsonar.javascript.lcov.reportPaths=coverage/lcov-report/lcov.info
+          args: -X

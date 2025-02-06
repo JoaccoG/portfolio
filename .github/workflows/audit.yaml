@@ -17,17 +17,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: (>) Check that ".editorconfig" exists
+      - name: (>) Check .editorconfig exists
         uses: andstor/file-existence-action@v1
         with:
           files: '.editorconfig'
 
-      - name: (>) Check "node_modules" is ignored
+      - name: (>) Check node_modules is ignored
         uses: dkershner6/gitignore-parser@v1
         with:
           must_deny: 'node_modules'
 
-      - name: (>) Cache "pnpm"
+      - name: (>) Cache pnpm
         uses: actions/cache@v4
         with:
           path: ~/.pnpm-store
