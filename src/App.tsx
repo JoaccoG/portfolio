@@ -1,29 +1,32 @@
-import { useState } from 'react';
-import './App.css';
+import { Routes, Route, Link } from 'react-router';
 
-function App() {
-  const [count, setCount] = useState<number>(0);
-
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          <img src={'/assets/images/vite.svg'} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={'/assets/images/react.svg'} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Joaquin Godoy</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+    <Routes>
+      <Route
+        index
+        element={
+          <>
+            <h1>Home Joaquín Godoy</h1>
+            <Link to="/about">Go to about</Link>
+          </>
+        }
+      />
+
+      <Route path="about" element={<h1>About</h1>} />
+
+      <Route path="work" element={<h1>Work</h1>} />
+
+      <Route path="blog">
+        <Route index element={<h1>Blog</h1>} />
+        <Route path=":entry" element={<h1>Blog Entry</h1>} />
+      </Route>
+
+      <Route path="contact" element={<h1>Contact</h1>} />
+
+      <Route path="*" element={<h1>Not found</h1>} />
+    </Routes>
   );
-}
+};
 
 export default App;
