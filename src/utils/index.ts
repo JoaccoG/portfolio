@@ -1,13 +1,15 @@
+export const MIN_PARTICLES = 25;
+export const MAX_PARTICLES = 120;
+export const BASE_PARTICLES = 30;
+export const BASE_WIDTH = 1280;
+export const BASE_HEIGHT = 720;
+
 export const getParticlesNumber = (): number => {
-  const baseParticles = 30;
+  if (typeof window === 'undefined') return BASE_PARTICLES;
 
-  if (typeof window === 'undefined') return baseParticles;
+  const screenWidth = window?.innerWidth ?? BASE_WIDTH;
+  const screenHeight = window?.innerHeight ?? BASE_HEIGHT;
+  const area = (screenWidth * screenHeight) / (BASE_WIDTH * BASE_HEIGHT);
 
-  const baseWidth = 1280;
-  const baseHeight = 720;
-  const screenWidth = window.innerWidth;
-  const screenHeight = window.innerHeight;
-  const area = (screenWidth * screenHeight) / (baseWidth * baseHeight);
-
-  return Math.min(120, Math.max(25, Math.round(baseParticles * area)));
+  return Math.min(MAX_PARTICLES, Math.max(MIN_PARTICLES, Math.round(BASE_PARTICLES * area)));
 };

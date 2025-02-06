@@ -8,14 +8,20 @@ const Particles = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [particlesNumber, setParticlesNumber] = useState<number>(80);
 
-  useEffect((): void => {
+  useEffect((): VoidFunction => {
     setParticlesNumber(getParticlesNumber());
+    const initializeParticles = async (): Promise<void> => {
+      try {
+        await initParticlesEngine(async (engine: Engine): Promise<void> => await loadSlim(engine));
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Failed to initialize particles:', error);
+      }
+    };
 
-    const initializeParticles = async (): Promise<void> =>
-      await initParticlesEngine(async (engine: Engine): Promise<void> => await loadSlim(engine));
-
-    setIsLoading(false);
     initializeParticles();
+
+    return (): void => setIsLoading(true);
   }, []);
 
   const particlesOptions: IParticlesProps['options'] = {
@@ -27,7 +33,7 @@ const Particles = () => {
       shape: { type: 'circle' },
       color: { value: '#f2ebe3' },
       size: { value: { min: 0.1, max: 1 } },
-      shadow: { enable: true, color: '#f2ebe3', blur: 4 },
+      shadow: { enable: false, color: '#f2ebe3', blur: 4 },
       links: { enable: false, color: '#f2ebe3', distance: 100, opacity: 1, width: 0.5 },
       number: { value: particlesNumber, density: { enable: true, width: 1000, height: 1000 } },
       move: { enable: true, speed: 4, random: true, direction: 'none', outModes: { default: 'bounce' } }
@@ -47,7 +53,13 @@ const Particles = () => {
     }
   };
 
-  return <>{!isLoading && <ParticlesComponent id={'particlesComponent'} options={particlesOptions} />}</>;
+  return (
+    <>
+      {!isLoading && (
+        <ParticlesComponent id="particlesComponent" data-testid="particlesComponent" options={particlesOptions} />
+      )}
+    </>
+  );
 };
 
 export default Particles;
