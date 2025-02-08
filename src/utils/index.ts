@@ -1,15 +1,17 @@
-export const MIN_PARTICLES = 25;
-export const MAX_PARTICLES = 120;
-export const BASE_PARTICLES = 30;
-export const BASE_WIDTH = 1280;
-export const BASE_HEIGHT = 720;
+export const PARTICLES_CONFIG = Object.freeze({
+  MIN_PARTICLES: 25,
+  MAX_PARTICLES: 120,
+  BASE_PARTICLES: 30,
+  BASE_WIDTH: 1280,
+  BASE_HEIGHT: 720,
 
-export const getParticlesNumber = (): number => {
-  if (typeof window === 'undefined') return BASE_PARTICLES;
+  getParticlesNumber(): number {
+    if (typeof window === 'undefined') return this.BASE_PARTICLES;
 
-  const screenWidth = window?.innerWidth ?? BASE_WIDTH;
-  const screenHeight = window?.innerHeight ?? BASE_HEIGHT;
-  const area = (screenWidth * screenHeight) / (BASE_WIDTH * BASE_HEIGHT);
+    const screenWidth = window?.innerWidth ?? this.BASE_WIDTH;
+    const screenHeight = window?.innerHeight ?? this.BASE_HEIGHT;
+    const area = (screenWidth * screenHeight) / (this.BASE_WIDTH * this.BASE_HEIGHT);
 
-  return Math.min(MAX_PARTICLES, Math.max(MIN_PARTICLES, Math.round(BASE_PARTICLES * area)));
-};
+    return Math.min(this.MAX_PARTICLES, Math.max(this.MIN_PARTICLES, Math.round(this.BASE_PARTICLES * area)));
+  }
+});

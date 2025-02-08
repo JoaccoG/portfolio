@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import ParticlesComponent, { initParticlesEngine, type IParticlesProps } from '@tsparticles/react';
 import type { Engine } from '@tsparticles/engine';
 import { loadSlim } from '@tsparticles/slim';
-import { getParticlesNumber } from '../../utils';
+import { PARTICLES_CONFIG } from '../../utils';
 
 const Particles = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [particlesNumber, setParticlesNumber] = useState<number>(80);
 
   useEffect((): VoidFunction => {
-    setParticlesNumber(getParticlesNumber());
+    setParticlesNumber(PARTICLES_CONFIG.getParticlesNumber());
     const initializeParticles = async (): Promise<void> => {
       try {
         await initParticlesEngine(async (engine: Engine): Promise<void> => await loadSlim(engine));
