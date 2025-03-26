@@ -125,13 +125,14 @@ body {
   }
 }
 
-main {
-  margin: calc(64px + 16px) 0 32px 0;
-  min-height: calc(100vh - (64px + 16px));
+#root {
+  margin: 64px 32px 32px 32px;
+  padding: 16px 0;
+  min-height: calc(100vh - (64px + 32px));
 
   @media screen and (min-width: 768px) {
-    margin: calc(80px + 16px) 0 32px 0;
-    min-height: calc(100vh - (80px + 16px));
+    margin: 80px 100px 32px 100px;
+    min-height: calc(100vh - (80px + 32px));
   }
 }
 

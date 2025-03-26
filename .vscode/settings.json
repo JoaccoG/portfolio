@@ -9,7 +9,7 @@
     "javascriptreact"
   ],
   "sonarlint.connectedMode.project": {
-    "connectionId": "portfolio",
+    "connectionId": "joaccog",
     "projectKey": "JoaccoG_portfolio"
   }
 }
