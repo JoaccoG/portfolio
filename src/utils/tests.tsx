@@ -1,10 +1,15 @@
-import React from 'react';
-import { render } from '@testing-library/react';
+import type { ReactElement } from 'react';
+import { render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
+import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
 
 export const renderWithMemoryRouter = (
-  ui: React.ReactElement,
+  ui: ReactElement,
   { initialEntries = ['/'] }: { initialEntries?: string[] } = {}
-) => {
-  return render(<MemoryRouter initialEntries={initialEntries}>{ui}</MemoryRouter>);
+): RenderResult => {
+  return render(
+    <MemoryRouter initialEntries={initialEntries}>
+      <ChakraProvider value={createSystem(defaultConfig)}>{ui}</ChakraProvider>
+    </MemoryRouter>
+  );
 };

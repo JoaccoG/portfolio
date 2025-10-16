@@ -16,6 +16,7 @@
       "@utils/*": ["src/utils/*"],
       "@tests/*": ["src/tests/*"],
       "@styles/*": ["src/styles/*"],
+      "@constants/*": ["src/constants/*"],
       "@components/*": ["src/components/*"]
     },
 

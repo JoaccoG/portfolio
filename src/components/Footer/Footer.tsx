@@ -1,29 +1,16 @@
-import type { IconType } from 'react-icons';
 import { Fragment } from 'react';
 import { Box, Flex, Text, VStack, HStack, Link, Icon, useBreakpointValue } from '@chakra-ui/react';
-import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope, FaSpotify } from 'react-icons/fa';
+import { SOCIAL_LINKS, type SocialLink } from '@constants/links';
 
 export const Footer = () => {
   const isDesktop = useBreakpointValue({ base: false, md: true });
-
-  const links = [
-    { label: 'GitHub', icon: FaGithub, href: 'https://github.com/JoaccoG' },
-    { label: 'LinkedIn', icon: FaLinkedin, href: 'https://www.linkedin.com/in/joaquin--godoy/' },
-    {
-      label: 'Spotify',
-      icon: FaSpotify,
-      href: 'https://open.spotify.com/user/31ar645vn4nkna54jly27vcviviy?si=fb87792c1bc746e1'
-    },
-    { label: 'Instagram', icon: FaInstagram, href: 'https://www.instagram.com/joacogodoy99' },
-    { label: 'Email', icon: FaEnvelope, href: 'mailto:joaquingodoy2407@gmail.com' }
-  ];
 
   return (
     <>
       {isDesktop && (
         <>
-          <Sidebar position="left" showIcon={true} links={links} />
-          <Sidebar position="right" showIcon={false} links={links.filter((link) => link.label === 'Email')} />
+          <Sidebar position="left" links={SOCIAL_LINKS} showIcon={true} />
+          <Sidebar position="right" links={SOCIAL_LINKS.filter((link) => link.label === 'Email')} showIcon={false} />
         </>
       )}
 
@@ -31,7 +18,7 @@ export const Footer = () => {
         <Flex maxW="1200px" mx="auto" px={{ base: '4', md: '0' }} direction="column" align="center" gap="6">
           {!isDesktop && (
             <HStack gap="6">
-              {links.map((social) => (
+              {SOCIAL_LINKS.map((social) => (
                 <Link
                   key={social.label}
                   href={social.href}
@@ -61,12 +48,12 @@ export const Footer = () => {
 };
 
 interface SidebarProps {
-  showIcon?: boolean;
   position: 'left' | 'right';
-  links: { label: string; icon: IconType; href: string }[];
+  links: SocialLink[];
+  showIcon: boolean;
 }
 
-const Sidebar = ({ showIcon, position, links }: SidebarProps) => {
+const Sidebar = ({ position, links, showIcon }: SidebarProps) => {
   return (
     <Box
       display="flex"

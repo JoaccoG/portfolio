@@ -7,16 +7,8 @@ vi.mock('@tsparticles/react', () => ({
 }));
 
 describe('Given a "Particles" component', (): void => {
-  beforeAll((): void => {
-    vi.spyOn(console, 'error').mockImplementation((): void => {});
-  });
-
   afterEach((): void => {
     vi.clearAllMocks();
-  });
-
-  afterAll((): void => {
-    vi.restoreAllMocks();
   });
 
   describe('When loading is finished', (): void => {

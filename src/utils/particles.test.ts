@@ -13,7 +13,7 @@ describe('Given a "getParticlesNumber" function', (): void => {
   describe('When window object is undefined', (): void => {
     test('Then it should return the "baseParticles" number', (): void => {
       (globalThis as any).window = undefined;
-      expect(PARTICLES_CONFIG.getParticlesNumber()).toBe(PARTICLES_CONFIG.BASE_PARTICLES);
+      expect(PARTICLES_CONFIG.getAmountOfParticles()).toBe(PARTICLES_CONFIG.BASE_PARTICLES);
     });
   });
 
@@ -21,7 +21,7 @@ describe('Given a "getParticlesNumber" function', (): void => {
     test('Then it should use base dimensions', (): void => {
       delete (globalThis.window as any).innerWidth;
       delete (globalThis.window as any).innerHeight;
-      expect(PARTICLES_CONFIG.getParticlesNumber()).toBe(PARTICLES_CONFIG.BASE_PARTICLES);
+      expect(PARTICLES_CONFIG.getAmountOfParticles()).toBe(PARTICLES_CONFIG.BASE_PARTICLES);
     });
   });
 
@@ -29,7 +29,7 @@ describe('Given a "getParticlesNumber" function', (): void => {
     test('Then it should return the minimum number of particles', (): void => {
       globalThis.window.innerWidth = 1;
       globalThis.window.innerHeight = 1;
-      expect(PARTICLES_CONFIG.getParticlesNumber()).toBe(PARTICLES_CONFIG.MIN_PARTICLES);
+      expect(PARTICLES_CONFIG.getAmountOfParticles()).toBe(PARTICLES_CONFIG.MIN_PARTICLES);
     });
   });
 
@@ -37,7 +37,7 @@ describe('Given a "getParticlesNumber" function', (): void => {
     test('Then it should return the maximum number of particles', (): void => {
       globalThis.window.innerWidth = 100000;
       globalThis.window.innerHeight = 100000;
-      expect(PARTICLES_CONFIG.getParticlesNumber()).toBe(PARTICLES_CONFIG.MAX_PARTICLES);
+      expect(PARTICLES_CONFIG.getAmountOfParticles()).toBe(PARTICLES_CONFIG.MAX_PARTICLES);
     });
   });
 
@@ -46,7 +46,7 @@ describe('Given a "getParticlesNumber" function', (): void => {
       globalThis.window.innerWidth = 1920;
       globalThis.window.innerHeight = 1080;
       const expected = Math.round(30 * ((1920 * 1080) / (1280 * 720)));
-      expect(PARTICLES_CONFIG.getParticlesNumber()).toBe(expected);
+      expect(PARTICLES_CONFIG.getAmountOfParticles()).toBe(expected);
     });
   });
 });
