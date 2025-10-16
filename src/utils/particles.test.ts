@@ -1,4 +1,4 @@
-import { PARTICLES_CONFIG } from './index';
+import { PARTICLES_CONFIG } from '@/utils/particles';
 
 describe('Given a "getParticlesNumber" function', (): void => {
   const originalWindow = { ...globalThis.window };

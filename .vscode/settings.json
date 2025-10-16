@@ -1,15 +1,25 @@
 {
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "editor.formatOnSave": true,
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
   "eslint.validate": [
     "javascript",
+    "javascriptreact",
     "typescript",
     "typescriptreact",
-    "javascriptreact"
   ],
-  "sonarlint.connectedMode.project": {
-    "connectionId": "joaccog",
-    "projectKey": "JoaccoG_portfolio"
-  }
+
+  "biome.enabled": false,
+  "biome.lsp.bin": "",
+
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
 }

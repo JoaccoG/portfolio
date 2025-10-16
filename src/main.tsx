@@ -1,17 +1,18 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
-import { ThemeProvider } from './contexts/theme/provider.tsx';
-import App from './App.tsx';
-import Particles from './components/shared/Particles/Particles.tsx';
+import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
+import { App } from '@/App.tsx';
+import { Particles } from '@components/Particles/Particles';
+import '@styles/globals.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
-      <ThemeProvider>
+      <ChakraProvider value={createSystem(defaultConfig)}>
         <App />
         <Particles />
-      </ThemeProvider>
+      </ChakraProvider>
     </BrowserRouter>
   </StrictMode>
 );

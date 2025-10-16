@@ -48,10 +48,12 @@ export default [
         'error',
         {
           printWidth: 120,
+          tabWidth: 2,
+          useTabs: false,
           singleQuote: true,
+          bracketSpacing: true,
           trailingComma: 'none',
           arrowParens: 'always',
-          bracketSpacing: true,
           endOfLine: 'lf'
         }
       ],

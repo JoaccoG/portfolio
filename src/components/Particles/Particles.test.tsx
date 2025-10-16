@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import Particles from './Particles';
+import { Particles } from '@components/Particles/Particles';
 
 vi.mock('@tsparticles/react', () => ({
   initParticlesEngine: vi.fn(() => Promise.resolve()),

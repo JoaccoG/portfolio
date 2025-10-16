@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
-import ParticlesComponent, { initParticlesEngine, type IParticlesProps } from '@tsparticles/react';
 import type { Engine } from '@tsparticles/engine';
+import type { IParticlesProps } from '@tsparticles/react';
+import { useState, useEffect } from 'react';
+import ParticlesComponent, { initParticlesEngine } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
-import { PARTICLES_CONFIG } from '../../../utils';
+import { PARTICLES_CONFIG } from '@/utils/particles';
 
-const Particles = () => {
+export const Particles = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [particlesNumber, setParticlesNumber] = useState<number>(80);
+  const [amountOfParticles, setAmountOfParticles] = useState<number>(80);
 
   useEffect((): VoidFunction => {
-    setParticlesNumber(PARTICLES_CONFIG.getParticlesNumber());
+    setAmountOfParticles(PARTICLES_CONFIG.getAmountOfParticles());
     const initializeParticles = async (): Promise<void> => {
       try {
         await initParticlesEngine(async (engine: Engine): Promise<void> => await loadSlim(engine));
@@ -35,7 +36,7 @@ const Particles = () => {
       size: { value: { min: 0.1, max: 1 } },
       shadow: { enable: false, color: '#f2ebe3', blur: 4 },
       links: { enable: false, color: '#f2ebe3', distance: 100, opacity: 1, width: 0.5 },
-      number: { value: particlesNumber, density: { enable: true, width: 800, height: 800 } },
+      number: { value: amountOfParticles, density: { enable: true, width: 800, height: 800 } },
       move: { enable: true, speed: 3, random: true, direction: 'none', outModes: { default: 'bounce' } }
     },
     interactivity: {
@@ -48,18 +49,12 @@ const Particles = () => {
       modes: {
         repulse: { distance: 55, duration: 1 },
         attract: { distance: 120, duration: 1 },
-        grab: { distance: 100, links: { opacity: 1 } }
+        grab: { distance: 80, links: { opacity: 1 } }
       }
     }
   };
 
-  return (
-    <>
-      {!isLoading && (
-        <ParticlesComponent id="particlesComponent" data-testid="particlesComponent" options={particlesOptions} />
-      )}
-    </>
-  );
-};
+  if (isLoading) return null;
 
-export default Particles;
+  return <ParticlesComponent id="particlesComponent" data-testid="particlesComponent" options={particlesOptions} />;
+};

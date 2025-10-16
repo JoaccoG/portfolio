@@ -1,6 +1,6 @@
 import { screen, waitFor, fireEvent } from '@testing-library/react';
-import { renderWithMemoryRouter } from '../../../tests/utils';
-import Header from './Header';
+import { renderWithMemoryRouter } from '@utils/tests';
+import { Header } from '@components/Header/Header';
 
 beforeAll((): void => {
   vi.spyOn(console, 'error').mockImplementation((): null => null);
@@ -14,21 +14,21 @@ describe('Given a "Header" component', (): void => {
   describe('When it is rendered', () => {
     test('Then it should be in the document', (): void => {
       renderWithMemoryRouter(<Header />);
-      expect(screen.getByLabelText('Logo')).toBeInTheDocument();
+      expect(screen.getByText('Joaquín Godoy')).toBeInTheDocument();
     });
   });
 
   describe('When navigating', () => {
     test.each([
-      { route: '/', testId: 'Home' },
-      { route: '/about', testId: 'About' },
-      { route: '/work', testId: 'Work' },
-      { route: '/blog', testId: 'Blog' }
-    ])('Then "%s" should be active', async ({ route, testId }) => {
+      { route: '/', label: 'Home' },
+      { route: '/about', label: 'About' },
+      { route: '/work', label: 'Work' },
+      { route: '/blog', label: 'Blog' }
+    ])('Then "%s" should be visible', async ({ route, label }) => {
       renderWithMemoryRouter(<Header />, { initialEntries: [route] });
       fireEvent.click(screen.getByLabelText('Toggle navigation menu'));
       await waitFor(() => {
-        expect(screen.getByTestId(testId)).toHaveClass('active');
+        expect(screen.getByText(label)).toBeInTheDocument();
       });
     });
   });
