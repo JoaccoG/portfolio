@@ -9,7 +9,6 @@
     "types": ["vitest/globals", "@testing-library/jest-dom"],
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"],
       "@pages/*": ["src/pages/*"],
       "@hooks/*": ["src/hooks/*"],
       "@types/*": ["src/types/*"],
