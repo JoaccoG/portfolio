@@ -5,63 +5,69 @@ import { SOCIAL_LINKS, type SocialLink } from '@constants/links';
 
 export const Footer = () => {
   const footerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(footerRef, { once: true, margin: '-100px' });
+  const isInView = useInView(footerRef, { once: true, margin: '-50px' });
   const isDesktop = useBreakpointValue({ base: false, md: true });
 
   return (
-    <>
-      <Box as="footer" ref={footerRef} borderTop="1px" borderColor="var(--color-neutral-dark-gray)" pt="16" mt="auto">
-        {isDesktop && (
-          <>
-            <Sidebar position="left" links={SOCIAL_LINKS} showIcon={true} />
-            <Sidebar position="right" links={SOCIAL_LINKS.filter((link) => link.label === 'Email')} showIcon={false} />
-          </>
-        )}
+    <Box as="footer" ref={footerRef} borderTop="1px" borderColor="var(--color-neutral-dark-gray)" mt="auto">
+      {isDesktop && (
+        <>
+          <Sidebar position="left" links={SOCIAL_LINKS} showIcon={true} />
+          <Sidebar position="right" links={SOCIAL_LINKS.filter((link) => link.label === 'Email')} showIcon={false} />
+        </>
+      )}
 
-        <Flex maxW="1200px" mx="auto" px={{ base: '4', md: '0' }} direction="column" align="center" gap="6">
-          {!isDesktop && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}>
-              <HStack gap="6">
-                {SOCIAL_LINKS.map((social, index) => (
-                  <motion.div
-                    key={social.label}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                    transition={{ duration: 0.6, delay: index * 0.1, ease: 'easeOut' }}>
-                    <Link
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={social.label}
-                      color="var(--color-neutral-light-gray)"
-                      _hover={{ color: 'var(--color-neutral-white)', transform: 'translateY(-2px)' }}
-                      transition="all 0.2s ease">
-                      <Icon as={social.icon} boxSize="6" />
-                    </Link>
-                  </motion.div>
-                ))}
-              </HStack>
-            </motion.div>
-          )}
+      <Flex
+        h={{ base: '80px', md: '24px' }}
+        maxW="1200px"
+        mx="auto"
+        px={{ base: '4', md: '0' }}
+        gap="4"
+        direction="column"
+        alignItems="center"
+        justifyContent="center">
+        {!isDesktop && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 1.2, ease: 'easeOut' }}>
-            <Text
-              fontSize="sm"
-              color="var(--color-neutral-light-gray)"
-              fontFamily="var(--font-family-inter)"
-              textAlign="center">
-              Designed & Built by <span style={{ color: 'var(--color-neutral-white)' }}>Joaquín Godoy</span> &copy;{' '}
-              {new Date().getFullYear()}
-            </Text>
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}>
+            <HStack gap="6">
+              {SOCIAL_LINKS.map((social, index) => (
+                <motion.div
+                  key={social.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                  transition={{ duration: 0.6, delay: index * 0.1, ease: 'easeOut' }}>
+                  <Link
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                    color="var(--color-neutral-light-gray)"
+                    _hover={{ color: 'var(--color-neutral-white)', transform: 'translateY(-2px)' }}
+                    transition="all 0.2s ease">
+                    <Icon as={social.icon} boxSize="6" />
+                  </Link>
+                </motion.div>
+              ))}
+            </HStack>
           </motion.div>
-        </Flex>
-      </Box>
-    </>
+        )}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}>
+          <Text
+            fontSize="sm"
+            color="var(--color-neutral-light-gray)"
+            fontFamily="var(--font-family-inter)"
+            textAlign="center">
+            Designed & Built by <span style={{ color: 'var(--color-neutral-white)' }}>Joaquín Godoy</span> &copy;{' '}
+            {new Date().getFullYear()}
+          </Text>
+        </motion.div>
+      </Flex>
+    </Box>
   );
 };
 

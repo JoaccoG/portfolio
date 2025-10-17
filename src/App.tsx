@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router';
 import { Header } from '@components/Header/Header';
 import { Footer } from '@components/Footer/Footer';
+import { Home } from '@pages/home';
 
 export const App = () => {
   return (
@@ -8,7 +9,7 @@ export const App = () => {
       <Header />
       <main>
         <Routes>
-          <Route index element={<h1>Home</h1>} />
+          <Route index element={<Home />} />
           <Route path="about" element={<h1>About</h1>} />
           <Route path="work" element={<h1>Work</h1>} />
           <Route path="blog">

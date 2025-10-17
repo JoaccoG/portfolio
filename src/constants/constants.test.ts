@@ -4,15 +4,16 @@ describe('Given a "PARTICLES_CONFIG" constant', () => {
   const originalWindow = { ...globalThis.window };
 
   beforeEach(() => {
-    globalThis.window = { ...originalWindow };
-  });
-  afterEach(() => {
-    globalThis.window = { ...originalWindow };
+    Object.defineProperty(globalThis, 'window', { value: { ...originalWindow } });
   });
 
-  describe('When window object is undefined', () => {
+  afterEach(() => {
+    Object.defineProperty(globalThis, 'window', { value: { ...originalWindow } });
+  });
+
+  describe('When globalThis is undefined', () => {
     test('Then it should return the "BASE_PARTICLES" number', () => {
-      (globalThis as any).window = undefined;
+      (globalThis.window as any) = undefined;
       expect(PARTICLES_CONFIG.getAmountOfParticles()).toBe(PARTICLES_CONFIG.BASE_PARTICLES);
     });
   });
