@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { screen } from '@testing-library/react';
 import { renderWithMemoryRouter } from '@utils/tests';
 import { Footer } from '@components/Footer/Footer';
@@ -111,6 +112,82 @@ describe('Given a "Footer" component', () => {
       const emailLink = screen.getByLabelText('Email');
       expect(emailLink).toBeInTheDocument();
       expect(emailLink).toHaveAttribute('href', 'mailto:joaquingodoy2407@gmail.com');
+    });
+  });
+
+  describe('When checking mobile layout behavior', () => {
+    vi.mock('@chakra-ui/react', async () => ({
+      ...(await vi.importActual('@chakra-ui/react')),
+      useBreakpointValue: vi.fn(() => false)
+    }));
+
+    test('Then it should not display desktop sidebars when in mobile mode', () => {
+      renderWithMemoryRouter(<Footer />);
+      expect(screen.getAllByLabelText('GitHub')).toHaveLength(1);
+    });
+
+    test('Then it should display social links in mobile layout when not in desktop mode', () => {
+      renderWithMemoryRouter(<Footer />);
+      SOCIAL_LINKS.forEach((link) => expect(screen.getByLabelText(link.label)).toBeInTheDocument());
+    });
+  });
+
+  describe('When checking sidebar conditional rendering', () => {
+    test('Then it should render sidebar links with icons when showIcon is true', () => {
+      renderWithMemoryRouter(<Footer />);
+      const githubLink = screen.getByLabelText('GitHub');
+      expect(githubLink).toBeInTheDocument();
+      expect(githubLink.getAttribute('href')).toContain('github');
+    });
+
+    test('Then it should render sidebar links with text when showIcon is false', () => {
+      renderWithMemoryRouter(<Footer />);
+      const emailLink = screen.getByLabelText('Email');
+      expect(emailLink).toBeInTheDocument();
+      expect(emailLink.getAttribute('href')).toContain('mailto');
+    });
+  });
+
+  describe('When checking animation states', () => {
+    test('Then it should handle inView state for animations', () => {
+      renderWithMemoryRouter(<Footer />);
+      expect(screen.getByRole('contentinfo')).toBeInTheDocument();
+      expect(screen.getByText(/Designed & Built by/)).toBeInTheDocument();
+    });
+
+    test('Then it should render motion components with proper initial states', () => {
+      renderWithMemoryRouter(<Footer />);
+      expect(screen.getByRole('contentinfo')).toBeInTheDocument();
+      expect(screen.getByText(/Designed & Built by/)).toBeInTheDocument();
+    });
+
+    test('Then it should render social links with proper motion animations', () => {
+      renderWithMemoryRouter(<Footer />);
+      SOCIAL_LINKS.forEach((link) => expect(screen.getByLabelText(link.label)).toBeInTheDocument());
+    });
+  });
+
+  describe('When checking email link text rendering', () => {
+    test('Then it should display email link in sidebar', () => {
+      renderWithMemoryRouter(<Footer />);
+      const emailLink = screen.getByLabelText('Email');
+      expect(emailLink).toBeInTheDocument();
+      expect(emailLink.getAttribute('href')).toContain('mailto');
+    });
+  });
+
+  describe('When checking sidebar positioning', () => {
+    test('Then it should render left sidebar with proper positioning', () => {
+      renderWithMemoryRouter(<Footer />);
+      expect(screen.getByLabelText('GitHub')).toBeInTheDocument();
+      expect(screen.getByLabelText('LinkedIn')).toBeInTheDocument();
+    });
+
+    test('Then it should render right sidebar with email link', () => {
+      renderWithMemoryRouter(<Footer />);
+      const emailLink = screen.getByLabelText('Email');
+      expect(emailLink).toBeInTheDocument();
+      expect(emailLink.getAttribute('href')).toContain('mailto');
     });
   });
 });

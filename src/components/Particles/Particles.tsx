@@ -3,7 +3,7 @@ import type { IParticlesProps } from '@tsparticles/react';
 import { useState, useEffect } from 'react';
 import ParticlesComponent, { initParticlesEngine } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
-import { PARTICLES_CONFIG } from '@/utils/particles';
+import { PARTICLES_CONFIG } from '@constants/particles';
 
 export const Particles = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -56,5 +56,5 @@ export const Particles = () => {
 
   if (isLoading) return null;
 
-  return <ParticlesComponent id="particlesComponent" data-testid="particlesComponent" options={particlesOptions} />;
+  return <ParticlesComponent id="particlesComponent" options={particlesOptions} />;
 };

@@ -20,10 +20,6 @@
 :root {
   color-scheme: dark light;
 
-  /* Font families */
-  --font-family-inter: 'Inter', 'Helvetica', 'Arial', sans-serif;
-  --font-family-fira-code: 'Fira Code', 'Courier', 'Courier New', monospace;
-
   /* Colors */
   --color-primary: #ff8a65;
   --color-secondary: #ffcc80;
@@ -35,6 +31,35 @@
   --color-accent-brown: #a67b5b;
   --color-accent-olive: #6d8b74;
   --color-accent-copper: #1f1010;
+
+  /* Font families */
+  --font-family-inter: 'Inter', 'Helvetica', 'Arial', sans-serif;
+  --font-family-fira-code: 'Fira Code', 'Courier', 'Courier New', monospace;
+
+  /* Font sizes */
+  --font-size-3xs: 0.5rem;
+  --font-size-2xs: 0.625rem;
+  --font-size-xs: 0.75rem;
+  --font-size-s: 1rem;
+  --font-size-m: 1.125rem;
+  --font-size-l: 1.25rem;
+  --font-size-xl: 1.375rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.625rem;
+  --font-size-4xl: 1.75rem;
+  --font-size-5xl: 1.875rem;
+  --font-size-6xl: 2rem;
+  --font-size-7xl: 2.125rem;
+  --font-size-8xl: 2.25rem;
+  --font-size-9xl: 2.375rem;
+  --font-size-10xl: 2.5rem;
+
+  /* Font weights */
+  --font-weight-thin: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+  --font-weight-black: 700;
 
   /* Margins */
   --margin-3xs: 0.25rem;
@@ -71,31 +96,6 @@
   --padding-8xl: 3.5rem;
   --padding-9xl: 3.75rem;
   --padding-10xl: 4rem;
-
-  /* Font sizes */
-  --font-size-3xs: 0.5rem;
-  --font-size-2xs: 0.625rem;
-  --font-size-xs: 0.75rem;
-  --font-size-s: 1rem;
-  --font-size-m: 1.125rem;
-  --font-size-l: 1.25rem;
-  --font-size-xl: 1.375rem;
-  --font-size-2xl: 1.5rem;
-  --font-size-3xl: 1.625rem;
-  --font-size-4xl: 1.75rem;
-  --font-size-5xl: 1.875rem;
-  --font-size-6xl: 2rem;
-  --font-size-7xl: 2.125rem;
-  --font-size-8xl: 2.25rem;
-  --font-size-9xl: 2.375rem;
-  --font-size-10xl: 2.5rem;
-
-  /* Font weights */
-  --font-weight-thin: 300;
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-weight-bold: 600;
-  --font-weight-black: 700;
 
   /* Border radius */
   --border-radius-none: 0;
@@ -139,14 +139,21 @@ html,
 body {
   color-scheme: dark light;
   color: var(--color-neutral-light-gray);
-  background-color: transparent;
+  background: transparent;
   outline: none;
   caret-color: transparent;
-  font-family: var(--font-family-inter);
   font-size: var(--font-size-s);
+  font-family: var(--font-family-inter);
   font-weight: var(--font-weight-regular);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  #root {
+    margin: 80px 32px 32px 32px;
+    @media screen and (min-width: 768px) {
+      margin: 80px 64px 32px 64px;
+    }
+  }
 
   #particlesComponent {
     position: absolute;
@@ -159,18 +166,6 @@ main {
   max-width: 1200px;
   margin: 0 auto;
   padding: 16px 0;
-}
-
-#root {
-  margin: 64px 32px 32px 0;
-  min-height: calc(100vh - (64px + 32px));
-}
-
-@media screen and (min-width: 768px) {
-  #root {
-    margin: 80px 0 32px 0;
-    min-height: calc(100vh - (80px + 32px));
-  }
 }
 
 img,

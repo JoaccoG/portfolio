@@ -29,6 +29,15 @@ beforeAll((): void => {
       dispatchEvent: vi.fn()
     }))
   });
+
+  global.IntersectionObserver = vi.fn().mockImplementation((_, options) => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+    root: options?.root || null,
+    rootMargin: options?.rootMargin || '0px',
+    thresholds: options?.thresholds || [0]
+  }));
 });
 
 afterAll((): void => {

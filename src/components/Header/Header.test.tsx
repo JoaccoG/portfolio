@@ -200,4 +200,51 @@ describe('Given a "Header" component', () => {
       await waitFor(() => expect(homeLink).toHaveStyle('color: var(--color-neutral-white)'));
     });
   });
+
+  describe('When the window is resized to desktop width', () => {
+    beforeEach(() => {
+      Object.defineProperty(window, 'innerWidth', { value: 600, writable: true });
+    });
+
+    test('Then the navigation menu should close if it was open', async () => {
+      renderWithMemoryRouter(<Header />);
+      const hamburgerButton = screen.getByLabelText('Toggle navigation menu');
+      fireEvent.click(hamburgerButton);
+      await waitFor(() => expect(screen.getByTestId('header-overlay')).toBeInTheDocument());
+      Object.defineProperty(window, 'innerWidth', { value: 768, writable: true });
+      fireEvent.resize(window);
+      await waitFor(() => expect(screen.queryByTestId('header-overlay')).not.toBeInTheDocument());
+    });
+
+    test('Then the body overflow should be restored', async () => {
+      renderWithMemoryRouter(<Header />);
+      const hamburgerButton = screen.getByLabelText('Toggle navigation menu');
+      fireEvent.click(hamburgerButton);
+      await waitFor(() => expect(document.body.style.overflow).toBe('hidden'));
+      Object.defineProperty(window, 'innerWidth', { value: 768, writable: true });
+      fireEvent.resize(window);
+      await waitFor(() => expect(document.body.style.overflow).toBe(''));
+    });
+
+    test('Then the hamburger animation should reset', async () => {
+      renderWithMemoryRouter(<Header />);
+      const hamburgerButton = screen.getByLabelText('Toggle navigation menu');
+      fireEvent.click(hamburgerButton);
+      await waitFor(() => {
+        const lines = hamburgerButton.querySelectorAll('div');
+        expect(lines[0]).toHaveStyle('transform: rotate(45deg) translate(10px, 5px)');
+        expect(lines[1]).toHaveStyle('opacity: 0');
+        expect(lines[2]).toHaveStyle('transform: rotate(-45deg) translate(10px, -5px)');
+      });
+      Object.defineProperty(window, 'innerWidth', { value: 768, writable: true });
+      fireEvent.resize(window);
+      await waitFor(() => {
+        const lines = hamburgerButton.querySelectorAll('div');
+        expect(lines[0]).toHaveStyle('transform: rotate(0)');
+        expect(lines[1]).toHaveStyle('opacity: 1');
+        expect(lines[1]).toHaveStyle('transform: translateX(0)');
+        expect(lines[2]).toHaveStyle('transform: rotate(0)');
+      });
+    });
+  });
 });
