@@ -1,9 +1,11 @@
-import react from 'eslint-plugin-react';
 import globals from 'globals';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import react from 'eslint-plugin-react';
 import prettier from 'eslint-plugin-prettier';
-import stylistic from '@stylistic/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
+import stylistic from '@stylistic/eslint-plugin';
 
 export default [
   {
@@ -15,7 +17,7 @@ export default [
     settings: { react: { version: 'detect' } },
     languageOptions: {
       parser: tsParser,
-      parserOptions: { project: './tsconfig.app.json', tsconfigRootDir: '.' },
+      parserOptions: { project: './tsconfig.app.json', tsconfigRootDir: path.dirname(fileURLToPath(import.meta.url)) },
       sourceType: 'module',
       ecmaVersion: 'latest',
       globals: globals.browser
