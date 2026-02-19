@@ -18,6 +18,7 @@ logs
 
 # ide
 .vscode/*
+!.vscode/settings.json
 
 # typescript
 *.tsbuildinfo
