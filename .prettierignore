@@ -1,0 +1,13 @@
+node_modules
+dist
+coverage
+.env
+*.local
+logs
+*.log
+.vscode/*
+*.tsbuildinfo
+.DS_Store
+.github
+public
+pnpm-lock.yaml

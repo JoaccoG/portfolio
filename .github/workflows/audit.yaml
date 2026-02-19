@@ -1,0 +1,39 @@
+name: Code audit
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  audit:
+    name: Code audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: (>) Git checkout
+        uses: actions/checkout@v4
+
+      - name: (>) Check node_modules is ignored
+        uses: dkershner6/gitignore-parser@v1
+        with:
+          must_deny: "node_modules"
+
+      - name: (>) Enable Corepack
+        run: corepack enable
+
+      - name: (>) Set up Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: (>) Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: (>) Build the app
+        run: pnpm build
+
+      - name: (>) ESLint and Prettier validation
+        run: pnpm lint

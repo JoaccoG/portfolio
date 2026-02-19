@@ -1,0 +1,13 @@
+[build]
+  command = "pnpm install --frozen-lockfile && pnpm build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22.21.1"
+  PNPM_VERSION = "10.30.0"
+  COREPACK_ENABLE = "0"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
