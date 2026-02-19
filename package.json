@@ -16,7 +16,8 @@
     "test": "vitest --coverage --watch=false",
     "preview": "vite preview",
     "lint": "eslint . && prettier --check .",
-    "format": "eslint . --fix && prettier . --write"
+    "format": "eslint . --fix && prettier . --write",
+    "prepare": "husky"
   },
   "dependencies": {
     "react": "^19.2.0",
@@ -41,7 +42,9 @@
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.5.0",
+    "husky": "^9.1.7",
     "jsdom": "^28.1.0",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.48.0",

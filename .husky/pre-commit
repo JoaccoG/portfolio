@@ -1,0 +1,31 @@
+. "$(dirname "$0")/shared.sh"
+
+hook_start "pre-commit"
+
+FILES_PATTERN='\.(jsx?|tsx?)(\..+)?$'
+
+step "Checking for console references..."
+if git diff --cached --name-only | \
+    grep -E $FILES_PATTERN | \
+    grep -Hn 'console\.(clear|dir|log|info|warn)' | \
+    grep -v '//';
+then
+    fail "Found references of '${RED}console.${RESET}${GRAY}'. Remove them to commit."
+    exit 1
+fi
+
+step "Checking for debugger statements..."
+if git diff --cached --name-only | \
+    grep -E $FILES_PATTERN | \
+    grep -Hn 'debugger' | \
+    grep -v '//';
+then
+    fail "Found references of '${RED}debugger${RESET}${GRAY}'. Remove them to commit."
+    exit 1
+fi
+
+step "Running lint-staged..."
+npx lint-staged > /dev/null 2>&1 || { fail "lint-staged failed."; exit 1; }
+
+hook_done "pre-commit"
+exit 0
