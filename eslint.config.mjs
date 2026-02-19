@@ -9,7 +9,21 @@ import stylistic from '@stylistic/eslint-plugin';
 
 export default [
   {
-    ignores: ['node_modules', 'public', 'coverage', 'build', 'dist', 'pnpm-lock.yaml', '.vscode', '.idea', '*.log']
+    ignores: [
+      'node_modules',
+      'dist',
+      'coverage',
+      '.env',
+      '*.local',
+      'logs',
+      '*.log',
+      '.vscode',
+      '*.tsbuildinfo',
+      '.DS_Store',
+      '.github',
+      'public',
+      'pnpm-lock.yaml'
+    ]
   },
   {
     files: ['src/**/*.{ts,tsx}'],

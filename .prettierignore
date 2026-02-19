@@ -1,5 +1,4 @@
 node_modules
-build
 dist
 coverage
 .env
@@ -9,5 +8,6 @@ logs
 .vscode/*
 *.tsbuildinfo
 .DS_Store
+.github
 public
 pnpm-lock.yaml
