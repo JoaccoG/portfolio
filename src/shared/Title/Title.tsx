@@ -42,7 +42,7 @@ const titleStyles: ResponsiveStyles = {
   textTransform: 'uppercase',
   textAlign: 'center',
   pointerEvents: 'none',
-  whiteSpace: 'wrap',
+  whiteSpace: 'normal',
   overflow: 'hidden',
   textOverflow: 'ellipsis'
 };
