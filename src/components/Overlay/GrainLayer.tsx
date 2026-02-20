@@ -1,5 +1,4 @@
 import { useRef, useEffect, type CSSProperties } from 'react';
-
 import { GrainRenderer } from './GrainRenderer';
 
 export const GRAIN_OPTIONS = {
