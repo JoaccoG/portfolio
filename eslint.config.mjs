@@ -1,6 +1,6 @@
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 import globals from 'globals';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import react from 'eslint-plugin-react';
 import prettier from 'eslint-plugin-prettier';
 import tsParser from '@typescript-eslint/parser';
