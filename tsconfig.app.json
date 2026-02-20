@@ -9,7 +9,8 @@
     "useDefineForClassFields": true,
     "baseUrl": "./",
     "paths": {
-      "@lib/*": ["src/lib/*"]
+      "@lib/*": ["src/lib/*"],
+      "@test/*": ["src/test/*"]
     },
 
     /* Bundler mode */
