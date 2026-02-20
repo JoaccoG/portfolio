@@ -30,9 +30,9 @@ describe('Given the Overlay component', () => {
   describe('When rendered', () => {
     it('Then it should render all three layers', () => {
       const { getByTestId } = render(<Overlay />);
-      expect(getByTestId('vignette')).toBeInTheDocument();
-      expect(getByTestId('grain')).toBeInTheDocument();
-      expect(getByTestId('grid')).toBeInTheDocument();
+      expect(getByTestId('vignette-layer')).toBeInTheDocument();
+      expect(getByTestId('grain-layer')).toBeInTheDocument();
+      expect(getByTestId('grid-layer')).toBeInTheDocument();
     });
   });
 });

@@ -44,5 +44,5 @@ export const GrainLayer = ({ fps, style }: GrainLayerProps) => {
     };
   }, [fps]);
 
-  return <canvas ref={canvasRef} style={style} />;
+  return <canvas data-testid="grain-layer" ref={canvasRef} style={style} />;
 };

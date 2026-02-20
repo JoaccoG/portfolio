@@ -4,4 +4,4 @@ interface VignetteLayerProps {
   style: CSSProperties;
 }
 
-export const VignetteLayer = ({ style }: VignetteLayerProps) => <div style={style} />;
+export const VignetteLayer = ({ style }: VignetteLayerProps) => <div data-testid="vignette-layer" style={style} />;

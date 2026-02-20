@@ -102,7 +102,7 @@ export const GridLayer = ({ cellSize, orbCount, orbSpeed, styles, gridOverflow }
   }, [cellSize, orbCount, orbSpeed]);
 
   return (
-    <div style={styles.fixedLayer}>
+    <div data-testid="grid-layer" style={styles.fixedLayer}>
       <div ref={baseRef} style={styles.gridSublayer} />
       <canvas ref={canvasRef} style={styles.orbCanvas} />
     </div>

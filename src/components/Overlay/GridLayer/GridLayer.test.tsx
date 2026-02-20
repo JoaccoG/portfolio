@@ -193,10 +193,10 @@ describe('Given the GridLayer component', () => {
       expect(GRID_LIGHTS_OPTIONS.count).toBeDefined();
       expect(GRID_LIGHTS_OPTIONS.speed).toBeDefined();
       expect(GRID_LIGHTS_OPTIONS.radius).toBe(2);
-      expect(GRID_LIGHTS_OPTIONS.turnChance).toBe(0.25);
-      expect(GRID_LIGHTS_OPTIONS.trailLength).toBe(300);
+      expect(GRID_LIGHTS_OPTIONS.turnChance).toBe(0.2);
+      expect(GRID_LIGHTS_OPTIONS.trailLength).toBe(200);
       expect(GRID_LIGHTS_OPTIONS.spawnDelay).toBe(500);
-      expect(GRID_LIGHTS_OPTIONS.spawnStagger).toBe(1000);
+      expect(GRID_LIGHTS_OPTIONS.spawnStagger).toBe(1500);
     });
   });
 });
