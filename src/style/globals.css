@@ -1,0 +1,97 @@
+@import '@fontsource/inter/latin-300.css';
+@import '@fontsource/inter/latin-400.css';
+@import '@fontsource/inter/latin-500.css';
+@import '@fontsource/inter/latin-600.css';
+@import '@fontsource/inter/latin-700.css';
+@import '@fontsource/fira-code/latin-300.css';
+@import '@fontsource/fira-code/latin-400.css';
+@import '@fontsource/fira-code/latin-500.css';
+@import '@fontsource/bebas-neue/latin-400.css';
+
+/* Variables */
+
+:root {
+  --color-primary: #ec7753;
+  --color-secondary: #ffc18b;
+  --color-white: #f2ebe3;
+  --color-black: #090807;
+  --color-light-gray: #757575;
+  --color-dark-gray: #383838;
+  --color-accent-red: #c62828;
+
+  --font-body: 'Inter', Helvetica, Arial, sans-serif;
+  --font-mono: 'Fira Code', Courier, monospace;
+  --font-display: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+
+  color-scheme: dark;
+}
+
+/* Resets and base styles */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#root {
+  position: relative;
+  overflow-x: hidden;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-white);
+  background-color: var(--color-black);
+  background-image: radial-gradient(ellipse 80% 80% at 50% -20%, #1a0a0a, transparent);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img,
+picture,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
