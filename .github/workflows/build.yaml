@@ -19,9 +19,11 @@ jobs:
           fetch-depth: 0
 
       - name: (>) Check secrets exist
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          if [[ -z "${{ secrets.SONAR_TOKEN }}" ]]; then
-            echo "Error: SONAR_TOKEN is not set."
+          if [[ -z "${SONAR_TOKEN}" ]]; then
+            echo "Error: Secret SONAR_TOKEN is not defined."
             exit 1
           fi
 
