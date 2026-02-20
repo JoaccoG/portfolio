@@ -10,10 +10,10 @@ export const GRID_LIGHTS_OPTIONS = {
   count: { base: 2, sm: 3, lg: 5 },
   speed: { base: 0.4, md: 0.6, lg: 0.8 },
   radius: 2,
-  turnChance: 0.25,
-  trailLength: 300,
+  turnChance: 0.2,
+  trailLength: 200,
   spawnDelay: 500,
-  spawnStagger: 1000
+  spawnStagger: 1500
 } as const;
 
 const GRID_LINE_WIDTH = 1;

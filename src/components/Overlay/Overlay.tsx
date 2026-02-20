@@ -1,8 +1,10 @@
 import type { CSSProperties } from 'react';
 import { useBreakpoint, type ResponsiveValue } from '@hooks/useBreakpoint';
-import { VignetteLayer } from './VignetteLayer';
-import { GrainLayer, GRAIN_OPTIONS } from './GrainLayer';
-import { GridLayer, GRID_OPTIONS, GRID_LIGHTS_OPTIONS } from './GridLayer';
+import { VignetteLayer } from './VignetteLayer/VignetteLayer';
+import { GrainLayer, GRAIN_OPTIONS } from './GrainLayer/GrainLayer';
+import { GridLayer, GRID_OPTIONS, GRID_LIGHTS_OPTIONS } from './GridLayer/GridLayer';
+
+const GRID_OVERFLOW = 256 as const;
 
 export const Overlay = () => {
   const { resolve } = useBreakpoint();
@@ -14,20 +16,22 @@ export const Overlay = () => {
 
   return (
     <>
-      <VignetteLayer style={styles.vignette} />
-      <GrainLayer fps={fps} style={styles.grain} />
+      <VignetteLayer style={overlayStyles.vignette} />
+      <GrainLayer fps={fps} style={overlayStyles.grain} />
       <GridLayer
         cellSize={cellSize}
         orbCount={orbCount}
         orbSpeed={orbSpeed}
         gridOverflow={GRID_OVERFLOW}
-        styles={{ fixedLayer: styles.fixedLayer, gridSublayer: styles.gridSublayer, orbCanvas: styles.orbCanvas }}
+        styles={{
+          fixedLayer: overlayStyles.fixedLayer,
+          gridSublayer: overlayStyles.gridSublayer,
+          orbCanvas: overlayStyles.orbCanvas
+        }}
       />
     </>
   );
 };
-
-const GRID_OVERFLOW = 256;
 
 const FIXED_BASE: CSSProperties = {
   position: 'fixed',
@@ -36,7 +40,7 @@ const FIXED_BASE: CSSProperties = {
   zIndex: -1
 };
 
-const styles: Record<string, CSSProperties> = {
+const overlayStyles: Record<string, CSSProperties> = {
   fixedLayer: {
     ...FIXED_BASE,
     overflow: 'hidden'

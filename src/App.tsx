@@ -5,7 +5,9 @@ export const App = () => {
   return (
     <>
       <Overlay />
-      <Title as="h1">Joaquin Godoy</Title>
+      <main>
+        <Title as="h1">Joaquin Godoy</Title>
+      </main>
     </>
   );
 };
