@@ -11,7 +11,13 @@
     "paths": {
       "@lib/*": ["src/lib/*"],
       "@test/*": ["src/test/*"],
-      "@style/*": ["src/style/*"]
+      "@hooks/*": ["src/hooks/*"],
+      "@pages/*": ["src/pages/*"],
+      "@utils/*": ["src/utils/*"],
+      "@style/*": ["src/style/*"],
+      "@shared/*": ["src/shared/*"],
+      "@constants/*": ["src/constants/*"],
+      "@components/*": ["src/components/*"]
     },
 
     /* Bundler mode */
