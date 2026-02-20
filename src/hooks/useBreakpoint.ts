@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, type CSSProperties } from 'react';
+import { useState, useEffect, type CSSProperties } from 'react';
 
 const BREAKPOINTS = {
   xs: 480,
@@ -10,7 +10,7 @@ const BREAKPOINTS = {
 
 export type Breakpoint = 'base' | keyof typeof BREAKPOINTS;
 
-type ResponsiveValue<T> = Partial<Record<Breakpoint, T>>;
+export type ResponsiveValue<T> = Partial<Record<Breakpoint, T>>;
 
 export type ResponsiveStyles = {
   [K in keyof CSSProperties]: CSSProperties[K] | ResponsiveValue<CSSProperties[K]>;
@@ -25,10 +25,13 @@ export const useBreakpoint = () => {
 
   const breakpoint: Breakpoint = isXl ? 'xl' : isLg ? 'lg' : isMd ? 'md' : isSm ? 'sm' : isXs ? 'xs' : 'base';
 
-  const resolve = useCallback(
-    (styles: ResponsiveStyles): CSSProperties => resolveStyles(styles, breakpoint),
-    [breakpoint]
-  );
+  function resolve(styles: ResponsiveStyles): CSSProperties;
+  function resolve<T>(value: ResponsiveValue<T>, fallback: T): T;
+  function resolve<T>(input: ResponsiveStyles | ResponsiveValue<T>, fallback?: T): CSSProperties | T {
+    if (fallback !== undefined) return resolveResponsiveValue(input as ResponsiveValue<T>, breakpoint) ?? fallback;
+
+    return resolveStyles(input as ResponsiveStyles, breakpoint);
+  }
 
   return { breakpoint, resolve };
 };
