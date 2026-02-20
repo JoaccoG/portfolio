@@ -8,6 +8,9 @@
     "skipLibCheck": true,
     "useDefineForClassFields": true,
     "baseUrl": "./",
+    "paths": {
+      "@lib/*": ["src/lib/*"]
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",
