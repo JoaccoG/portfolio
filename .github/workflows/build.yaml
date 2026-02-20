@@ -1,0 +1,59 @@
+name: SonarQube
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonarqube:
+    name: SonarQube scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: (>) Git checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: (>) Check secrets exist
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          if [[ -z "${SONAR_TOKEN}" ]]; then
+            echo "Error: Secret SONAR_TOKEN is not defined."
+            exit 1
+          fi
+
+      - name: (>) Enable Corepack
+        run: corepack enable
+
+      - name: (>) Set up Nodejs. 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: (>) Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: (>) Build the app
+        run: pnpm build
+
+      - name: (>) Generate coverage report
+        run: pnpm test
+
+      - name: (>) Save coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
+      - name: (>) SonarQube scan
+        uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602 # v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: -X
