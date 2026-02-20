@@ -1,14 +1,17 @@
 type EventData = Record<string, string | number | boolean>;
 type QueuedEvent = { name: string; data?: EventData };
+type UmamiGlobal = { umami?: { track: (name: string, data?: EventData) => void } };
 
 let isLoaded = false;
 const queue: QueuedEvent[] = [];
+
+const getUmami = () => (globalThis as UmamiGlobal).umami;
 
 const flushQueue = (): void => {
   isLoaded = true;
   while (queue.length > 0) {
     const event = queue.shift()!;
-    window.umami?.track(event.name, event.data);
+    getUmami()?.track(event.name, event.data);
   }
 };
 
@@ -28,8 +31,9 @@ export const loadUmami = (): void => {
 };
 
 export const track = (eventName: string, eventData?: EventData): void => {
-  if (typeof window === 'undefined') return;
+  if (!('document' in globalThis)) return;
 
-  if (isLoaded && window.umami) window.umami.track(eventName, eventData);
+  const umami = getUmami();
+  if (isLoaded && umami) umami.track(eventName, eventData);
   else queue.push({ name: eventName, data: eventData });
 };
