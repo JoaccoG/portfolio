@@ -21,7 +21,7 @@ export const mockMatchMedia = (matches: Record<string, boolean>) => {
     dispatchEvent: vi.fn()
   }));
 
-  Object.defineProperty(window, 'matchMedia', { value: mock, writable: true });
+  Object.defineProperty(globalThis, 'matchMedia', { value: mock, writable: true });
 
   const triggerChange = (query: string, newMatches: boolean) => {
     matches[query] = newMatches;

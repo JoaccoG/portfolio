@@ -23,7 +23,17 @@ export const useBreakpoint = () => {
   const isLg = useMediaQuery(`(min-width: ${BREAKPOINTS.lg}px)`);
   const isXl = useMediaQuery(`(min-width: ${BREAKPOINTS.xl}px)`);
 
-  const breakpoint: Breakpoint = isXl ? 'xl' : isLg ? 'lg' : isMd ? 'md' : isSm ? 'sm' : isXs ? 'xs' : 'base';
+  const getBreakpoint = (): Breakpoint => {
+    if (isXl) return 'xl';
+    if (isLg) return 'lg';
+    if (isMd) return 'md';
+    if (isSm) return 'sm';
+    if (isXs) return 'xs';
+
+    return 'base';
+  };
+
+  const breakpoint = getBreakpoint();
 
   function resolve(styles: ResponsiveStyles): CSSProperties;
   function resolve<T>(value: ResponsiveValue<T>, fallback: T): T;
