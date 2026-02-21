@@ -12,7 +12,7 @@ export default defineConfig({
       reportOnFailure: true,
       reportsDirectory: 'coverage',
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['src/**/*.test.{ts,tsx}', 'src/**/*.d.ts', 'src/main.tsx']
+      exclude: ['src/**/*.test.{ts,tsx}', 'src/**/*.d.ts', 'src/test/helpers/**/*.{ts,tsx}', 'src/main.tsx']
     }
   }
 });

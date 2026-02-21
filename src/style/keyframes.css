@@ -1,0 +1,27 @@
+@keyframes overlayVignettePulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  30% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.4;
+  }
+  80% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes scrollHintPulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scaleY(0.6);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
