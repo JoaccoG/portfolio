@@ -1,6 +1,10 @@
 import { createMockCanvasContext, createMockCanvas, createMockGradient } from '@test/helpers/canvas';
 import { GridRenderer } from './GridRenderer';
 
+const GRID_OVERFLOW = 256;
+
+const WRAP_MARGIN = 40;
+
 const BASE_CONFIG = {
   cellSize: 100,
   orbCount: 2,
@@ -10,12 +14,16 @@ const BASE_CONFIG = {
   trailLength: 4,
   gridOffsetX: 0,
   gridOffsetY: 0,
+  gridOverflow: GRID_OVERFLOW,
+  wrapMargin: WRAP_MARGIN,
   spawnDelay: 100,
   spawnStagger: 50
 } as const;
 
 const VIEWPORT_WIDTH = 800;
 const VIEWPORT_HEIGHT = 600;
+const CANVAS_WIDTH = VIEWPORT_WIDTH + GRID_OVERFLOW * 2;
+const CANVAS_HEIGHT = VIEWPORT_HEIGHT + GRID_OVERFLOW * 2;
 
 const mockSpriteCanvas = () => {
   const originalCreateElement = document.createElement.bind(document);
@@ -38,6 +46,8 @@ const setupRenderer = (configOverrides = {}) => {
   const config = { ...BASE_CONFIG, ...configOverrides };
   const ctx = createMockCanvasContext();
   const canvas = createMockCanvas(ctx);
+  canvas.width = CANVAS_WIDTH;
+  canvas.height = CANVAS_HEIGHT;
 
   Object.defineProperty(window, 'innerWidth', { value: VIEWPORT_WIDTH, writable: true });
   Object.defineProperty(window, 'innerHeight', { value: VIEWPORT_HEIGHT, writable: true });
@@ -72,11 +82,11 @@ describe('Given a GridRenderer instance', () => {
       renderer.dispose();
     });
 
-    it('Then it should set canvas dimensions to window size', () => {
+    it('Then it should set canvas dimensions to window size plus overflow', () => {
       const { renderer, canvas } = setupRenderer();
       renderer.mount(canvas);
-      expect(canvas.width).toBe(VIEWPORT_WIDTH);
-      expect(canvas.height).toBe(VIEWPORT_HEIGHT);
+      expect(canvas.width).toBe(CANVAS_WIDTH);
+      expect(canvas.height).toBe(CANVAS_HEIGHT);
       renderer.dispose();
     });
 
@@ -101,17 +111,71 @@ describe('Given a GridRenderer instance', () => {
   });
 
   describe('When resize() is called', () => {
-    it('Then it should update internal canvas dimensions', () => {
+    it('Then it should update internal canvas dimensions to the given size', () => {
       const { renderer, canvas } = setupRenderer();
       renderer.mount(canvas);
 
-      Object.defineProperty(window, 'innerWidth', { value: 1920, writable: true });
-      Object.defineProperty(window, 'innerHeight', { value: 1080, writable: true });
-      renderer.resize(canvas);
+      const newWidth = 2432;
+      const newHeight = 1592;
+      renderer.resize(canvas, newWidth, newHeight, 10, 20);
 
-      expect(canvas.width).toBe(1920);
-      expect(canvas.height).toBe(1080);
+      expect(canvas.width).toBe(newWidth);
+      expect(canvas.height).toBe(newHeight);
+      expect(renderer['config'].gridOffsetX).toBe(10);
+      expect(renderer['config'].gridOffsetY).toBe(20);
       renderer.dispose();
+    });
+
+    it('Then it should respawn orbs after debounce settles', () => {
+      const { renderer, canvas } = setupRenderer({ orbCount: 2, spawnDelay: 100, spawnStagger: 50 });
+      renderer.mount(canvas);
+      vi.advanceTimersByTime(200);
+      expect(renderer['orbs']).toHaveLength(2);
+
+      renderer.resize(canvas, 1000, 800, 5, 5);
+
+      vi.advanceTimersByTime(300 + 200);
+      expect(renderer['orbs']).toHaveLength(2);
+
+      renderer.dispose();
+    });
+
+    it('Then consecutive rapid resizes should only trigger one respawn', () => {
+      const spawnSpy = vi.fn();
+      const { renderer, canvas } = setupRenderer({ orbCount: 2, spawnDelay: 0, spawnStagger: 0 });
+      renderer.mount(canvas);
+      vi.advanceTimersByTime(0);
+
+      const originalRespawn = renderer['respawnOrbs'].bind(renderer);
+      renderer['respawnOrbs'] = () => {
+        spawnSpy();
+        originalRespawn();
+      };
+
+      renderer.resize(canvas, 1000, 800, 5, 5);
+      vi.advanceTimersByTime(100);
+      renderer.resize(canvas, 1200, 900, 10, 10);
+      vi.advanceTimersByTime(100);
+      renderer.resize(canvas, 1400, 1000, 15, 15);
+
+      vi.advanceTimersByTime(300);
+      vi.advanceTimersByTime(0);
+      expect(spawnSpy).toHaveBeenCalledTimes(1);
+
+      renderer.dispose();
+    });
+
+    it('Then dispose should cancel pending debounce timer', () => {
+      const { renderer, canvas } = setupRenderer({ orbCount: 2, spawnDelay: 0, spawnStagger: 0 });
+      renderer.mount(canvas);
+      vi.advanceTimersByTime(0);
+      expect(renderer['orbs']).toHaveLength(2);
+
+      renderer.resize(canvas, 1000, 800, 5, 5);
+      renderer.dispose();
+
+      vi.advanceTimersByTime(300);
+      expect(renderer['orbs']).toHaveLength(0);
     });
   });
 
@@ -128,7 +192,7 @@ describe('Given a GridRenderer instance', () => {
 
       renderer.render();
 
-      expect(ctx.clearRect).toHaveBeenCalledWith(0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+      expect(ctx.clearRect).toHaveBeenCalledWith(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       expect(ctx.drawImage).toHaveBeenCalled();
     });
   });
@@ -202,7 +266,7 @@ describe('Given a GridRenderer instance', () => {
       vi.advanceTimersByTime(0);
 
       const orb = renderer['orbs'][0];
-      expect(orb.y).toBe(VIEWPORT_HEIGHT);
+      expect(orb.y).toBe(CANVAS_HEIGHT);
       expect(orb.direction).toBe('up');
       renderer.dispose();
     });
@@ -228,7 +292,7 @@ describe('Given a GridRenderer instance', () => {
       vi.advanceTimersByTime(0);
 
       const orb = renderer['orbs'][0];
-      expect(orb.x).toBe(VIEWPORT_WIDTH);
+      expect(orb.x).toBe(CANVAS_WIDTH);
       expect(orb.direction).toBe('left');
       renderer.dispose();
     });
@@ -307,6 +371,11 @@ describe('Given a GridRenderer instance', () => {
   });
 
   describe('When an orb exits the viewport', () => {
+    const VIEW_LEFT = GRID_OVERFLOW - WRAP_MARGIN;
+    const VIEW_RIGHT = CANVAS_WIDTH - GRID_OVERFLOW + WRAP_MARGIN;
+    const VIEW_TOP = GRID_OVERFLOW - WRAP_MARGIN;
+    const VIEW_BOTTOM = CANVAS_HEIGHT - GRID_OVERFLOW + WRAP_MARGIN;
+
     const setupOrbAtPosition = (x: number, y: number) => {
       const { renderer, canvas } = setupRenderer({ orbCount: 1, spawnDelay: 0, orbSpeed: 0 });
       renderer.mount(canvas);
@@ -320,39 +389,49 @@ describe('Given a GridRenderer instance', () => {
       return { renderer, orb };
     };
 
-    it('If x goes below -cellSize, then it should wrap to width', () => {
-      const { renderer, orb } = setupOrbAtPosition(-101, 300);
+    it('If x goes below viewLeft, then it should wrap to viewRight', () => {
+      const { renderer, orb } = setupOrbAtPosition(VIEW_LEFT - 1, 400);
       renderer.render();
-      expect(orb.x).toBe(VIEWPORT_WIDTH);
+      expect(orb.x).toBe(VIEW_RIGHT);
       renderer.dispose();
     });
 
-    it('If x exceeds width + cellSize, then it should wrap to 0', () => {
-      const { renderer, orb } = setupOrbAtPosition(VIEWPORT_WIDTH + 101, 300);
+    it('If x exceeds viewRight, then it should wrap to viewLeft', () => {
+      const { renderer, orb } = setupOrbAtPosition(VIEW_RIGHT + 1, 400);
       renderer.render();
-      expect(orb.x).toBe(0);
+      expect(orb.x).toBe(VIEW_LEFT);
       renderer.dispose();
     });
 
-    it('If y goes below -cellSize, then it should wrap to height', () => {
-      const { renderer, orb } = setupOrbAtPosition(400, -101);
+    it('If y goes below viewTop, then it should wrap to viewBottom', () => {
+      const { renderer, orb } = setupOrbAtPosition(400, VIEW_TOP - 1);
       renderer.render();
-      expect(orb.y).toBe(VIEWPORT_HEIGHT);
+      expect(orb.y).toBe(VIEW_BOTTOM);
       renderer.dispose();
     });
 
-    it('If y exceeds height + cellSize, then it should wrap to 0', () => {
-      const { renderer, orb } = setupOrbAtPosition(400, VIEWPORT_HEIGHT + 101);
+    it('If y exceeds viewBottom, then it should wrap to viewTop', () => {
+      const { renderer, orb } = setupOrbAtPosition(400, VIEW_BOTTOM + 1);
       renderer.render();
-      expect(orb.y).toBe(0);
+      expect(orb.y).toBe(VIEW_TOP);
       renderer.dispose();
     });
 
-    it('If within bounds, then it should not wrap', () => {
-      const { renderer, orb } = setupOrbAtPosition(400, 300);
+    it('If within viewport bounds, then it should not wrap', () => {
+      const { renderer, orb } = setupOrbAtPosition(400, 400);
       renderer.render();
       expect(orb.x).toBe(400);
-      expect(orb.y).toBe(300);
+      expect(orb.y).toBe(400);
+      renderer.dispose();
+    });
+
+    it('Then it should clear the trail on wrap', () => {
+      const { renderer, orb } = setupOrbAtPosition(VIEW_RIGHT + 1, 400);
+      orb.trailSize = 3;
+      orb.trailHead = 3;
+      renderer.render();
+      expect(orb.trailSize).toBe(0);
+      expect(orb.trailHead).toBe(0);
       renderer.dispose();
     });
   });
@@ -369,11 +448,14 @@ describe('Given a GridRenderer instance', () => {
       renderer.mount(canvas);
       vi.advanceTimersByTime(0);
 
+      const orb = renderer['orbs'][0];
+      orb.x = CANVAS_WIDTH / 2;
+      orb.y = CANVAS_HEIGHT / 2;
+
       for (let i = 0; i < trailLength + 2; i++) {
         renderer.render();
       }
 
-      const orb = renderer['orbs'][0];
       expect(orb.trailSize).toBe(trailLength);
       expect(orb.trailHead).toBe((trailLength + 2) % trailLength);
       renderer.dispose();
@@ -456,6 +538,51 @@ describe('Given a GridRenderer instance', () => {
 
       const turned = orb.direction !== renderer['orbs'][0]?.direction || true;
       expect(turned).toBe(true);
+      renderer.dispose();
+    });
+  });
+
+  describe('When debugDrawGrid() is called directly', () => {
+    it('Then it should draw vertical and horizontal grid lines', () => {
+      const { renderer, canvas, ctx } = setupRenderer({ orbCount: 0, cellSize: 100, gridOffsetX: 10, gridOffsetY: 20 });
+      renderer.mount(canvas);
+      ctx.beginPath.mockClear();
+
+      renderer['debugDrawGrid']();
+
+      expect(ctx.beginPath).toHaveBeenCalled();
+      expect(ctx.moveTo).toHaveBeenCalled();
+      expect(ctx.lineTo).toHaveBeenCalled();
+      expect(ctx.stroke).toHaveBeenCalled();
+      renderer.dispose();
+    });
+
+    it('If ctx is null, then it should not draw', () => {
+      const { renderer, canvas, ctx } = setupRenderer({ orbCount: 0 });
+      renderer.mount(canvas);
+      renderer.dispose();
+
+      ctx.beginPath.mockClear();
+      renderer['debugDrawGrid']();
+
+      expect(ctx.beginPath).not.toHaveBeenCalled();
+    });
+
+    it('Then it should skip lines at negative coordinates', () => {
+      const { renderer, canvas, ctx } = setupRenderer({
+        orbCount: 0,
+        cellSize: 100,
+        gridOffsetX: -50,
+        gridOffsetY: -50
+      });
+      renderer.mount(canvas);
+      ctx.beginPath.mockClear();
+
+      renderer['debugDrawGrid']();
+
+      const moveToArgs = ctx.moveTo.mock.calls;
+      const hasNegativeX = moveToArgs.some((args: number[]) => args[0] < 0);
+      expect(hasNegativeX).toBe(false);
       renderer.dispose();
     });
   });

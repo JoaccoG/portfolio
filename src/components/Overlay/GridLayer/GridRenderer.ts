@@ -25,6 +25,8 @@ interface GridRendererConfig {
   trailLength: number;
   gridOffsetX: number;
   gridOffsetY: number;
+  gridOverflow: number;
+  wrapMargin: number;
   spawnDelay: number;
   spawnStagger: number;
 }
@@ -59,9 +61,10 @@ const HEAD_CENTER_ALPHA = 0.5;
 const HEAD_MID_STOP = 0.5;
 const INTERSECTION_TOLERANCE_OFFSET = 0.5;
 const TURN_COOLDOWN_FACTOR = 0.8;
+const RESIZE_DEBOUNCE_MS = 300;
 
 export class GridRenderer {
-  private readonly config: GridRendererConfig;
+  private config: GridRendererConfig;
   private ctx: CanvasRenderingContext2D | null = null;
   private canvasWidth = 0;
   private canvasHeight = 0;
@@ -69,6 +72,8 @@ export class GridRenderer {
   private frameCount = 0;
   private glowSprite: HTMLCanvasElement | null = null;
   private spawnTimers: ReturnType<typeof setTimeout>[] = [];
+  private resizeDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+  private isMounted = false;
 
   constructor(config: GridRendererConfig) {
     this.config = config;
@@ -79,18 +84,22 @@ export class GridRenderer {
     if (!ctx) return false;
 
     this.ctx = ctx;
-    this.resize(canvas);
+    const { gridOffsetX, gridOffsetY } = this.config;
+    this.resize(canvas, canvas.width || 0, canvas.height || 0, gridOffsetX, gridOffsetY);
     this.glowSprite = this.createGlowSprite();
     this.scheduleOrbSpawns();
+    this.isMounted = true;
 
     return true;
   }
 
-  resize(canvas: HTMLCanvasElement): void {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    this.canvasWidth = canvas.width;
-    this.canvasHeight = canvas.height;
+  resize(canvas: HTMLCanvasElement, width: number, height: number, gridOffsetX: number, gridOffsetY: number): void {
+    canvas.width = width;
+    canvas.height = height;
+    this.canvasWidth = width;
+    this.canvasHeight = height;
+    this.config = { ...this.config, gridOffsetX, gridOffsetY };
+    if (this.isMounted) this.debouncedRespawnOrbs();
   }
 
   render(): void {
@@ -99,6 +108,8 @@ export class GridRenderer {
     const { canvasWidth: w, canvasHeight: h } = this;
     this.ctx.clearRect(0, 0, w, h);
     this.frameCount++;
+
+    this.debugDrawGrid();
 
     for (const orb of this.orbs) {
       this.moveOrb(orb);
@@ -113,6 +124,9 @@ export class GridRenderer {
   dispose(): void {
     this.spawnTimers.forEach(clearTimeout);
     this.spawnTimers = [];
+    if (this.resizeDebounceTimer) clearTimeout(this.resizeDebounceTimer);
+    this.resizeDebounceTimer = null;
+    this.isMounted = false;
     this.ctx = null;
     this.orbs = [];
     this.glowSprite = null;
@@ -151,6 +165,18 @@ export class GridRenderer {
       );
       this.spawnTimers.push(timer);
     }
+  }
+
+  private debouncedRespawnOrbs(): void {
+    if (this.resizeDebounceTimer) clearTimeout(this.resizeDebounceTimer);
+    this.resizeDebounceTimer = setTimeout(() => this.respawnOrbs(), RESIZE_DEBOUNCE_MS);
+  }
+
+  private respawnOrbs(): void {
+    this.spawnTimers.forEach(clearTimeout);
+    this.spawnTimers = [];
+    this.orbs = [];
+    this.scheduleOrbSpawns();
   }
 
   private spawnOrbFromEdge(): Orb {
@@ -230,14 +256,38 @@ export class GridRenderer {
   }
 
   private wrapOrb(orb: Orb): void {
-    const { cellSize } = this.config;
+    const { gridOverflow, wrapMargin } = this.config;
     const { canvasWidth: w, canvasHeight: h } = this;
 
-    if (orb.x < -cellSize) orb.x = w;
-    else if (orb.x > w + cellSize) orb.x = 0;
+    const viewLeft = gridOverflow - wrapMargin;
+    const viewRight = w - gridOverflow + wrapMargin;
+    const viewTop = gridOverflow - wrapMargin;
+    const viewBottom = h - gridOverflow + wrapMargin;
 
-    if (orb.y < -cellSize) orb.y = h;
-    else if (orb.y > h + cellSize) orb.y = 0;
+    let didWrap = false;
+
+    if (orb.x < viewLeft) {
+      orb.x = viewRight;
+      didWrap = true;
+    } else if (orb.x > viewRight) {
+      orb.x = viewLeft;
+      didWrap = true;
+    }
+
+    if (orb.y < viewTop) {
+      orb.y = viewBottom;
+      didWrap = true;
+    } else if (orb.y > viewBottom) {
+      orb.y = viewTop;
+      didWrap = true;
+    }
+
+    if (didWrap) this.clearTrail(orb);
+  }
+
+  private clearTrail(orb: Orb): void {
+    orb.trailHead = 0;
+    orb.trailSize = 0;
   }
 
   private drawTrail(orb: Orb): void {
@@ -265,5 +315,33 @@ export class GridRenderer {
     this.ctx.globalAlpha = HEAD_CENTER_ALPHA;
     this.ctx.drawImage(this.glowSprite, orb.x - orbRadius, orb.y - orbRadius, orbRadius * 2, orbRadius * 2);
     this.ctx.globalAlpha = 1;
+  }
+
+  private debugDrawGrid(): void {
+    if (!this.ctx) return;
+
+    const { cellSize, gridOffsetX, gridOffsetY } = this.config;
+    const { canvasWidth: w, canvasHeight: h } = this;
+
+    this.ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+    this.ctx.lineWidth = 1;
+
+    for (let x = gridOffsetX; x <= w; x += cellSize) {
+      if (x < 0) continue;
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, 0);
+      this.ctx.lineTo(x, h);
+      this.ctx.stroke();
+    }
+
+    for (let y = gridOffsetY; y <= h; y += cellSize) {
+      if (y < 0) continue;
+      this.ctx.beginPath();
+      this.ctx.moveTo(0, y);
+      this.ctx.lineTo(w, y);
+      this.ctx.stroke();
+    }
+
+    this.ctx.strokeStyle = '';
   }
 }
