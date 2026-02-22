@@ -25,6 +25,7 @@ interface GridRendererConfig {
   trailLength: number;
   gridOffsetX: number;
   gridOffsetY: number;
+  gridOverflow: number;
   spawnDelay: number;
   spawnStagger: number;
 }
@@ -61,7 +62,7 @@ const INTERSECTION_TOLERANCE_OFFSET = 0.5;
 const TURN_COOLDOWN_FACTOR = 0.8;
 
 export class GridRenderer {
-  private readonly config: GridRendererConfig;
+  private config: GridRendererConfig;
   private ctx: CanvasRenderingContext2D | null = null;
   private canvasWidth = 0;
   private canvasHeight = 0;
@@ -79,18 +80,20 @@ export class GridRenderer {
     if (!ctx) return false;
 
     this.ctx = ctx;
-    this.resize(canvas);
+    const { gridOffsetX, gridOffsetY } = this.config;
+    this.resize(canvas, canvas.width || 0, canvas.height || 0, gridOffsetX, gridOffsetY);
     this.glowSprite = this.createGlowSprite();
     this.scheduleOrbSpawns();
 
     return true;
   }
 
-  resize(canvas: HTMLCanvasElement): void {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    this.canvasWidth = canvas.width;
-    this.canvasHeight = canvas.height;
+  resize(canvas: HTMLCanvasElement, width: number, height: number, gridOffsetX: number, gridOffsetY: number): void {
+    canvas.width = width;
+    canvas.height = height;
+    this.canvasWidth = width;
+    this.canvasHeight = height;
+    this.config = { ...this.config, gridOffsetX, gridOffsetY };
   }
 
   render(): void {
@@ -99,6 +102,8 @@ export class GridRenderer {
     const { canvasWidth: w, canvasHeight: h } = this;
     this.ctx.clearRect(0, 0, w, h);
     this.frameCount++;
+
+    this.debugDrawGrid();
 
     for (const orb of this.orbs) {
       this.moveOrb(orb);
@@ -256,6 +261,34 @@ export class GridRenderer {
       this.ctx.globalAlpha = alpha;
       this.ctx.drawImage(this.glowSprite, point.x - radius, point.y - radius, radius * 2, radius * 2);
     }
+  }
+
+  private debugDrawGrid(): void {
+    if (!this.ctx) return;
+
+    const { cellSize, gridOffsetX, gridOffsetY } = this.config;
+    const { canvasWidth: w, canvasHeight: h } = this;
+
+    this.ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+    this.ctx.lineWidth = 1;
+
+    for (let x = gridOffsetX; x <= w; x += cellSize) {
+      if (x < 0) continue;
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, 0);
+      this.ctx.lineTo(x, h);
+      this.ctx.stroke();
+    }
+
+    for (let y = gridOffsetY; y <= h; y += cellSize) {
+      if (y < 0) continue;
+      this.ctx.beginPath();
+      this.ctx.moveTo(0, y);
+      this.ctx.lineTo(w, y);
+      this.ctx.stroke();
+    }
+
+    this.ctx.strokeStyle = '';
   }
 
   private drawHead(orb: Orb): void {

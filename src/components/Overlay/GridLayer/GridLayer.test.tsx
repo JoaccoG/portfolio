@@ -165,12 +165,13 @@ describe('Given the GridLayer component', () => {
   });
 
   describe('When the window is resized', () => {
-    it('Then the first effect should reapply the grid offset', () => {
+    it('Then it should update both the grid background and the renderer offsets', () => {
       const { container } = render(
         <GridLayer cellSize={128} orbCount={3} orbSpeed={1} styles={DEFAULT_STYLES} gridOverflow={256} />
       );
 
       const gridDiv = container.querySelector('div > div') as HTMLDivElement;
+      mockState.resizeCalls = 0;
 
       Object.defineProperty(window, 'innerWidth', { value: 500, writable: true });
       Object.defineProperty(window, 'innerHeight', { value: 400, writable: true });
@@ -178,6 +179,20 @@ describe('Given the GridLayer component', () => {
 
       expect(gridDiv?.style.backgroundPosition).toBeDefined();
       expect(gridDiv?.style.backgroundImage).toBeDefined();
+      expect(mockState.resizeCalls).toBe(1);
+    });
+
+    it('If base ref is null, then it should still resize the renderer without crashing', () => {
+      const nullRef = {} as { current: null };
+      Object.defineProperty(nullRef, 'current', { get: () => null, set: () => {} });
+      useRefOverrides[0] = nullRef;
+
+      render(<GridLayer cellSize={128} orbCount={3} orbSpeed={1} styles={DEFAULT_STYLES} gridOverflow={256} />);
+      mockState.resizeCalls = 0;
+
+      window.dispatchEvent(new Event('resize'));
+
+      expect(mockState.resizeCalls).toBe(1);
     });
   });
 

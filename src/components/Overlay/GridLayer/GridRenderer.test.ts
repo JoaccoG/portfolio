@@ -1,6 +1,8 @@
 import { createMockCanvasContext, createMockCanvas, createMockGradient } from '@test/helpers/canvas';
 import { GridRenderer } from './GridRenderer';
 
+const GRID_OVERFLOW = 256;
+
 const BASE_CONFIG = {
   cellSize: 100,
   orbCount: 2,
@@ -10,12 +12,15 @@ const BASE_CONFIG = {
   trailLength: 4,
   gridOffsetX: 0,
   gridOffsetY: 0,
+  gridOverflow: GRID_OVERFLOW,
   spawnDelay: 100,
   spawnStagger: 50
 } as const;
 
 const VIEWPORT_WIDTH = 800;
 const VIEWPORT_HEIGHT = 600;
+const CANVAS_WIDTH = VIEWPORT_WIDTH + GRID_OVERFLOW * 2;
+const CANVAS_HEIGHT = VIEWPORT_HEIGHT + GRID_OVERFLOW * 2;
 
 const mockSpriteCanvas = () => {
   const originalCreateElement = document.createElement.bind(document);
@@ -38,6 +43,8 @@ const setupRenderer = (configOverrides = {}) => {
   const config = { ...BASE_CONFIG, ...configOverrides };
   const ctx = createMockCanvasContext();
   const canvas = createMockCanvas(ctx);
+  canvas.width = CANVAS_WIDTH;
+  canvas.height = CANVAS_HEIGHT;
 
   Object.defineProperty(window, 'innerWidth', { value: VIEWPORT_WIDTH, writable: true });
   Object.defineProperty(window, 'innerHeight', { value: VIEWPORT_HEIGHT, writable: true });
@@ -72,11 +79,11 @@ describe('Given a GridRenderer instance', () => {
       renderer.dispose();
     });
 
-    it('Then it should set canvas dimensions to window size', () => {
+    it('Then it should set canvas dimensions to window size plus overflow', () => {
       const { renderer, canvas } = setupRenderer();
       renderer.mount(canvas);
-      expect(canvas.width).toBe(VIEWPORT_WIDTH);
-      expect(canvas.height).toBe(VIEWPORT_HEIGHT);
+      expect(canvas.width).toBe(CANVAS_WIDTH);
+      expect(canvas.height).toBe(CANVAS_HEIGHT);
       renderer.dispose();
     });
 
@@ -101,16 +108,18 @@ describe('Given a GridRenderer instance', () => {
   });
 
   describe('When resize() is called', () => {
-    it('Then it should update internal canvas dimensions', () => {
+    it('Then it should update internal canvas dimensions to the given size', () => {
       const { renderer, canvas } = setupRenderer();
       renderer.mount(canvas);
 
-      Object.defineProperty(window, 'innerWidth', { value: 1920, writable: true });
-      Object.defineProperty(window, 'innerHeight', { value: 1080, writable: true });
-      renderer.resize(canvas);
+      const newWidth = 2432;
+      const newHeight = 1592;
+      renderer.resize(canvas, newWidth, newHeight, 10, 20);
 
-      expect(canvas.width).toBe(1920);
-      expect(canvas.height).toBe(1080);
+      expect(canvas.width).toBe(newWidth);
+      expect(canvas.height).toBe(newHeight);
+      expect(renderer['config'].gridOffsetX).toBe(10);
+      expect(renderer['config'].gridOffsetY).toBe(20);
       renderer.dispose();
     });
   });
@@ -128,7 +137,7 @@ describe('Given a GridRenderer instance', () => {
 
       renderer.render();
 
-      expect(ctx.clearRect).toHaveBeenCalledWith(0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+      expect(ctx.clearRect).toHaveBeenCalledWith(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       expect(ctx.drawImage).toHaveBeenCalled();
     });
   });
@@ -202,7 +211,7 @@ describe('Given a GridRenderer instance', () => {
       vi.advanceTimersByTime(0);
 
       const orb = renderer['orbs'][0];
-      expect(orb.y).toBe(VIEWPORT_HEIGHT);
+      expect(orb.y).toBe(CANVAS_HEIGHT);
       expect(orb.direction).toBe('up');
       renderer.dispose();
     });
@@ -228,7 +237,7 @@ describe('Given a GridRenderer instance', () => {
       vi.advanceTimersByTime(0);
 
       const orb = renderer['orbs'][0];
-      expect(orb.x).toBe(VIEWPORT_WIDTH);
+      expect(orb.x).toBe(CANVAS_WIDTH);
       expect(orb.direction).toBe('left');
       renderer.dispose();
     });
@@ -323,12 +332,12 @@ describe('Given a GridRenderer instance', () => {
     it('If x goes below -cellSize, then it should wrap to width', () => {
       const { renderer, orb } = setupOrbAtPosition(-101, 300);
       renderer.render();
-      expect(orb.x).toBe(VIEWPORT_WIDTH);
+      expect(orb.x).toBe(CANVAS_WIDTH);
       renderer.dispose();
     });
 
     it('If x exceeds width + cellSize, then it should wrap to 0', () => {
-      const { renderer, orb } = setupOrbAtPosition(VIEWPORT_WIDTH + 101, 300);
+      const { renderer, orb } = setupOrbAtPosition(CANVAS_WIDTH + 101, 300);
       renderer.render();
       expect(orb.x).toBe(0);
       renderer.dispose();
@@ -337,12 +346,12 @@ describe('Given a GridRenderer instance', () => {
     it('If y goes below -cellSize, then it should wrap to height', () => {
       const { renderer, orb } = setupOrbAtPosition(400, -101);
       renderer.render();
-      expect(orb.y).toBe(VIEWPORT_HEIGHT);
+      expect(orb.y).toBe(CANVAS_HEIGHT);
       renderer.dispose();
     });
 
     it('If y exceeds height + cellSize, then it should wrap to 0', () => {
-      const { renderer, orb } = setupOrbAtPosition(400, VIEWPORT_HEIGHT + 101);
+      const { renderer, orb } = setupOrbAtPosition(400, CANVAS_HEIGHT + 101);
       renderer.render();
       expect(orb.y).toBe(0);
       renderer.dispose();

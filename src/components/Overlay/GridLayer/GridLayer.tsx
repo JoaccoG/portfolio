@@ -33,40 +33,43 @@ interface GridLayerProps {
 export const GridLayer = ({ cellSize, orbCount, orbSpeed, styles, gridOverflow }: GridLayerProps) => {
   const baseRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const gridOffsetRef = useRef({ x: 0, y: 0 });
 
   const line = (dir: string) =>
     `repeating-linear-gradient(to ${dir}, rgba(255,255,255,${GRID_OPTIONS.baseOpacity}) 0px, rgba(255,255,255,${GRID_OPTIONS.baseOpacity}) ${GRID_LINE_WIDTH}px, transparent ${GRID_LINE_WIDTH}px, transparent ${cellSize}px)`;
   const gridPattern = `${line('right')}, ${line('bottom')}`;
 
   useEffect(() => {
-    const applyOffset = () => {
-      const totalW = window.innerWidth + gridOverflow * 2;
-      const totalH = window.innerHeight + gridOverflow * 2;
-      const x = ((totalW / 2) % cellSize) - cellSize / 2;
-      const y = ((totalH / 2) % cellSize) - cellSize / 2;
-
-      gridOffsetRef.current = { x, y };
-
-      if (baseRef.current) {
-        baseRef.current.style.backgroundPosition = `${x}px ${y}px`;
-        baseRef.current.style.backgroundImage = gridPattern;
-      }
-    };
-
-    applyOffset();
-    window.addEventListener('resize', applyOffset);
-
-    return () => window.removeEventListener('resize', applyOffset);
-  }, [cellSize]);
-
-  useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const { x: ox, y: oy } = gridOffsetRef.current;
-    const gridOffsetX = ((ox % cellSize) + cellSize) % cellSize;
-    const gridOffsetY = ((oy % cellSize) + cellSize) % cellSize;
+    const getGridDimensions = () => {
+      if (!baseRef.current) return { w: 0, h: 0 };
+
+      const rect = baseRef.current.getBoundingClientRect();
+
+      return { w: rect.width, h: rect.height };
+    };
+
+    const computeOffset = (totalW: number, totalH: number) => ({
+      x: ((totalW / 2) % cellSize) - cellSize / 2,
+      y: ((totalH / 2) % cellSize) - cellSize / 2
+    });
+
+    const applyGridBackground = (offset: { x: number; y: number }) => {
+      if (!baseRef.current) return;
+
+      baseRef.current.style.backgroundPosition = `${offset.x}px ${offset.y}px`;
+      baseRef.current.style.backgroundImage = gridPattern;
+    };
+
+    const { w, h } = getGridDimensions();
+    const initialOffset = computeOffset(w, h);
+    applyGridBackground(initialOffset);
+
+    canvas.width = w;
+    canvas.height = h;
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
 
     const renderer = new GridRenderer({
       cellSize,
@@ -75,15 +78,24 @@ export const GridLayer = ({ cellSize, orbCount, orbSpeed, styles, gridOverflow }
       orbRadius: GRID_LIGHTS_OPTIONS.radius,
       turnChance: GRID_LIGHTS_OPTIONS.turnChance,
       trailLength: GRID_LIGHTS_OPTIONS.trailLength,
-      gridOffsetX,
-      gridOffsetY,
+      gridOffsetX: initialOffset.x,
+      gridOffsetY: initialOffset.y,
+      gridOverflow,
       spawnDelay: GRID_LIGHTS_OPTIONS.spawnDelay,
       spawnStagger: GRID_LIGHTS_OPTIONS.spawnStagger
     });
 
     if (!renderer.mount(canvas)) return;
 
-    const handleResize = () => renderer.resize(canvas);
+    const handleResize = () => {
+      const { w: rw, h: rh } = getGridDimensions();
+      const offset = computeOffset(rw, rh);
+      applyGridBackground(offset);
+      canvas.style.width = `${rw}px`;
+      canvas.style.height = `${rh}px`;
+      renderer.resize(canvas, rw, rh, offset.x, offset.y);
+    };
+
     window.addEventListener('resize', handleResize);
 
     let rafId: number;

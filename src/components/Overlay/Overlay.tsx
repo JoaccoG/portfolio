@@ -51,8 +51,10 @@ const overlayStyles: Record<string, CSSProperties> = {
   },
   orbCanvas: {
     position: 'absolute',
-    top: 0,
-    left: 0,
+    top: -GRID_OVERFLOW,
+    left: -GRID_OVERFLOW,
+    maxWidth: 'none',
+    maxHeight: 'none',
     pointerEvents: 'none'
   },
   grain: {

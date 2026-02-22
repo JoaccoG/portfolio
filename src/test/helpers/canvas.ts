@@ -5,8 +5,14 @@ interface MockCanvasContext {
   createImageData: ReturnType<typeof vi.fn>;
   createRadialGradient: ReturnType<typeof vi.fn>;
   fillRect: ReturnType<typeof vi.fn>;
+  beginPath: ReturnType<typeof vi.fn>;
+  moveTo: ReturnType<typeof vi.fn>;
+  lineTo: ReturnType<typeof vi.fn>;
+  stroke: ReturnType<typeof vi.fn>;
   globalAlpha: number;
   fillStyle: string | CanvasGradient;
+  strokeStyle: string;
+  lineWidth: number;
 }
 
 interface MockGradient {
@@ -29,8 +35,14 @@ export const createMockCanvasContext = (): MockCanvasContext => {
     ),
     createRadialGradient: vi.fn(() => gradient),
     fillRect: vi.fn(),
+    beginPath: vi.fn(),
+    moveTo: vi.fn(),
+    lineTo: vi.fn(),
+    stroke: vi.fn(),
     globalAlpha: 1,
-    fillStyle: ''
+    fillStyle: '',
+    strokeStyle: '',
+    lineWidth: 1
   };
 };
 
