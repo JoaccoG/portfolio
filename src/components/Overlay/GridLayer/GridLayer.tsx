@@ -3,17 +3,18 @@ import { GridRenderer } from './GridRenderer';
 
 export const GRID_OPTIONS = {
   cellSize: { base: 128, sm: 192, md: 256 },
-  baseOpacity: 0.03
+  baseOpacity: 0.05
 } as const;
 
 export const GRID_LIGHTS_OPTIONS = {
-  count: { base: 2, sm: 3, lg: 5 },
-  speed: { base: 0.4, md: 0.6, lg: 0.8 },
+  count: { base: 4, sm: 6, lg: 8 },
+  speed: { base: 0.8, lg: 1 },
   radius: 2,
-  turnChance: 0.2,
-  trailLength: 200,
-  spawnDelay: 500,
-  spawnStagger: 1500
+  turnChance: 0.25,
+  trailLength: 100,
+  wrapMargin: 100, // should be the the same or higher than the trailLength to avoid cutting off the trail before the orb appears on the other side of the screen
+  spawnDelay: 200,
+  spawnStagger: 500
 } as const;
 
 const GRID_LINE_WIDTH = 1;
@@ -81,6 +82,7 @@ export const GridLayer = ({ cellSize, orbCount, orbSpeed, styles, gridOverflow }
       gridOffsetX: initialOffset.x,
       gridOffsetY: initialOffset.y,
       gridOverflow,
+      wrapMargin: GRID_LIGHTS_OPTIONS.wrapMargin,
       spawnDelay: GRID_LIGHTS_OPTIONS.spawnDelay,
       spawnStagger: GRID_LIGHTS_OPTIONS.spawnStagger
     });

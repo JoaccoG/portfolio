@@ -199,7 +199,7 @@ describe('Given the GridLayer component', () => {
   describe('When GRID_OPTIONS is exported', () => {
     it('Then it should contain the expected configuration', () => {
       expect(GRID_OPTIONS.cellSize).toBeDefined();
-      expect(GRID_OPTIONS.baseOpacity).toBe(0.03);
+      expect(GRID_OPTIONS.baseOpacity).toBe(0.05);
     });
   });
 
@@ -208,10 +208,11 @@ describe('Given the GridLayer component', () => {
       expect(GRID_LIGHTS_OPTIONS.count).toBeDefined();
       expect(GRID_LIGHTS_OPTIONS.speed).toBeDefined();
       expect(GRID_LIGHTS_OPTIONS.radius).toBe(2);
-      expect(GRID_LIGHTS_OPTIONS.turnChance).toBe(0.2);
-      expect(GRID_LIGHTS_OPTIONS.trailLength).toBe(200);
-      expect(GRID_LIGHTS_OPTIONS.spawnDelay).toBe(500);
-      expect(GRID_LIGHTS_OPTIONS.spawnStagger).toBe(1500);
+      expect(GRID_LIGHTS_OPTIONS.turnChance).toBe(0.25);
+      expect(GRID_LIGHTS_OPTIONS.trailLength).toBe(100);
+      expect(GRID_LIGHTS_OPTIONS.wrapMargin).toBe(100);
+      expect(GRID_LIGHTS_OPTIONS.spawnDelay).toBe(200);
+      expect(GRID_LIGHTS_OPTIONS.spawnStagger).toBe(500);
     });
   });
 });
