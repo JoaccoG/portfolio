@@ -16,6 +16,7 @@
       "@utils/*": ["src/utils/*"],
       "@style/*": ["src/style/*"],
       "@shared/*": ["src/shared/*"],
+      "@shaders/*": ["src/shaders/*"],
       "@constants/*": ["src/constants/*"],
       "@components/*": ["src/components/*"]
     },
