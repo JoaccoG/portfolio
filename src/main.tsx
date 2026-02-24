@@ -6,6 +6,16 @@ import { loadUmami } from '@lib/analytics';
 import { App } from './App';
 import '@style/globals.css';
 
+if (import.meta.env.VITE_ENVIRONMENT === 'production') {
+  const noop = () => {};
+
+  console.log = noop;
+  console.warn = noop;
+  console.error = noop;
+  console.info = noop;
+  console.debug = noop;
+}
+
 loadUmami();
 
 gsap.registerPlugin(ScrollTrigger);
