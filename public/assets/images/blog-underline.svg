@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 20" fill="none">
+  <!--
+    Hand-drawn graffiti-style underline for the Blog CTA.
+    Diagonal upward stroke: forward to "o", backtrack to "l", forward past end.
+    Used inline in Header.tsx for dynamic stroke color + GSAP draw animation.
+  -->
+  <path
+    d="M 0,14 C 20,12 45,9 65,7 C 78,6 86,5.5 92,5 C 82,8 62,12 46,13.5 C 40,14 36,14 34,14 C 52,13.5 80,12 104,10 C 120,9 134,8 140,7.5"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>

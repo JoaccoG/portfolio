@@ -22,7 +22,7 @@ export const GRID = {
 export const ORBS = {
   count: { base: 6, sm: 8, lg: 10 } as ResponsiveValue<number>,
   speed: { base: 1, md: 1.2 } as ResponsiveValue<number>,
-  radius: 2,
+  radius: 3,
   spawnDelay: 0.2, // delay before the first orb spawns
   spawnStagger: 0.5, // delay between each consecutive orb spawning
   turnChance: 0.25, // probability of turning at a grid intersection
