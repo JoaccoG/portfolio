@@ -1,5 +1,4 @@
-import { forwardRef, useEffect, useRef, type Ref, type SVGProps } from 'react';
-import { createElement } from 'react';
+import { forwardRef, useRef, useEffect, createElement } from 'react';
 
 interface SvgIconMockOptions {
   testId?: string;
@@ -16,7 +15,7 @@ interface SvgIconMockOptions {
  * @returns {React.ComponentType<SVGProps<SVGSVGElement>>} A mock SVG icon component.
  */
 export const createSvgIconMock = ({ testId = 'svg-icon', renderPath = () => true }: SvgIconMockOptions = {}) =>
-  forwardRef((props: SVGProps<SVGSVGElement>, ref: Ref<SVGSVGElement>) => {
+  forwardRef((props: React.SVGProps<SVGSVGElement>, ref: React.Ref<SVGSVGElement>) => {
     const svgRef = useRef<SVGSVGElement>(null);
 
     useEffect(() => {

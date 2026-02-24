@@ -1,9 +1,9 @@
-import { forwardRef, type CSSProperties } from 'react';
+import { forwardRef } from 'react';
 import { useBreakpoint, type ResponsiveStyles } from '@hooks/useBreakpoint';
 
 interface TitleProps {
   children: React.ReactNode;
-  style?: CSSProperties;
+  style?: ResponsiveStyles;
   as?: 'h1' | 'h2' | 'h3';
   isTruncated?: boolean;
 }
@@ -16,8 +16,7 @@ export const Title = forwardRef<HTMLHeadingElement, TitleProps>(
       <Tag
         ref={ref}
         style={{
-          ...resolve(titleStyle),
-          ...style,
+          ...resolve({ ...titleStyle, ...style }),
           ...(isTruncated && { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' })
         }}>
         {children}
