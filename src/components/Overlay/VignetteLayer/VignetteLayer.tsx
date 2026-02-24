@@ -21,7 +21,7 @@ export const VignetteLayer = ({ innerRadius, outerRadius, maxDarkness }: Vignett
           uOuterRadius: { value: outerRadius },
           uMaxDarkness: { value: maxDarkness },
           uPulseDuration: { value: VIGNETTE.pulseDuration },
-          uAspect: { value: 1.0 }
+          uAspect: { value: 1 }
         },
         vertexShader: fullscreenVert,
         fragmentShader: vignetteFrag,

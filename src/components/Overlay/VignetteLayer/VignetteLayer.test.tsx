@@ -15,7 +15,7 @@ describe('Given the VignetteLayer component', () => {
   describe('When rendered', () => {
     it('Then it should create a mesh with a ShaderMaterial', async () => {
       const renderer = await ReactThreeTestRenderer.create(
-        <VignetteLayer innerRadius={0.55} outerRadius={1.0} maxDarkness={0.85} />
+        <VignetteLayer innerRadius={0.55} outerRadius={1} maxDarkness={0.85} />
       );
       const mesh = renderer.scene.findByType('Mesh');
       const instance = mesh.instance as unknown as Mesh;
@@ -34,12 +34,12 @@ describe('Given the VignetteLayer component', () => {
       expect(material.uniforms.uOuterRadius.value).toBe(1.2);
       expect(material.uniforms.uMaxDarkness.value).toBe(0.6);
       expect(material.uniforms.uPulseDuration.value).toBe(VIGNETTE.pulseDuration);
-      expect(material.uniforms.uAspect.value).toBe(1.0);
+      expect(material.uniforms.uAspect.value).toBe(1);
     });
 
     it('Then it should have render order 3', async () => {
       const renderer = await ReactThreeTestRenderer.create(
-        <VignetteLayer innerRadius={0.55} outerRadius={1.0} maxDarkness={0.85} />
+        <VignetteLayer innerRadius={0.55} outerRadius={1} maxDarkness={0.85} />
       );
       const mesh = renderer.scene.findByType('Mesh');
       expect(mesh.props.renderOrder).toBe(3);
@@ -49,7 +49,7 @@ describe('Given the VignetteLayer component', () => {
   describe('When frames advance', () => {
     it('Then the onFrame callback should update uTime and uAspect', async () => {
       const renderer = await ReactThreeTestRenderer.create(
-        <VignetteLayer innerRadius={0.55} outerRadius={1.0} maxDarkness={0.85} />
+        <VignetteLayer innerRadius={0.55} outerRadius={1} maxDarkness={0.85} />
       );
       const mesh = renderer.scene.findByType('Mesh');
       const instance = mesh.instance as unknown as Mesh;
