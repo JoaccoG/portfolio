@@ -1,110 +1,46 @@
-import { useRef, useEffect, type CSSProperties } from 'react';
-import { GridRenderer } from './GridRenderer';
+import { useMemo } from 'react';
+import { BufferGeometry, Float32BufferAttribute } from 'three';
+import { useThree } from '@react-three/fiber';
 
-export const GRID_OPTIONS = {
-  cellSize: { base: 128, sm: 192, md: 256 },
-  baseOpacity: 0.03
-} as const;
-
-export const GRID_LIGHTS_OPTIONS = {
-  count: { base: 2, sm: 3, lg: 5 },
-  speed: { base: 0.4, md: 0.6, lg: 0.8 },
-  radius: 2,
-  turnChance: 0.2,
-  trailLength: 200,
-  spawnDelay: 500,
-  spawnStagger: 1500
-} as const;
-
-const GRID_LINE_WIDTH = 1;
+import { GRID } from '@constants/overlay';
 
 interface GridLayerProps {
   cellSize: number;
-  orbCount: number;
-  orbSpeed: number;
-  styles: {
-    fixedLayer: CSSProperties;
-    gridSublayer: CSSProperties;
-    orbCanvas: CSSProperties;
-  };
-  gridOverflow: number;
 }
 
-export const GridLayer = ({ cellSize, orbCount, orbSpeed, styles, gridOverflow }: GridLayerProps) => {
-  const baseRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const gridOffsetRef = useRef({ x: 0, y: 0 });
+export const GridLayer = ({ cellSize }: GridLayerProps) => {
+  const { size } = useThree();
 
-  const line = (dir: string) =>
-    `repeating-linear-gradient(to ${dir}, rgba(255,255,255,${GRID_OPTIONS.baseOpacity}) 0px, rgba(255,255,255,${GRID_OPTIONS.baseOpacity}) ${GRID_LINE_WIDTH}px, transparent ${GRID_LINE_WIDTH}px, transparent ${cellSize}px)`;
-  const gridPattern = `${line('right')}, ${line('bottom')}`;
+  const geometry = useMemo(() => {
+    const overflow = GRID.overflow;
+    const w = size.width + overflow * 2;
+    const h = size.height + overflow * 2;
 
-  useEffect(() => {
-    const applyOffset = () => {
-      const totalW = window.innerWidth + gridOverflow * 2;
-      const totalH = window.innerHeight + gridOverflow * 2;
-      const x = ((totalW / 2) % cellSize) - cellSize / 2;
-      const y = ((totalH / 2) % cellSize) - cellSize / 2;
+    const halfW = size.width / 2;
+    const halfH = size.height / 2;
 
-      gridOffsetRef.current = { x, y };
+    const left = -halfW - overflow;
+    const right = halfW + overflow;
+    const top = halfH + overflow;
+    const bottom = -halfH - overflow;
 
-      if (baseRef.current) {
-        baseRef.current.style.backgroundPosition = `${x}px ${y}px`;
-        baseRef.current.style.backgroundImage = gridPattern;
-      }
-    };
+    const offsetX = ((w / 2) % cellSize) - cellSize / 2;
+    const offsetY = ((h / 2) % cellSize) - cellSize / 2;
 
-    applyOffset();
-    window.addEventListener('resize', applyOffset);
+    const points: number[] = [];
 
-    return () => window.removeEventListener('resize', applyOffset);
-  }, [cellSize]);
+    for (let x = left + offsetX; x <= right; x += cellSize) points.push(x, bottom, 0, x, top, 0);
+    for (let y = bottom + offsetY; y <= top; y += cellSize) points.push(left, y, 0, right, y, 0);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const geo = new BufferGeometry();
+    geo.setAttribute('position', new Float32BufferAttribute(points, 3));
 
-    const { x: ox, y: oy } = gridOffsetRef.current;
-    const gridOffsetX = ((ox % cellSize) + cellSize) % cellSize;
-    const gridOffsetY = ((oy % cellSize) + cellSize) % cellSize;
-
-    const renderer = new GridRenderer({
-      cellSize,
-      orbCount,
-      orbSpeed,
-      orbRadius: GRID_LIGHTS_OPTIONS.radius,
-      turnChance: GRID_LIGHTS_OPTIONS.turnChance,
-      trailLength: GRID_LIGHTS_OPTIONS.trailLength,
-      gridOffsetX,
-      gridOffsetY,
-      spawnDelay: GRID_LIGHTS_OPTIONS.spawnDelay,
-      spawnStagger: GRID_LIGHTS_OPTIONS.spawnStagger
-    });
-
-    if (!renderer.mount(canvas)) return;
-
-    const handleResize = () => renderer.resize(canvas);
-    window.addEventListener('resize', handleResize);
-
-    let rafId: number;
-    const loop = () => {
-      rafId = requestAnimationFrame(loop);
-      renderer.render();
-    };
-
-    rafId = requestAnimationFrame(loop);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', handleResize);
-      renderer.dispose();
-    };
-  }, [cellSize, orbCount, orbSpeed]);
+    return geo;
+  }, [size.width, size.height, cellSize]);
 
   return (
-    <div style={styles.fixedLayer}>
-      <div ref={baseRef} style={styles.gridSublayer} />
-      <canvas ref={canvasRef} style={styles.orbCanvas} />
-    </div>
+    <lineSegments geometry={geometry} renderOrder={0}>
+      <lineBasicMaterial color="#ffffff" transparent opacity={GRID.lineOpacity} depthTest={false} />
+    </lineSegments>
   );
 };

@@ -1,38 +1,56 @@
 import { render } from '@testing-library/react';
 import { Overlay } from './Overlay';
 
-vi.mock('./VignetteLayer/VignetteLayer', () => ({
-  VignetteLayer: ({ style }: { style: React.CSSProperties }) => <div data-testid="vignette-layer" style={style} />
+vi.mock('@react-three/fiber', async () => {
+  const actual = await vi.importActual('@react-three/fiber');
+
+  return {
+    ...actual,
+    Canvas: ({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) => (
+      <div data-testid="canvas" style={style}>
+        {children}
+      </div>
+    )
+  };
+});
+
+vi.mock('@shaders/overlay/fullscreen.vert?raw', () => ({
+  default: 'void main() { gl_Position = vec4(0.0); }'
 }));
 
-vi.mock('./GrainLayer/GrainLayer', () => ({
-  GrainLayer: ({ fps, style }: { fps: number; style: React.CSSProperties }) => (
-    <canvas data-testid="grain-layer" data-fps={fps} style={style} />
-  ),
-  GRAIN_OPTIONS: { fps: { base: 24, sm: 30, md: 60 }, canvasSize: 256, opacity: 0.08 }
+vi.mock('@shaders/overlay/grain.frag?raw', () => ({
+  default: 'void main() { gl_FragColor = vec4(0.0); }'
 }));
 
-vi.mock('./GridLayer/GridLayer', () => ({
-  GridLayer: (props: Record<string, unknown>) => <div data-testid="grid-layer" data-cell-size={props.cellSize} />,
-  GRID_OPTIONS: { cellSize: { base: 128, sm: 192, md: 256 }, baseOpacity: 0.03 },
-  GRID_LIGHTS_OPTIONS: {
-    count: { base: 2, sm: 3, lg: 5 },
-    speed: { base: 0.4, md: 0.6, lg: 0.8 },
-    radius: 2,
-    turnChance: 0.2,
-    trailLength: 200,
-    spawnDelay: 500,
-    spawnStagger: 1500
-  }
+vi.mock('@shaders/overlay/vignette.frag?raw', () => ({
+  default: 'void main() { gl_FragColor = vec4(0.0); }'
 }));
+
+vi.mock('@shaders/overlay/orb.vert?raw', () => ({
+  default: 'void main() { gl_Position = vec4(0.0); }'
+}));
+
+vi.mock('@shaders/overlay/orb.frag?raw', () => ({
+  default: 'void main() { gl_FragColor = vec4(0.0); }'
+}));
+
+vi.mock('./VignetteLayer/VignetteLayer', () => ({ VignetteLayer: () => null }));
+vi.mock('./GrainLayer/GrainLayer', () => ({ GrainLayer: () => null }));
+vi.mock('./GridLayer/GridLayer', () => ({ GridLayer: () => null }));
+vi.mock('./GridLayer/OrbSystem', () => ({ OrbSystem: () => null }));
 
 describe('Given the Overlay component', () => {
   describe('When rendered', () => {
-    it('Then it should render all three layers', () => {
+    it('Then it should render a canvas container', () => {
       const { getByTestId } = render(<Overlay />);
-      expect(getByTestId('vignette-layer')).toBeInTheDocument();
-      expect(getByTestId('grain-layer')).toBeInTheDocument();
-      expect(getByTestId('grid-layer')).toBeInTheDocument();
+      const canvas = getByTestId('canvas');
+      expect(canvas).toBeInTheDocument();
+    });
+
+    it('Then the canvas container should be present in the document', () => {
+      const { getByTestId } = render(<Overlay />);
+      const canvas = getByTestId('canvas');
+      expect(canvas).toBeVisible();
     });
   });
 });

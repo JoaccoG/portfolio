@@ -16,7 +16,7 @@ export const Title = forwardRef<HTMLHeadingElement, TitleProps>(
       <Tag
         ref={ref}
         style={{
-          ...resolve(titleStyles),
+          ...resolve(titleStyle),
           ...style,
           ...(isTruncated && { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' })
         }}>
@@ -26,7 +26,7 @@ export const Title = forwardRef<HTMLHeadingElement, TitleProps>(
   }
 );
 
-const titleStyles: ResponsiveStyles = {
+const titleStyle: ResponsiveStyles = {
   fontFamily: 'var(--font-display)',
   fontWeight: 400,
   fontSize: {
