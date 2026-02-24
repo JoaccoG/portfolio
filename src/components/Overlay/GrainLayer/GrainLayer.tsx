@@ -1,48 +1,37 @@
-import { useRef, useEffect, type CSSProperties } from 'react';
-import { GrainRenderer } from './GrainRenderer';
-
-export const GRAIN_OPTIONS = {
-  fps: { base: 24, sm: 30, md: 60 },
-  canvasSize: 256,
-  opacity: 0.08
-} as const;
+import { useMemo } from 'react';
+import { ShaderMaterial } from 'three';
+import { GRAIN } from '@constants/overlay';
+import fullscreenVert from '@shaders/overlay/fullscreen.vert?raw';
+import grainFrag from '@shaders/overlay/grain.frag?raw';
+import { FullscreenQuad } from '../FullscreenQuad';
 
 interface GrainLayerProps {
   fps: number;
-  style: CSSProperties;
 }
 
-export const GrainLayer = ({ fps, style }: GrainLayerProps) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const rendererRef = useRef<GrainRenderer>(new GrainRenderer(GRAIN_OPTIONS.canvasSize));
+export const GrainLayer = ({ fps }: GrainLayerProps) => {
+  const material = useMemo(
+    () =>
+      new ShaderMaterial({
+        uniforms: {
+          uTime: { value: 0 },
+          uFps: { value: fps },
+          uOpacity: { value: GRAIN.opacity },
+          uWarmth: { value: GRAIN.warmthRange }
+        },
+        vertexShader: fullscreenVert,
+        fragmentShader: grainFrag,
+        transparent: true,
+        depthTest: false,
+        depthWrite: false
+      }),
+    [fps]
+  );
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+  const onFrame = useMemo(
+    () => (state: { elapsedTime: number }) => (material.uniforms.uTime.value = state.elapsedTime),
+    [material]
+  );
 
-    const renderer = rendererRef.current;
-    if (!renderer.mount(canvas)) return;
-
-    const frameDuration = 1000 / fps;
-
-    let rafId: number;
-    let lastRenderTime = 0;
-
-    const loop = (timestamp: number) => {
-      rafId = requestAnimationFrame(loop);
-      if (timestamp - lastRenderTime < frameDuration) return;
-      lastRenderTime = timestamp;
-
-      renderer.render();
-    };
-
-    rafId = requestAnimationFrame(loop);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      renderer.dispose();
-    };
-  }, [fps]);
-
-  return <canvas ref={canvasRef} style={style} />;
+  return <FullscreenQuad material={material} renderOrder={2} onFrame={onFrame} />;
 };

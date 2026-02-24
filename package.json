@@ -13,8 +13,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "test": "vitest --coverage --watch=false",
+    "build:icons": "svgr --out-dir src/components/icons --typescript --ref --no-prettier --no-index -- public/assets/images",
     "preview": "vite preview",
+    "test": "vitest --coverage --watch=false",
     "lint": "eslint . && prettier --check .",
     "format": "eslint . --fix && prettier . --write",
     "prepare": "husky"
@@ -34,7 +35,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@react-three/test-renderer": "^9.1.0",
     "@stylistic/eslint-plugin": "^5.9.0",
+    "@svgr/cli": "^8.1.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
