@@ -43,5 +43,6 @@ const titleStyle: ResponsiveStyles = {
   pointerEvents: 'none',
   whiteSpace: 'normal',
   overflow: 'hidden',
-  textOverflow: 'ellipsis'
+  textOverflow: 'ellipsis',
+  textShadow: '2px 2px 16px rgba(0, 0, 0, 0.5)'
 };

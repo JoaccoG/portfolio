@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 
 const BREAKPOINTS = {
-  xs: 480,
-  sm: 768,
-  md: 1024,
-  lg: 1280,
-  xl: 1440
+  xs: 480, // mobile
+  sm: 768, // tablet
+  md: 1024, // laptop
+  lg: 1280, // small desktop
+  xl: 1440 // large desktop
 } as const;
 
 export type Breakpoint = 'base' | keyof typeof BREAKPOINTS;

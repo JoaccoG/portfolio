@@ -136,8 +136,8 @@ const NavLink = ({
 
 const HEADER_SIZING = {
   padding: {
-    expanded: { base: '1.5rem 2rem', sm: '2.5rem 3.5rem' },
-    compact: { base: '1.5rem 2rem', sm: '2rem 3rem' }
+    expanded: { base: '1.5rem 2rem 0', sm: '2.5rem 3.5rem 0' },
+    compact: { base: '1.5rem 2rem 0', sm: '2rem 3rem 0' }
   },
   gap: {
     expanded: { base: '1.5rem', sm: '2.5rem', lg: '3rem' },
