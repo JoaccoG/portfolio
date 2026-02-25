@@ -6,7 +6,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 const AUTO_SPEED = 0.25; // base rotation speed for the idle drift
 const DIRECTION_CHANGE_RATE = 0.05; // how quickly the drift direction randomizes
 const MOUSE_INFLUENCE = 1; // how strongly the mouse tilts the knot
-const MOUSE_SMOOTHING = 90; // hpw fast the knot catches up to the mouse
+const MOUSE_SMOOTHING = 90; // how fast the knot catches up to the mouse
 const MAX_DELTA = 1 / 30;
 
 const globalMouse = new Vector2(0, 0);

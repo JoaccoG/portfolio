@@ -12,7 +12,7 @@ interface SvgIconMockOptions {
  * @param {string} testId - The test ID to use for the SVG icon.
  * @param {Function} renderPath - A function that returns a boolean indicating whether to render the path element.
  *
- * @returns {React.ComponentType<SVGProps<SVGSVGElement>>} A mock SVG icon component.
+ * @returns {React.ComponentType<React.SVGProps<SVGSVGElement>>} A mock SVG icon component.
  */
 export const createSvgIconMock = ({ testId = 'svg-icon', renderPath = () => true }: SvgIconMockOptions = {}) =>
   forwardRef((props: React.SVGProps<SVGSVGElement>, ref: React.Ref<SVGSVGElement>) => {
