@@ -26,7 +26,7 @@ describe('Given the GridLayer component', () => {
       const material = children.find((c) => c.type === 'LineBasicMaterial');
       expect(material).toBeDefined();
       expect(material!.props.transparent).toBe(true);
-      expect(material!.props.opacity).toBe(0.04);
+      expect(material!.props.opacity).toBe(0.08);
     });
 
     it('Then render order should be 0', async () => {

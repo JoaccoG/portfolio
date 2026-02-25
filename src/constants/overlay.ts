@@ -15,7 +15,7 @@ export const GRAIN = {
 
 export const GRID = {
   cellSize: { base: 150, sm: 192, md: 256 } as ResponsiveValue<number>,
-  lineOpacity: 0.04,
+  lineOpacity: 0.08,
   overflow: 256
 } as const;
 
