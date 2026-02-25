@@ -10,9 +10,9 @@ const MOUSE_SMOOTHING = 90; // hpw fast the knot catches up to the mouse
 const MAX_DELTA = 1 / 30;
 
 const globalMouse = new Vector2(0, 0);
-if (typeof window !== 'undefined')
-  window.addEventListener('mousemove', (e) => {
-    globalMouse.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
+if (typeof globalThis.window !== 'undefined')
+  globalThis.addEventListener('mousemove', (e: MouseEvent) => {
+    globalMouse.set((e.clientX / globalThis.innerWidth) * 2 - 1, -(e.clientY / globalThis.innerHeight) * 2 + 1);
   });
 
 export const HeroScene = forwardRef<HTMLDivElement>((_, ref) => {
@@ -21,7 +21,7 @@ export const HeroScene = forwardRef<HTMLDivElement>((_, ref) => {
   const setRef = (el: HTMLDivElement | null) => {
     containerRef.current = el;
     if (typeof ref === 'function') ref(el);
-    else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = el;
+    else if (ref) (ref as React.RefObject<HTMLDivElement | null>).current = el;
   };
 
   useEffect(() => {

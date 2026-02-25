@@ -38,7 +38,7 @@ export const Hero = () => {
           traitsRef.current.children,
           { opacity: 0, y: 40 },
           { opacity: 1, y: 0, duration: 0.8, stagger: 0.12, ease: 'back.out(1.4)' },
-          1.0
+          1
         );
     },
     { scope: sectionRef, dependencies: [breakpoint] }
