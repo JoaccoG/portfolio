@@ -188,16 +188,35 @@ describe('Given the Scene structure with ReactThreeTestRenderer', () => {
 });
 
 describe('Given the global mouse listener', () => {
+  it('Then it should be registered on mount', () => {
+    const addSpy = vi.spyOn(globalThis, 'addEventListener');
+    render(<HeroScene />);
+    expect(addSpy).toHaveBeenCalledWith('mousemove', expect.any(Function));
+    addSpy.mockRestore();
+  });
+
+  it('Then it should be removed on unmount', () => {
+    const removeSpy = vi.spyOn(globalThis, 'removeEventListener');
+    const { unmount } = render(<HeroScene />);
+    unmount();
+    expect(removeSpy).toHaveBeenCalledWith('mousemove', expect.any(Function));
+    removeSpy.mockRestore();
+  });
+
   it('Then moving the mouse should not throw', () => {
+    render(<HeroScene />);
     expect(() => {
-      window.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: 200 }));
+      globalThis.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: 200 }));
     }).not.toThrow();
   });
 
   it('Then mouse events at viewport edges should not throw', () => {
+    render(<HeroScene />);
     expect(() => {
-      window.dispatchEvent(new MouseEvent('mousemove', { clientX: 0, clientY: 0 }));
-      window.dispatchEvent(new MouseEvent('mousemove', { clientX: window.innerWidth, clientY: window.innerHeight }));
+      globalThis.dispatchEvent(new MouseEvent('mousemove', { clientX: 0, clientY: 0 }));
+      globalThis.dispatchEvent(
+        new MouseEvent('mousemove', { clientX: globalThis.innerWidth, clientY: globalThis.innerHeight })
+      );
     }).not.toThrow();
   });
 });

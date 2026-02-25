@@ -10,13 +10,19 @@ const MOUSE_SMOOTHING = 90; // how fast the knot catches up to the mouse
 const MAX_DELTA = 1 / 30;
 
 const globalMouse = new Vector2(0, 0);
-if (typeof globalThis.window !== 'undefined')
-  globalThis.addEventListener('mousemove', (e: MouseEvent) => {
-    globalMouse.set((e.clientX / globalThis.innerWidth) * 2 - 1, -(e.clientY / globalThis.innerHeight) * 2 + 1);
-  });
+
+const onMouseMove = (e: MouseEvent) => {
+  globalMouse.set((e.clientX / globalThis.innerWidth) * 2 - 1, -(e.clientY / globalThis.innerHeight) * 2 + 1);
+};
 
 export const HeroScene = forwardRef<HTMLDivElement>((_, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    globalThis.addEventListener('mousemove', onMouseMove);
+
+    return () => globalThis.removeEventListener('mousemove', onMouseMove);
+  }, []);
 
   const setRef = (el: HTMLDivElement | null) => {
     containerRef.current = el;
@@ -41,7 +47,7 @@ export const HeroScene = forwardRef<HTMLDivElement>((_, ref) => {
       el.style.overflow = 'visible';
       el = el.parentElement;
     }
-  });
+  }, [containerRef]);
 
   return (
     <div ref={setRef} style={canvasContainerStyle}>
@@ -77,7 +83,7 @@ const TorusKnotMesh = () => {
     meshRef.current.rotation.y += velocity.current.y * delta;
     meshRef.current.rotation.z += velocity.current.z * delta;
 
-    smoothMouse.current.lerp(globalMouse, delta * MOUSE_SMOOTHING);
+    smoothMouse.current.lerp(globalMouse, Math.min(delta * MOUSE_SMOOTHING, 1));
 
     const targetTiltX = -smoothMouse.current.y * MOUSE_INFLUENCE;
     const targetTiltY = smoothMouse.current.x * MOUSE_INFLUENCE;

@@ -10,7 +10,7 @@ import { HeroScene } from './components/HeroScene';
 
 export const Hero = () => {
   const { breakpoint, resolve } = useBreakpoint();
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);

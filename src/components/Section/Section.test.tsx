@@ -38,7 +38,7 @@ describe('Given the Section component', () => {
 
   describe('When a ref is provided', () => {
     it('Then the ref should point to the <section> element', () => {
-      const ref = createRef<HTMLDivElement>();
+      const ref = createRef<HTMLElement>();
       render(<Section ref={ref}>Content</Section>);
       expect(ref.current).toBeInstanceOf(HTMLElement);
       expect(ref.current?.tagName).toBe('SECTION');

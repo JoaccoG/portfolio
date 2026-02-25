@@ -7,7 +7,7 @@ interface SectionProps {
   id?: string;
 }
 
-export const Section = forwardRef<HTMLDivElement, SectionProps>(({ children, id, style }, ref) => {
+export const Section = forwardRef<HTMLElement, SectionProps>(({ children, id, style }, ref) => {
   const { resolve } = useBreakpoint();
 
   return (
