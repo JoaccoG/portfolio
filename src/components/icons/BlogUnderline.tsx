@@ -1,6 +1,6 @@
-import { forwardRef, type Ref, type SVGProps } from 'react';
+import { forwardRef } from 'react';
 
-export const BlogUnderline = forwardRef((props: SVGProps<SVGSVGElement>, ref: Ref<SVGSVGElement>) => (
+export const BlogUnderline = forwardRef((props: React.SVGProps<SVGSVGElement>, ref: React.Ref<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 140 20" ref={ref} {...props}>
     <path
       stroke="currentColor"

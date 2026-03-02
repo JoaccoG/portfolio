@@ -1,11 +1,11 @@
-import { useState, useEffect, type CSSProperties } from 'react';
+import { useState, useEffect } from 'react';
 
 const BREAKPOINTS = {
-  xs: 480,
-  sm: 768,
-  md: 1024,
-  lg: 1280,
-  xl: 1440
+  xs: 480, // mobile
+  sm: 768, // tablet
+  md: 1024, // laptop
+  lg: 1280, // small desktop
+  xl: 1440 // large desktop
 } as const;
 
 export type Breakpoint = 'base' | keyof typeof BREAKPOINTS;
@@ -13,7 +13,7 @@ export type Breakpoint = 'base' | keyof typeof BREAKPOINTS;
 export type ResponsiveValue<T> = Partial<Record<Breakpoint, T>>;
 
 export type ResponsiveStyles = {
-  [K in keyof CSSProperties]: CSSProperties[K] | ResponsiveValue<CSSProperties[K]>;
+  [K in keyof React.CSSProperties]: React.CSSProperties[K] | ResponsiveValue<React.CSSProperties[K]>;
 };
 
 export const useBreakpoint = () => {
@@ -35,9 +35,9 @@ export const useBreakpoint = () => {
 
   const breakpoint = getBreakpoint();
 
-  function resolve(styles: ResponsiveStyles): CSSProperties;
+  function resolve(styles: ResponsiveStyles): React.CSSProperties;
   function resolve<T>(value: ResponsiveValue<T>, fallback: T): T;
-  function resolve<T>(input: ResponsiveStyles | ResponsiveValue<T>, fallback?: T): CSSProperties | T {
+  function resolve<T>(input: ResponsiveStyles | ResponsiveValue<T>, fallback?: T): React.CSSProperties | T {
     if (fallback !== undefined) return resolveResponsiveValue(input as ResponsiveValue<T>, breakpoint) ?? fallback;
 
     return resolveStyles(input as ResponsiveStyles, breakpoint);
@@ -78,10 +78,10 @@ const resolveResponsiveValue = <T>(map: ResponsiveValue<T>, breakpoint: Breakpoi
   return undefined;
 };
 
-const resolveStyles = (styles: ResponsiveStyles, breakpoint: Breakpoint): CSSProperties =>
+const resolveStyles = (styles: ResponsiveStyles, breakpoint: Breakpoint): React.CSSProperties =>
   Object.fromEntries(
     Object.entries(styles).map(([key, value]) => [
       key,
       isResponsiveValue(value) ? resolveResponsiveValue(value, breakpoint) : value
     ])
-  ) as CSSProperties;
+  ) as React.CSSProperties;

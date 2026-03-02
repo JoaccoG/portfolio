@@ -1,4 +1,4 @@
-import { useState, useRef, type Ref, type RefObject, type MouseEvent } from 'react';
+import { useState, useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useBreakpoint, type ResponsiveStyles } from '@hooks/useBreakpoint';
@@ -85,14 +85,20 @@ interface NavLinkProps {
   href: string;
   label: string;
   scrollTo?: (target: string) => void;
-  underlineRef?: RefObject<SVGSVGElement | null>;
+  underlineRef?: React.RefObject<SVGSVGElement | null>;
 }
 
-const NavLink = ({ ref, href, label, scrollTo, underlineRef }: NavLinkProps & { ref?: Ref<HTMLAnchorElement> }) => {
+const NavLink = ({
+  ref,
+  href,
+  label,
+  scrollTo,
+  underlineRef
+}: NavLinkProps & { ref?: React.Ref<HTMLAnchorElement> }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { resolve } = useBreakpoint();
 
-  const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (href.startsWith('#') && scrollTo) {
       e.preventDefault();
       scrollTo(href.slice(1));
@@ -113,25 +119,15 @@ const NavLink = ({ ref, href, label, scrollTo, underlineRef }: NavLinkProps & { 
         position: underlineRef ? 'relative' : undefined
       }}>
       {label}
-      {underlineRef && (
-        <BlogUnderline
-          ref={underlineRef}
-          style={{
-            ...resolve(underlineSvgStyle),
-            color: isHovered ? 'var(--color-primary)' : 'var(--color-white)',
-            transition: 'color 0.3s ease',
-            opacity: 0
-          }}
-        />
-      )}
+      {underlineRef && <BlogUnderline ref={underlineRef} style={{ ...resolve(underlineSvgStyle) }} />}
     </a>
   );
 };
 
 const HEADER_SIZING = {
   padding: {
-    expanded: { base: '1.5rem 2rem', sm: '2.5rem 3.5rem' },
-    compact: { base: '1.5rem 2rem', sm: '2rem 3rem' }
+    expanded: { base: '1.5rem 2rem 0', sm: '2.5rem 3.5rem 0' },
+    compact: { base: '1.5rem 2rem 0', sm: '2rem 3rem 0' }
   },
   gap: {
     expanded: { base: '1.5rem', sm: '2.5rem', lg: '3rem' },
@@ -174,10 +170,13 @@ const navLinksStyle: ResponsiveStyles = {
 };
 
 const underlineSvgStyle: ResponsiveStyles = {
+  width: '150%',
   position: 'absolute',
   bottom: '-6px',
-  left: '-20%',
-  width: '150%',
+  left: '-24px',
+  color: 'var(--color-primary)',
+  transition: 'color 0.3s ease',
   pointerEvents: 'none',
-  overflow: 'visible'
+  overflow: 'visible',
+  opacity: 0
 };

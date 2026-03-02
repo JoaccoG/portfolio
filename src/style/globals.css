@@ -20,6 +20,10 @@
   --color-light-gray: #757575;
   --color-dark-gray: #383838;
   --color-accent-red: #c62828;
+  --color-info: #3b82f6;
+  --color-success: #4ade80;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
 
   --font-body: 'Inter', Helvetica, Arial, sans-serif;
   --font-mono: 'Fira Code', Courier, monospace;
