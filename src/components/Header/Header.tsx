@@ -119,17 +119,7 @@ const NavLink = ({
         position: underlineRef ? 'relative' : undefined
       }}>
       {label}
-      {underlineRef && (
-        <BlogUnderline
-          ref={underlineRef}
-          style={{
-            ...resolve(underlineSvgStyle),
-            color: isHovered ? 'var(--color-primary)' : 'var(--color-white)',
-            transition: 'color 0.3s ease',
-            opacity: 0
-          }}
-        />
-      )}
+      {underlineRef && <BlogUnderline ref={underlineRef} style={{ ...resolve(underlineSvgStyle) }} />}
     </a>
   );
 };
@@ -180,10 +170,13 @@ const navLinksStyle: ResponsiveStyles = {
 };
 
 const underlineSvgStyle: ResponsiveStyles = {
+  width: '150%',
   position: 'absolute',
   bottom: '-6px',
-  left: '-20%',
-  width: '150%',
+  left: '-24px',
+  color: 'var(--color-primary)',
+  transition: 'color 0.3s ease',
   pointerEvents: 'none',
-  overflow: 'visible'
+  overflow: 'visible',
+  opacity: 0
 };
