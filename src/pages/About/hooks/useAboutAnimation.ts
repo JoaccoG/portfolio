@@ -2,7 +2,7 @@ import type { RefObject } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
-const TITLE_DURATION = 1.0;
+const TITLE_DURATION = 1;
 const CONTENT_START = 0.1;
 const CONTENT_SPEED = 1000;
 const TAIL_PX = 100;
@@ -96,6 +96,8 @@ export const useAboutAnimation = (refs: UseAboutAnimationRefs) => {
           );
         });
       });
+
+      return () => mm.revert();
     },
     { scope: sectionRef }
   );

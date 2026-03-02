@@ -7,7 +7,7 @@ vi.mock('gsap', () => ({
     set: vi.fn(),
     fromTo: vi.fn(),
     timeline: vi.fn(() => ({ fromTo: vi.fn().mockReturnThis(), to: vi.fn().mockReturnThis() })),
-    matchMedia: vi.fn(() => ({ add: vi.fn() }))
+    matchMedia: vi.fn(() => ({ add: vi.fn(), revert: vi.fn() }))
   }
 }));
 

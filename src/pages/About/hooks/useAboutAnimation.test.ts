@@ -3,11 +3,10 @@ import { renderHook } from '@testing-library/react';
 import { useAboutAnimation } from './useAboutAnimation';
 
 type MatchMediaCallback = () => void;
-const capturedMediaCallbacks = new Map<string, MatchMediaCallback>();
 
-const mockTimeline = {
-  fromTo: vi.fn().mockReturnThis()
-};
+const capturedMediaCallbacks = new Map<string, MatchMediaCallback>();
+const mockTimeline = { fromTo: vi.fn().mockReturnThis() };
+const mockRevert = vi.fn();
 
 vi.mock('gsap', () => ({
   default: {
@@ -15,6 +14,7 @@ vi.mock('gsap', () => ({
     fromTo: vi.fn(),
     timeline: vi.fn(() => mockTimeline),
     matchMedia: vi.fn(() => ({
+      revert: mockRevert,
       add: vi.fn((query: string, cb: MatchMediaCallback) => capturedMediaCallbacks.set(query, cb))
     }))
   }
@@ -104,6 +104,13 @@ describe('Given the useAboutAnimation hook', () => {
       expect(gsap.matchMedia).toHaveBeenCalled();
       expect(capturedMediaCallbacks.has('(min-width: 1024px)')).toBe(true);
       expect(capturedMediaCallbacks.has('(max-width: 1023px)')).toBe(true);
+    });
+
+    it('Then it should revert matchMedia on unmount', () => {
+      const { unmount } = renderHook(() => useAboutAnimation(createPopulatedRefs()));
+      expect(mockRevert).not.toHaveBeenCalled();
+      unmount();
+      expect(mockRevert).toHaveBeenCalledTimes(1);
     });
   });
 
