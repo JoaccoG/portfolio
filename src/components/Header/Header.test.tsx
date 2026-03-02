@@ -157,16 +157,17 @@ describe('Given the Header component', () => {
       expect(link.style.color).toBe('var(--color-white)');
     });
 
-    it('Then the blog underline color should change on hover', async () => {
+    it('Then the blog underline color should NOT change on hover', async () => {
       const user = userEvent.setup();
       render(<Header scrollTo={scrollTo} />);
       const blogLink = screen.getByText('BLOG').closest('a')!;
       const underline = screen.getByTestId('blog-underline');
 
+      const colorBefore = underline.style.color;
       await user.hover(blogLink);
-      expect(underline.style.color).toBe('var(--color-primary)');
+      expect(underline.style.color).toBe(colorBefore);
       await user.unhover(blogLink);
-      expect(underline.style.color).toBe('var(--color-white)');
+      expect(underline.style.color).toBe(colorBefore);
     });
   });
 });
