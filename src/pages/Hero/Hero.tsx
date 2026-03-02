@@ -111,10 +111,11 @@ const subtitleStyle: ResponsiveStyles = {
   color: 'var(--color-white)',
   fontWeight: 500,
   fontFamily: 'var(--font-mono)',
-  fontSize: { base: '0.75rem', xs: '0.8rem', sm: '0.875rem', md: '1rem' },
+  fontSize: { base: '0.75rem', xs: '0.8rem', sm: '0.875rem', md: '1rem', lg: '1.125rem', xl: '1.25rem' },
   letterSpacing: '0.08em',
   lineHeight: 1.6,
-  padding: '0 2rem'
+  padding: '0 2rem',
+  textShadow: '1px 1px 4px rgba(0, 0, 0, 0.5)'
 };
 
 const traitsRowStyle: ResponsiveStyles = {
