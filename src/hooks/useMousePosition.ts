@@ -5,11 +5,13 @@ interface MousePosition {
   y: number;
 }
 
-export const useMousePosition = (containerRef: RefObject<HTMLElement | null>): MousePosition => {
+export const useMousePosition = (containerRef: RefObject<HTMLElement | null>, enabled = true): MousePosition => {
   const [position, setPosition] = useState<MousePosition>({ x: 0, y: 0 });
   const rafId = useRef(0);
 
   useEffect(() => {
+    if (!enabled) return;
+
     const onMouseMove = (e: MouseEvent) => {
       cancelAnimationFrame(rafId.current);
       rafId.current = requestAnimationFrame(() => {
@@ -26,7 +28,7 @@ export const useMousePosition = (containerRef: RefObject<HTMLElement | null>): M
       globalThis.removeEventListener('mousemove', onMouseMove);
       cancelAnimationFrame(rafId.current);
     };
-  }, [containerRef]);
+  }, [containerRef, enabled]);
 
   return position;
 };

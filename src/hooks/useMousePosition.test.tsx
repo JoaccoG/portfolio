@@ -114,6 +114,23 @@ describe('Given the useMousePosition hook', () => {
     });
   });
 
+  describe('When enabled is false', () => {
+    it('Then it should NOT register a mousemove listener', () => {
+      const addSpy = vi.spyOn(globalThis, 'addEventListener');
+
+      const DisabledHarness = () => {
+        const ref = useRef<HTMLDivElement>(null);
+        useMousePosition(ref, false);
+
+        return <div ref={ref} />;
+      };
+
+      render(<DisabledHarness />);
+      expect(addSpy).not.toHaveBeenCalledWith('mousemove', expect.any(Function));
+      addSpy.mockRestore();
+    });
+  });
+
   describe('When unmounted', () => {
     it('Then it should remove the mousemove listener and cancel pending rAF', () => {
       const removeSpy = vi.spyOn(globalThis, 'removeEventListener');

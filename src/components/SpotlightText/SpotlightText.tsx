@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { useBreakpoint, type ResponsiveStyles } from '@hooks/useBreakpoint';
 import { useMousePosition } from '@hooks/useMousePosition';
 
@@ -15,6 +15,9 @@ const DRIFT = {
   driftFreqY: 0.000093
 } as const;
 
+const buildMask = (x: number, y: number) =>
+  `radial-gradient(circle ${SPOTLIGHT_RADIUS}px at ${x}px ${y}px, black 0%, transparent 100%)`;
+
 interface SpotlightTextProps {
   lines: readonly string[];
   rows?: number;
@@ -23,43 +26,37 @@ interface SpotlightTextProps {
 export const SpotlightText = ({ lines, rows = 5 }: SpotlightTextProps) => {
   const { breakpoint, resolve } = useBreakpoint();
   const containerRef = useRef<HTMLDivElement>(null);
-  const mouse = useMousePosition(containerRef);
-  const [autoPos, setAutoPos] = useState({ x: 0, y: 0 });
+  const litLayerRef = useRef<HTMLDivElement>(null);
 
   const isTouch = !['md', 'lg', 'xl'].includes(breakpoint);
-
-  const animate = useCallback(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const { width, height } = container.getBoundingClientRect();
-    const t = performance.now();
-
-    const cx = (Math.sin(t * DRIFT.freqX + DRIFT.phaseX) + Math.sin(t * DRIFT.driftFreqX)) / 2;
-    const cy = (Math.sin(t * DRIFT.freqY + DRIFT.phaseY) + Math.sin(t * DRIFT.driftFreqY)) / 2;
-
-    setAutoPos({
-      x: width * (0.15 + (cx + 1) * 0.35),
-      y: height * (0.15 + (cy + 1) * 0.35)
-    });
-  }, []);
+  const mouse = useMousePosition(containerRef, !isTouch);
 
   useEffect(() => {
     if (!isTouch) return;
 
     let rafId: number;
     const tick = () => {
-      animate();
+      const container = containerRef.current;
+      const litLayer = litLayerRef.current;
+      if (container && litLayer) {
+        const { width, height } = container.getBoundingClientRect();
+        const t = performance.now();
+        const cx = (Math.sin(t * DRIFT.freqX + DRIFT.phaseX) + Math.sin(t * DRIFT.driftFreqX)) / 2;
+        const cy = (Math.sin(t * DRIFT.freqY + DRIFT.phaseY) + Math.sin(t * DRIFT.driftFreqY)) / 2;
+        const mask = buildMask(width * (0.15 + (cx + 1) * 0.35), height * (0.15 + (cy + 1) * 0.35));
+        litLayer.style.maskImage = mask;
+        litLayer.style.webkitMaskImage = mask;
+      }
+
       rafId = requestAnimationFrame(tick);
     };
 
     rafId = requestAnimationFrame(tick);
 
     return () => cancelAnimationFrame(rafId);
-  }, [isTouch, animate]);
+  }, [isTouch]);
 
-  const pos = isTouch ? autoPos : mouse;
-  const mask = `radial-gradient(circle ${SPOTLIGHT_RADIUS}px at ${pos.x}px ${pos.y}px, black 0%, transparent 100%)`;
+  const desktopMask = isTouch ? undefined : buildMask(mouse.x, mouse.y);
 
   const buildTrackItems = (textStyle: ResponsiveStyles, dotStyle: ResponsiveStyles) =>
     Array.from({ length: TRACK_REPS }, (_, repIdx) =>
@@ -92,7 +89,12 @@ export const SpotlightText = ({ lines, rows = 5 }: SpotlightTextProps) => {
     <div ref={containerRef} style={resolve(containerStyle)}>
       <div style={resolve(layerStyle)}>{renderRows(darkTextStyle, darkDotStyle)}</div>
 
-      <div style={{ ...resolve(litLayerStyle), maskImage: mask, WebkitMaskImage: mask }}>
+      <div
+        ref={litLayerRef}
+        style={{
+          ...resolve(litLayerStyle),
+          ...(desktopMask && { maskImage: desktopMask, WebkitMaskImage: desktopMask })
+        }}>
         {renderRows(litTextStyle, litDotStyle)}
       </div>
     </div>
@@ -154,8 +156,15 @@ const dotBase: ResponsiveStyles = {
   flexShrink: 0
 };
 
-const darkTextStyle: ResponsiveStyles = { ...textBase, color: '#424342' };
-const darkDotStyle: ResponsiveStyles = { ...dotBase, background: '#424342' };
+const darkTextStyle: ResponsiveStyles = {
+  ...textBase,
+  color: '#424342'
+};
+
+const darkDotStyle: ResponsiveStyles = {
+  ...dotBase,
+  background: '#424342'
+};
 
 const litLayerStyle: ResponsiveStyles = {
   ...layerStyle,
@@ -165,5 +174,12 @@ const litLayerStyle: ResponsiveStyles = {
   pointerEvents: 'none'
 };
 
-const litTextStyle: ResponsiveStyles = { ...textBase, color: 'var(--color-white)' };
-const litDotStyle: ResponsiveStyles = { ...dotBase, background: 'var(--color-white)' };
+const litTextStyle: ResponsiveStyles = {
+  ...textBase,
+  color: 'var(--color-white)'
+};
+
+const litDotStyle: ResponsiveStyles = {
+  ...dotBase,
+  background: 'var(--color-white)'
+};

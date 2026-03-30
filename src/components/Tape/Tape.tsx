@@ -32,12 +32,17 @@ export const Tape = forwardRef<HTMLDivElement, TapeProps>(
 
     const rotation = typeof angle === 'number' ? angle : resolve(angle, DEFAULTS.angle.base);
     const duration = typeof speed === 'number' ? speed : resolve(speed, DEFAULTS.speed.base);
-    const animation = direction === 'left' ? 'tapeMarqueeLeft' : 'tapeMarqueeRight';
+    const animationName = direction === 'left' ? 'tapeMarqueeLeft' : 'tapeMarqueeRight';
+    const isAnimated = duration > 0;
     const items = Array.from({ length: repetitions }, (_, i) => i);
 
     return (
       <div ref={ref} style={{ ...resolve(tapeStyle), transform: `rotate(${rotation}deg)` }}>
-        <div style={{ ...resolve(trackStyle), animation: `${animation} ${duration}s linear infinite` }}>
+        <div
+          style={{
+            ...resolve(trackStyle),
+            animation: isAnimated ? `${animationName} ${duration}s linear infinite` : 'none'
+          }}>
           {items.map((i) => (
             <span key={i} style={resolve(itemStyle)}>
               <span style={resolve(textStyle)}>{text}</span>
@@ -61,7 +66,7 @@ const tapeStyle: ResponsiveStyles = {
   padding: { base: '0.65rem 0', lg: '0.8rem 0' },
   userSelect: 'none',
   pointerEvents: 'none',
-  zIndex: 10000
+  zIndex: 10
 };
 
 const trackStyle: ResponsiveStyles = {

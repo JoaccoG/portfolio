@@ -11,7 +11,7 @@ vi.mock('@hooks/useBreakpoint', () => ({
 }));
 
 vi.mock('@hooks/useMousePosition', () => ({
-  useMousePosition: () => ({ x: 100, y: 100 })
+  useMousePosition: (_ref: unknown, _enabled?: boolean) => ({ x: 100, y: 100 })
 }));
 
 const lines = ['APIs', 'Web Apps', 'Libraries'];
@@ -66,9 +66,10 @@ describe('Given the SpotlightText component', () => {
       expect(rafSpy).toHaveBeenCalled();
     });
 
-    it('Then flushing the rAF callback should run the drift animation', () => {
+    it('Then flushing the rAF callback should apply the mask directly on the lit layer', () => {
       const { container } = render(<SpotlightText lines={lines} />);
       const rootDiv = container.firstChild as HTMLDivElement;
+      const litLayer = rootDiv.children[1] as HTMLDivElement;
 
       rootDiv.getBoundingClientRect = vi.fn(() => ({
         width: 800,
@@ -82,16 +83,16 @@ describe('Given the SpotlightText component', () => {
         toJSON: () => {}
       }));
 
-      const nowSpy = vi.spyOn(performance, 'now').mockReturnValue(5000);
+      vi.spyOn(performance, 'now').mockReturnValue(5000);
 
       act(() => {
         const cb = rafCbs.shift();
         if (cb) cb(5000);
       });
 
-      expect(nowSpy).toHaveBeenCalled();
       expect(rootDiv.getBoundingClientRect).toHaveBeenCalled();
-      nowSpy.mockRestore();
+      expect(litLayer.style.maskImage).toContain('radial-gradient');
+      vi.restoreAllMocks();
     });
 
     it('Then the tick function should re-schedule itself after animating', () => {
@@ -131,7 +132,8 @@ describe('Given the SpotlightText component', () => {
   });
 
   describe('When the mask style is applied', () => {
-    it('Then the lit layer should have a radial-gradient mask', () => {
+    it('Then the lit layer should have a radial-gradient mask on desktop', () => {
+      mockBreakpoint.value = 'lg';
       const { container } = render(<SpotlightText lines={lines} />);
       const rootDiv = container.firstChild as HTMLDivElement;
       const litLayer = rootDiv.children[1] as HTMLDivElement;

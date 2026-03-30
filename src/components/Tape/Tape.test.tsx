@@ -71,6 +71,14 @@ describe('Given the Tape component', () => {
     });
   });
 
+  describe('When speed is zero', () => {
+    it('Then it should set animation to none', () => {
+      render(<Tape speed={0} />);
+      const track = screen.getAllByText('COMING SOON')[0].parentElement!.parentElement!;
+      expect(track.style.animation).toBe('none');
+    });
+  });
+
   describe('When a ref is passed', () => {
     it('Then it should forward the ref to the root div', () => {
       const ref = createRef<HTMLDivElement>();
