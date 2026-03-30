@@ -58,7 +58,7 @@ const tapeStyle: ResponsiveStyles = {
   background: 'var(--color-dark-gray)',
   borderTop: '1px solid var(--color-light-gray)',
   borderBottom: '1px solid var(--color-light-gray)',
-  padding: '0.65rem 0',
+  padding: { base: '0.65rem 0', lg: '0.8rem 0' },
   userSelect: 'none',
   pointerEvents: 'none',
   zIndex: 10000
@@ -73,14 +73,14 @@ const trackStyle: ResponsiveStyles = {
 const itemStyle: ResponsiveStyles = {
   display: 'flex',
   alignItems: 'center',
-  gap: '1.5rem',
+  gap: { base: '1.5rem', lg: '1.75rem' },
   flexShrink: 0,
-  padding: '0 1.5rem'
+  padding: { base: '0 1.5rem', lg: '0 1.75rem' }
 };
 
 const textStyle: ResponsiveStyles = {
   fontFamily: 'var(--font-mono)',
-  fontSize: '0.7rem',
+  fontSize: { base: '0.7rem', lg: '0.8rem' },
   fontWeight: 500,
   letterSpacing: '0.25em',
   textTransform: 'uppercase',
@@ -89,8 +89,8 @@ const textStyle: ResponsiveStyles = {
 };
 
 const separatorStyle: ResponsiveStyles = {
-  width: '4px',
-  height: '4px',
+  width: { base: '4px', lg: '5px' },
+  height: { base: '4px', lg: '5px' },
   background: 'var(--color-primary)',
   borderRadius: '50%',
   opacity: 0.6,
