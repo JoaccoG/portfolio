@@ -11,13 +11,14 @@ export default defineConfig({
       reporter: ['text', 'lcov'],
       reportOnFailure: true,
       reportsDirectory: 'coverage',
-      include: ['src/**/*.{ts,tsx}'],
+      include: ['src/**/*.{ts,tsx}', 'netlify/**/*.ts'],
       exclude: [
         'src/**/*.d.ts',
         'src/**/*.test.{ts,tsx}',
         'src/test/helpers/**/*.{ts,tsx}',
         'src/components/icons/**/*.{ts,tsx}',
-        'src/main.tsx'
+        'src/main.tsx',
+        'netlify/**/*.test.ts'
       ]
     }
   }
