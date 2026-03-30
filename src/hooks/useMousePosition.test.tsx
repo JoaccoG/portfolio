@@ -41,8 +41,8 @@ describe('Given the useMousePosition hook', () => {
       expect(latest).toEqual({ x: 0, y: 0 });
     });
 
-    it('Then it should register a mousemove listener on window', () => {
-      const addSpy = vi.spyOn(window, 'addEventListener');
+    it('Then it should register a mousemove listener on globalThis', () => {
+      const addSpy = vi.spyOn(globalThis, 'addEventListener');
       render(<TestHarness onPosition={() => {}} />);
       expect(addSpy).toHaveBeenCalledWith('mousemove', expect.any(Function));
       addSpy.mockRestore();
@@ -68,7 +68,7 @@ describe('Given the useMousePosition hook', () => {
       }));
 
       act(() => {
-        window.dispatchEvent(new MouseEvent('mousemove', { clientX: 250, clientY: 150 }));
+        globalThis.dispatchEvent(new MouseEvent('mousemove', { clientX: 250, clientY: 150 }));
       });
 
       act(() => {
@@ -83,11 +83,11 @@ describe('Given the useMousePosition hook', () => {
       render(<TestHarness onPosition={() => {}} />);
 
       act(() => {
-        window.dispatchEvent(new MouseEvent('mousemove', { clientX: 10, clientY: 10 }));
+        globalThis.dispatchEvent(new MouseEvent('mousemove', { clientX: 10, clientY: 10 }));
       });
 
       act(() => {
-        window.dispatchEvent(new MouseEvent('mousemove', { clientX: 20, clientY: 20 }));
+        globalThis.dispatchEvent(new MouseEvent('mousemove', { clientX: 20, clientY: 20 }));
       });
 
       expect(cancelRafSpy).toHaveBeenCalled();
@@ -104,7 +104,7 @@ describe('Given the useMousePosition hook', () => {
       render(<NullRefHarness />);
 
       act(() => {
-        window.dispatchEvent(new MouseEvent('mousemove', { clientX: 10, clientY: 10 }));
+        globalThis.dispatchEvent(new MouseEvent('mousemove', { clientX: 10, clientY: 10 }));
       });
 
       act(() => {
@@ -116,7 +116,7 @@ describe('Given the useMousePosition hook', () => {
 
   describe('When unmounted', () => {
     it('Then it should remove the mousemove listener and cancel pending rAF', () => {
-      const removeSpy = vi.spyOn(window, 'removeEventListener');
+      const removeSpy = vi.spyOn(globalThis, 'removeEventListener');
       const { unmount } = render(<TestHarness onPosition={() => {}} />);
       unmount();
 

@@ -61,6 +61,16 @@ export const SpotlightText = ({ lines, rows = 5 }: SpotlightTextProps) => {
   const pos = isTouch ? autoPos : mouse;
   const mask = `radial-gradient(circle ${SPOTLIGHT_RADIUS}px at ${pos.x}px ${pos.y}px, black 0%, transparent 100%)`;
 
+  const buildTrackItems = (textStyle: ResponsiveStyles, dotStyle: ResponsiveStyles) =>
+    Array.from({ length: TRACK_REPS }, (_, repIdx) =>
+      lines.map((line, lineIdx) => (
+        <span key={`${repIdx}-${lineIdx}`} style={resolve(itemStyle)}>
+          <span style={resolve(textStyle)}>{line}</span>
+          <span style={resolve(dotStyle)} />
+        </span>
+      ))
+    ).flat();
+
   const renderRows = (textStyle: ResponsiveStyles, dotStyle: ResponsiveStyles) =>
     Array.from({ length: rows }, (_, rowIdx) => {
       const animation = rowIdx % 2 === 0 ? 'tapeMarqueeLeft' : 'tapeMarqueeRight';
@@ -72,14 +82,7 @@ export const SpotlightText = ({ lines, rows = 5 }: SpotlightTextProps) => {
               ...resolve(trackStyle),
               animation: `${animation} ${MARQUEE_SPEED}s linear infinite`
             }}>
-            {Array.from({ length: TRACK_REPS }, (_, repIdx) =>
-              lines.map((line, lineIdx) => (
-                <span key={`${repIdx}-${lineIdx}`} style={resolve(itemStyle)}>
-                  <span style={resolve(textStyle)}>{line}</span>
-                  <span style={resolve(dotStyle)} />
-                </span>
-              ))
-            ).flat()}
+            {buildTrackItems(textStyle, dotStyle)}
           </div>
         </div>
       );

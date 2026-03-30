@@ -20,10 +20,10 @@ export const useMousePosition = (containerRef: RefObject<HTMLElement | null>): M
       });
     };
 
-    window.addEventListener('mousemove', onMouseMove);
+    globalThis.addEventListener('mousemove', onMouseMove);
 
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
+      globalThis.removeEventListener('mousemove', onMouseMove);
       cancelAnimationFrame(rafId.current);
     };
   }, [containerRef]);
