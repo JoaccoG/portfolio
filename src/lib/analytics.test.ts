@@ -39,15 +39,15 @@ beforeEach(async () => {
 describe('Given the analytics lib', () => {
   describe('When loadUmami() is called', () => {
     it('If in local, then it should not inject the script', () => {
-      vi.stubEnv('VITE_ENVIRONMENT', 'local');
+      vi.stubEnv('ENVIRONMENT', 'local');
       loadUmami();
       expect(getInjectedScript()).toBeNull();
     });
 
     it('If in production but env vars are missing, then it should not inject the script', () => {
-      vi.stubEnv('VITE_ENVIRONMENT', 'production');
-      vi.stubEnv('VITE_UMAMI__SCRIPT_URL', '');
-      vi.stubEnv('VITE_UMAMI__WEBSITE_ID', '');
+      vi.stubEnv('ENVIRONMENT', 'production');
+      vi.stubEnv('UMAMI__SCRIPT_URL', '');
+      vi.stubEnv('UMAMI__WEBSITE_ID', '');
       loadUmami();
       expect(getInjectedScript()).toBeNull();
     });

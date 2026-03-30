@@ -6,7 +6,7 @@ import { loadUmami } from '@lib/analytics';
 import { App } from './App';
 import '@style/globals.css';
 
-if (import.meta.env.VITE_ENVIRONMENT === 'production') {
+if (import.meta.env.ENVIRONMENT === 'production') {
   const noop = () => {};
 
   console.log = noop;

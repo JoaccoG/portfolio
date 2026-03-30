@@ -1,9 +1,9 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_ENVIRONMENT: string;
-  readonly VITE_UMAMI__SCRIPT_URL: string;
-  readonly VITE_UMAMI__WEBSITE_ID: string;
+  readonly ENVIRONMENT: string;
+  readonly UMAMI__SCRIPT_URL: string;
+  readonly UMAMI__WEBSITE_ID: string;
 }
 
 interface ImportMeta {
