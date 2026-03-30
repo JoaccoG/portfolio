@@ -4,8 +4,13 @@
     "target": "ES2023",
     "lib": ["ES2023"],
     "module": "ESNext",
-    "types": ["node"],
+    "types": ["node", "vitest/globals"],
     "skipLibCheck": true,
+    "baseUrl": "./",
+    "paths": {
+      "@api/lib*": ["netlify/lib/*"],
+      "@api/middlewares*": ["netlify/middlewares/*"]
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -22,5 +27,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "netlify"]
 }
