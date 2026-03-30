@@ -3,6 +3,7 @@ import { Overlay } from '@components/Overlay/Overlay';
 import { Header } from '@components/Header/Header';
 import { Hero } from '@pages/Hero/Hero';
 import { About } from '@pages/About/About';
+import { Projects } from '@pages/Projects/Projects';
 
 export const App = () => {
   const { scrollTo } = useSmoothScroll();
@@ -14,6 +15,7 @@ export const App = () => {
       <main>
         <Hero />
         <About />
+        <Projects />
       </main>
     </>
   );

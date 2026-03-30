@@ -1,6 +1,6 @@
 export const NAV_ITEMS = [
   { label: 'ABOUT', target: 'about' },
-  { label: 'WORK', target: 'work' },
+  { label: 'WORK', target: 'projects' },
   { label: 'CONTACT', target: 'contact' }
 ] as const;
 
@@ -57,3 +57,14 @@ export const ABOUT_CHAPTERS = [
     ]
   }
 ];
+
+export const PROJECTS_CATEGORIES = [
+  'APIs',
+  'Web Apps',
+  'Libraries',
+  'AI Tools',
+  'LLMs',
+  'Platforms',
+  'Mobile Apps',
+  'Open Source'
+] as const;
