@@ -13,7 +13,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "build:icons": "svgr --out-dir src/components/icons --typescript --ref --no-prettier --no-index -- public/assets/images",
+    "build:icons": "svgr --out-dir src/components/icons --typescript --ref --no-prettier --no-index -- public/assets/icons",
     "preview": "vite preview",
     "test": "vitest --coverage --watch=false",
     "lint": "eslint . && prettier --check .",
