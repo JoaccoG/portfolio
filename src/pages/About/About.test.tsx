@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { ABOUT_CHAPTERS } from '@constants/content';
+import { ABOUT } from '@constants/content';
 import { About } from './About';
 
 vi.mock('gsap', () => ({
@@ -69,12 +69,12 @@ describe('Given the About page', () => {
 
     it('Then it should render the title "ABOUT ME"', () => {
       render(<About />);
-      expect(screen.getByText('ABOUT ME')).toBeInTheDocument();
+      expect(screen.getByText(ABOUT.title)).toBeInTheDocument();
     });
 
     it('Then it should render all chapters from ABOUT_CHAPTERS', () => {
       render(<About />);
-      ABOUT_CHAPTERS.forEach((chapter) => {
+      ABOUT.chapters.forEach((chapter) => {
         expect(screen.getByTestId(`chapter-${chapter.number}`)).toBeInTheDocument();
         expect(screen.getByText(chapter.title)).toBeInTheDocument();
       });
@@ -82,7 +82,7 @@ describe('Given the About page', () => {
 
     it('Then the last chapter ref should be assigned to the last chapter element', () => {
       render(<About />);
-      const lastChapter = screen.getByTestId(`chapter-${ABOUT_CHAPTERS[ABOUT_CHAPTERS.length - 1].number}`);
+      const lastChapter = screen.getByTestId(`chapter-${ABOUT.chapters[ABOUT.chapters.length - 1].number}`);
       expect(lastChapter).toBeInTheDocument();
     });
   });

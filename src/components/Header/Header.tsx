@@ -2,8 +2,8 @@ import { useState, useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useBreakpoint, type ResponsiveStyles } from '@hooks/useBreakpoint';
-import { NAV_ITEMS } from '@constants/content';
-import { BlogUnderline } from '@components/icons/BlogUnderline';
+import { HEADER } from '@constants/content';
+import { SvgIcon } from '@components/icons';
 
 interface HeaderProps {
   scrollTo: (target: string) => void;
@@ -71,11 +71,16 @@ export const Header = ({ scrollTo }: HeaderProps) => {
         <div
           ref={navLinksRef}
           style={{ ...resolve(navLinksContainerStyle), display: hasScrollShrink ? 'flex' : 'none' }}>
-          {NAV_ITEMS.map((item) => (
-            <NavLink key={item.target} href={`#${item.target}`} label={item.label} scrollTo={scrollTo} />
+          {HEADER.navItems.map(({ label, target }) => (
+            <NavLink key={target} href={target} label={label} scrollTo={scrollTo} />
           ))}
         </div>
-        <NavLink ref={blogLinkRef} href="/blog" label="BLOG" underlineRef={underlineRef} />
+        <NavLink
+          ref={blogLinkRef}
+          href={HEADER.blogLink.target}
+          label={HEADER.blogLink.label}
+          underlineRef={underlineRef}
+        />
       </nav>
     </header>
   );
@@ -119,7 +124,7 @@ const NavLink = ({
         position: underlineRef ? 'relative' : undefined
       }}>
       {label}
-      {underlineRef && <BlogUnderline ref={underlineRef} style={{ ...resolve(underlineSvgStyle) }} />}
+      {underlineRef && <SvgIcon icon="blogUnderline" ref={underlineRef} style={{ ...resolve(underlineSvgStyle) }} />}
     </a>
   );
 };

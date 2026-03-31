@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useBreakpoint, type ResponsiveStyles } from '@hooks/useBreakpoint';
-import { PROJECTS_CATEGORIES } from '@constants/content';
+import { PROJECTS } from '@constants/content';
 import { Section } from '@components/Section/Section';
 import { Title } from '@components/Title/Title';
 import { Tape } from '@components/Tape/Tape';
@@ -37,12 +37,12 @@ export const Projects = () => {
   return (
     <Section ref={sectionRef} id="projects" style={projectsSectionStyle}>
       <Title ref={titleRef} as="h2">
-        PROJECTS
+        {PROJECTS.title}
       </Title>
 
       <div style={resolve(gridStyle)}>
         <div ref={spotlightRef} style={spotlightCellStyle}>
-          <SpotlightText lines={PROJECTS_CATEGORIES} />
+          <SpotlightText lines={PROJECTS.categories} />
         </div>
 
         <div style={resolve(tapeCellStyle)}>
@@ -55,7 +55,8 @@ export const Projects = () => {
 
 const projectsSectionStyle: ResponsiveStyles = {
   height: 'auto',
-  minHeight: { base: 'auto', md: '100dvh' },
+  // minHeight: { base: '100dvh', sm: 'auto' },
+  minHeight: 'auto',
   justifyContent: 'center',
   padding: { base: '4rem 0', xs: '4rem 0', md: '0' },
   gap: '3rem',
@@ -66,7 +67,7 @@ const gridStyle: ResponsiveStyles = {
   width: '100%',
   maxHeight: '700px',
   display: 'grid',
-  flex: { base: 'none', md: '1' },
+  flex: { base: 'none', sm: '1' },
   alignItems: 'center'
 };
 

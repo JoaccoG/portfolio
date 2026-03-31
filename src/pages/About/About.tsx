@@ -1,6 +1,6 @@
-import { useRef } from 'react';
+import { useRef, type ReactNode } from 'react';
 import { useBreakpoint, type ResponsiveStyles } from '@hooks/useBreakpoint';
-import { ABOUT_CHAPTERS } from '@constants/content';
+import { ABOUT } from '@constants/content';
 import { Section } from '@components/Section/Section';
 import { Title } from '@components/Title/Title';
 import { useAboutAnimation } from './hooks/useAboutAnimation';
@@ -17,16 +17,16 @@ export const About = () => {
 
   useAboutAnimation({ sectionRef, titleRef, windowRef, innerRef, lastChapterRef, chapterRefs });
 
-  const lastIdx = ABOUT_CHAPTERS.length - 1;
+  const lastIdx = ABOUT.chapters.length - 1;
 
   return (
     <Section ref={sectionRef} id="about" style={aboutSectionStyle}>
       <Title ref={titleRef} as="h2" style={titleStyle}>
-        ABOUT ME
+        {ABOUT.title}
       </Title>
       <div ref={windowRef} style={resolve(windowStyle)}>
         <div ref={innerRef} style={resolve(innerStyle)}>
-          {ABOUT_CHAPTERS.map((chapter, idx) => (
+          {ABOUT.chapters.map((chapter, idx) => (
             <AboutChapter
               key={chapter.number}
               ref={(el) => {
@@ -35,7 +35,7 @@ export const About = () => {
               }}
               number={chapter.number}
               title={chapter.title}
-              paragraphs={chapter.paragraphs}
+              paragraphs={chapter.paragraphs as unknown as ReactNode[]}
             />
           ))}
         </div>

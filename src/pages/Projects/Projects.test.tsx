@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { PROJECTS } from '@constants/content';
 import { Projects } from './Projects';
 
 const { callGsapSync } = vi.hoisted(() => ({ callGsapSync: { value: false } }));
@@ -77,7 +78,7 @@ describe('Given the Projects page', () => {
 
     it('Then it should render the title "PROJECTS"', () => {
       render(<Projects />);
-      expect(screen.getByText('PROJECTS')).toBeInTheDocument();
+      expect(screen.getByText(PROJECTS.title)).toBeInTheDocument();
     });
 
     it('Then it should render the SpotlightText component', () => {
