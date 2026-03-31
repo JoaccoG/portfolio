@@ -30,3 +30,33 @@ vi.mock('./src/hooks/useBreakpoint', () => ({
     resolve: vi.fn((_input: unknown, fallback?: unknown) => fallback ?? {})
   })
 }));
+
+vi.mock('./src/components/icons', async () => {
+  const { forwardRef, useRef, useEffect, createElement } = await vi.importActual<typeof import('react')>('react');
+
+  return {
+    SvgIcon: forwardRef(({ icon }: { icon: string; style?: unknown }, ref: React.Ref<SVGSVGElement>) => {
+      const svgRef = useRef<SVGSVGElement>(null);
+
+      useEffect(() => {
+        const svg = svgRef.current;
+        if (!svg) return;
+        const path = svg.querySelector('path');
+        if (path && !path.getTotalLength) (path as unknown as Record<string, unknown>).getTotalLength = () => 100;
+      }, []);
+
+      useEffect(() => {
+        const svg = svgRef.current;
+        if (!svg) return;
+        if (typeof ref === 'function') ref(svg);
+        else if (ref && typeof ref === 'object') (ref as { current: SVGSVGElement | null }).current = svg;
+      }, [ref]);
+
+      return createElement(
+        'div',
+        { 'data-testid': `svg-icon-${icon}` },
+        createElement('svg', { ref: svgRef }, createElement('path', { d: 'M0 0' }))
+      );
+    })
+  };
+});
