@@ -140,6 +140,58 @@ describe('Given the useContactForm hook', () => {
     });
   });
 
+  describe('When handleSubmit is called while status is not idle', () => {
+    it('Then it should ignore submit during success cooldown', async () => {
+      vi.useFakeTimers();
+      mockFetch.mockResolvedValueOnce(makeOkResponse());
+      const { result } = renderHook(() => useContactForm());
+
+      act(() => {
+        result.current.handleChange('email', 'test@example.com');
+        result.current.handleChange('message', 'Hello');
+      });
+      await act(async () => {
+        await result.current.handleSubmit();
+      });
+      expect(result.current.status).toBe('success');
+
+      await act(async () => {
+        await result.current.handleSubmit();
+      });
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+
+      act(() => {
+        vi.advanceTimersByTime(2000);
+      });
+      vi.useRealTimers();
+    });
+
+    it('Then it should ignore submit during error cooldown', async () => {
+      vi.useFakeTimers();
+      mockFetch.mockResolvedValueOnce(makeErrorResponse(500, { message: 'Error' }));
+      const { result } = renderHook(() => useContactForm());
+
+      act(() => {
+        result.current.handleChange('email', 'test@example.com');
+        result.current.handleChange('message', 'Hello');
+      });
+      await act(async () => {
+        await result.current.handleSubmit();
+      });
+      expect(result.current.status).toBe('error');
+
+      await act(async () => {
+        await result.current.handleSubmit();
+      });
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+
+      act(() => {
+        vi.advanceTimersByTime(2000);
+      });
+      vi.useRealTimers();
+    });
+  });
+
   describe('When handleSubmit succeeds', () => {
     it('Then status should become success', async () => {
       mockFetch.mockResolvedValueOnce(makeOkResponse());
@@ -186,7 +238,7 @@ describe('Given the useContactForm hook', () => {
       expect(result.current.fields).toEqual({ email: '', subject: '', message: '' });
     });
 
-    it('Then status should reset to idle after 3.5s', async () => {
+    it('Then status should reset to idle after 2s', async () => {
       vi.useFakeTimers();
       mockFetch.mockResolvedValueOnce(makeOkResponse());
       const { result } = renderHook(() => useContactForm());
@@ -248,7 +300,7 @@ describe('Given the useContactForm hook', () => {
       expect(result.current.status).toBe('error');
     });
 
-    it('Then status should reset to idle after 3.5s', async () => {
+    it('Then status should reset to idle after 2s', async () => {
       vi.useFakeTimers();
       mockFetch.mockResolvedValueOnce(makeErrorResponse(500, { message: 'Error' }));
       const { result } = renderHook(() => useContactForm());

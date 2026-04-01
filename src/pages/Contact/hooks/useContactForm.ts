@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { track } from '@lib/analytics';
 
 export type FormStatus = 'idle' | 'sending' | 'success' | 'error';
 
@@ -75,6 +76,8 @@ export const useContactForm = () => {
   }, []);
 
   const handleSubmit = useCallback(async () => {
+    if (status !== 'idle') return;
+
     const fieldErrors = validate(fields);
     if (hasErrors(fieldErrors)) {
       setErrors(fieldErrors);
@@ -87,6 +90,7 @@ export const useContactForm = () => {
     setStatus('sending');
 
     try {
+      track('contact-form-submitted', { email: fields.email.trim(), subject: fields.subject.trim() || 'default' });
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -117,7 +121,7 @@ export const useContactForm = () => {
       setServerError('Something went wrong. Try again.');
       setStatus('error');
     }
-  }, [fields]);
+  }, [fields, status]);
 
   return { fields, errors, status, serverError, successMessage, handleChange, handleSubmit };
 };

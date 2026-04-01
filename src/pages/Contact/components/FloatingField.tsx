@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useBreakpoint, type ResponsiveStyles } from '@hooks/useBreakpoint';
 
 interface FloatingFieldProps {
@@ -10,9 +10,12 @@ interface FloatingFieldProps {
 }
 
 export const FloatingField = ({ type, label, value, error, onChange }: FloatingFieldProps) => {
+  const id = useId();
   const { resolve } = useBreakpoint();
   const [isFocused, setIsFocused] = useState(false);
   const isFloating = isFocused || value.length > 0;
+  const inputId = `field-${id}`;
+  const errorId = `error-${id}`;
 
   const borderColor = error ? 'var(--color-error)' : isFocused ? 'var(--color-primary)' : 'rgba(242, 235, 227, 0.12)';
 
@@ -35,6 +38,7 @@ export const FloatingField = ({ type, label, value, error, onChange }: FloatingF
   return (
     <div style={resolve(fieldWrapperStyle)}>
       <label
+        htmlFor={inputId}
         style={{
           ...resolve(labelStyle),
           color: labelColor,
@@ -48,14 +52,26 @@ export const FloatingField = ({ type, label, value, error, onChange }: FloatingF
       {type === 'textarea' ? (
         <textarea
           {...sharedProps}
+          id={inputId}
           rows={4}
+          aria-invalid={!!error}
+          aria-describedby={error ? errorId : undefined}
           style={{ ...resolve(inputStyles), resize: 'vertical', minHeight: '100px', maxHeight: '200px' }}
         />
       ) : (
-        <input {...sharedProps} type={type} style={resolve(inputStyles)} />
+        <input
+          {...sharedProps}
+          id={inputId}
+          type={type}
+          aria-invalid={!!error}
+          aria-describedby={error ? errorId : undefined}
+          style={resolve(inputStyles)}
+        />
       )}
 
-      <span style={resolve(errorTextStyle)}>{error ?? ''}</span>
+      <span id={error ? errorId : undefined} role={error ? 'alert' : undefined} style={resolve(errorTextStyle)}>
+        {error ?? ''}
+      </span>
     </div>
   );
 };

@@ -34,7 +34,7 @@ export const SvgIcon = forwardRef<HTMLDivElement, SvgIconProps>(({ icon, style =
 
   return (
     <div ref={ref} style={resolve({ ...svgIconStyle, ...style })}>
-      {createElement(svgIcons[icon])}
+      {createElement(svgIcons[icon], { width: '100%', height: '100%' })}
     </div>
   );
 });

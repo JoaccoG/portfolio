@@ -1,4 +1,4 @@
-import { useRef, type ReactNode } from 'react';
+import { useRef } from 'react';
 import { useBreakpoint, type ResponsiveStyles } from '@hooks/useBreakpoint';
 import { ABOUT } from '@constants/content';
 import { Section } from '@components/Section/Section';
@@ -55,7 +55,7 @@ export const About = () => {
                 }}
                 number={chapter.number}
                 title={chapter.title}
-                paragraphs={chapter.paragraphs as unknown as ReactNode[]}
+                paragraphs={chapter.paragraphs}
               />
             ))}
           </div>
@@ -80,7 +80,7 @@ const titleGroupStyle: ResponsiveStyles = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: { base: '1rem', md: 'none' },
+  gap: { base: '1rem', md: '0' },
   position: { base: 'relative', md: 'absolute' },
   left: { base: 'auto', md: '50%' },
   top: { base: 'auto', md: '50%' },

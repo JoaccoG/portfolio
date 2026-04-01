@@ -131,6 +131,15 @@ describe('Given the ResumeDropdown component', () => {
     });
   });
 
+  describe('When the page is scrolled while dropdown is open', () => {
+    it('Then the dropdown should remain open', () => {
+      render(<ResumeDropdown />);
+      fireEvent.click(screen.getByRole('button'));
+      fireEvent.scroll(window);
+      expect(getDropdownContainer()).toHaveStyle({ opacity: 1, pointerEvents: 'auto' });
+    });
+  });
+
   describe('When a ref is forwarded', () => {
     it('Then the ref should point to the container element', () => {
       const ref = createRef<HTMLDivElement>();

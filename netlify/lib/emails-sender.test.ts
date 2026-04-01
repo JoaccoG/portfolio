@@ -65,12 +65,24 @@ describe('Given sendEmail', () => {
   });
 
   it('Then it should throw ApiError(502) when Resend returns an error', async () => {
-    mockSend.mockResolvedValueOnce({ error: { message: 'Send failed' } });
+    mockSend.mockResolvedValueOnce({ error: { name: 'application_error', message: 'Send failed', statusCode: 500 } });
     const sender = await importSender();
 
     await expect(sender.sendEmail({ replyTo: 'u@e.com', subject: 'Hi', message: 'Msg' })).rejects.toMatchObject({
       status: 502,
       message: 'Failed to send email'
+    });
+  });
+
+  it('Then it should throw ApiError(429) with time-until-reset when daily quota is exceeded', async () => {
+    mockSend.mockResolvedValueOnce({
+      error: { name: 'daily_quota_exceeded', message: 'Daily quota exceeded', statusCode: 429 }
+    });
+    const sender = await importSender();
+
+    await expect(sender.sendEmail({ replyTo: 'u@e.com', subject: 'Hi', message: 'Msg' })).rejects.toMatchObject({
+      status: 429,
+      message: expect.stringMatching(/^Daily usage reached, please try again in .+/)
     });
   });
 });
@@ -90,12 +102,53 @@ describe('Given addSubscriber', () => {
   });
 
   it('Then it should throw ApiError(502) when Resend returns an error', async () => {
-    mockCreate.mockResolvedValueOnce({ error: { message: 'Create failed' } });
+    mockCreate.mockResolvedValueOnce({
+      error: { name: 'application_error', message: 'Create failed', statusCode: 500 }
+    });
     const sender = await importSender();
 
     await expect(sender.addSubscriber({ email: 'u@e.com' })).rejects.toMatchObject({
       status: 502,
       message: 'Failed to subscribe'
     });
+  });
+
+  it('Then it should throw ApiError(429) with time-until-reset when daily quota is exceeded', async () => {
+    mockCreate.mockResolvedValueOnce({
+      error: { name: 'daily_quota_exceeded', message: 'Daily quota exceeded', statusCode: 429 }
+    });
+    const sender = await importSender();
+
+    await expect(sender.addSubscriber({ email: 'u@e.com' })).rejects.toMatchObject({
+      status: 429,
+      message: expect.stringMatching(/^Daily usage reached, please try again in .+/)
+    });
+  });
+});
+
+describe('Given getTimeUntilDailyReset', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('Then it should return hours and minutes until next midnight UTC', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-04-01T15:22:00Z'));
+    const { getTimeUntilDailyReset } = await import('./emails-sender');
+    expect(getTimeUntilDailyReset()).toBe('8 hours and 38 minutes');
+  });
+
+  it('Then it should return only minutes when less than an hour remains', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-04-01T23:30:00Z'));
+    const { getTimeUntilDailyReset } = await import('./emails-sender');
+    expect(getTimeUntilDailyReset()).toBe('30 minutes');
+  });
+
+  it('Then it should return only hours when minutes are exactly zero', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-04-01T22:00:00Z'));
+    const { getTimeUntilDailyReset } = await import('./emails-sender');
+    expect(getTimeUntilDailyReset()).toBe('2 hours');
   });
 });

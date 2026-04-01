@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback, forwardRef } from 'react';
+import { track } from '@lib/analytics';
 import { useBreakpoint, type ResponsiveStyles } from '@hooks/useBreakpoint';
 import { ABOUT } from '@constants/content';
 import { SvgIcon } from '@components/icons';
@@ -33,12 +34,10 @@ export const ResumeDropdown = forwardRef<HTMLDivElement>(function ResumeDropdown
 
     document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('scroll', close, { passive: true });
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('scroll', close);
     };
   }, [isOpen]);
 
@@ -48,6 +47,7 @@ export const ResumeDropdown = forwardRef<HTMLDivElement>(function ResumeDropdown
     <div ref={mergeRef} style={resolve(containerStyle)}>
       <button
         type="button"
+        aria-expanded={isOpen}
         onClick={() => setIsOpen((prev) => !prev)}
         onMouseEnter={() => setIsButtonHovered(true)}
         onMouseLeave={() => setIsButtonHovered(false)}
@@ -79,7 +79,16 @@ export const ResumeDropdown = forwardRef<HTMLDivElement>(function ResumeDropdown
           borderColor: 'var(--color-primary)'
         }}>
         {ABOUT.buttonOptions.map(({ label, href }) => (
-          <DropdownOption key={href} label={label} href={href} onSelect={() => setIsOpen(false)} />
+          <DropdownOption
+            key={href}
+            label={label}
+            href={href}
+            isVisible={isOpen}
+            onSelect={() => {
+              track('resume-dropdown-option-selected', { language: label.toLowerCase() });
+              setIsOpen(false);
+            }}
+          />
         ))}
       </div>
     </div>
@@ -92,7 +101,7 @@ interface DropdownOptionProps {
   onSelect: () => void;
 }
 
-const DropdownOption = ({ label, href, onSelect }: DropdownOptionProps) => {
+const DropdownOption = ({ label, href, onSelect, isVisible }: DropdownOptionProps & { isVisible: boolean }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { resolve } = useBreakpoint();
 
@@ -101,6 +110,7 @@ const DropdownOption = ({ label, href, onSelect }: DropdownOptionProps) => {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      tabIndex={isVisible ? 0 : -1}
       onClick={onSelect}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

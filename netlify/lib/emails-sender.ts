@@ -12,6 +12,35 @@ interface AddSubscriberParams {
   email: string;
 }
 
+interface ResendError {
+  name: string;
+  statusCode: number | null;
+  message: string;
+}
+
+const DAILY_QUOTA_ERROR = 'daily_quota_exceeded';
+
+export const getTimeUntilDailyReset = (): string => {
+  const now = new Date();
+  const nextMidnightUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+  const totalMinutes = Math.ceil((nextMidnightUTC.getTime() - now.getTime()) / (1000 * 60));
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (hours === 0) return `${minutes} minutes`;
+  if (minutes === 0) return `${hours} hours`;
+  return `${hours} hours and ${minutes} minutes`;
+};
+
+const throwIfResendError = (error: ResendError | null, fallbackMessage: string): void => {
+  if (!error) return;
+
+  if (error.name === DAILY_QUOTA_ERROR)
+    throw new ApiError(429, `Daily usage reached, please try again in ${getTimeUntilDailyReset()}`);
+
+  throw new ApiError(502, fallbackMessage);
+};
+
 abstract class EmailSender {
   abstract sendEmail(params: SendEmailParams): Promise<void>;
   abstract addSubscriber(params: AddSubscriberParams): Promise<void>;
@@ -33,7 +62,7 @@ class ResendEmailSender extends EmailSender {
       subject,
       text: message
     });
-    if (error) throw new ApiError(502, 'Failed to send email');
+    throwIfResendError(error, 'Failed to send email');
   }
 
   async addSubscriber({ email }: AddSubscriberParams): Promise<void> {
@@ -42,7 +71,7 @@ class ResendEmailSender extends EmailSender {
       email,
       unsubscribed: false
     });
-    if (error) throw new ApiError(502, 'Failed to subscribe');
+    throwIfResendError(error, 'Failed to subscribe');
   }
 }
 
