@@ -24,6 +24,7 @@ interface SocialLinkProps {
 }
 
 const SocialLink = ({ icon, url }: SocialLinkProps) => {
+  const { resolve } = useBreakpoint();
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   return (
@@ -34,7 +35,7 @@ const SocialLink = ({ icon, url }: SocialLinkProps) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
-        ...socialLinkStyle,
+        ...resolve(socialLinkStyle),
         color: isHovered ? 'var(--color-primary)' : '#3d3d3d'
       }}>
       <SvgIcon icon={icon} />
@@ -65,7 +66,7 @@ const socialLinksStyle: ResponsiveStyles = {
   gap: '1rem'
 };
 
-const socialLinkStyle: React.CSSProperties = {
+const socialLinkStyle: ResponsiveStyles = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',

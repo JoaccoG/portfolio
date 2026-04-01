@@ -41,7 +41,7 @@ export const Projects = () => {
       </Title>
 
       <div style={resolve(gridStyle)}>
-        <div ref={spotlightRef} style={spotlightCellStyle}>
+        <div ref={spotlightRef} style={resolve(spotlightCellStyle)}>
           <SpotlightText lines={PROJECTS.categories} />
         </div>
 
@@ -70,7 +70,7 @@ const gridStyle: ResponsiveStyles = {
   alignItems: 'center'
 };
 
-const spotlightCellStyle: React.CSSProperties = {
+const spotlightCellStyle: ResponsiveStyles = {
   gridRow: 1,
   gridColumn: 1
 };
