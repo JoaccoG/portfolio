@@ -1,8 +1,8 @@
 import type { Config } from '@netlify/functions';
-import { withApi } from '@api/middlewares/composer';
-import { parseBody, contactSchema } from '@api/lib/schemas';
-import { getEmailSender } from '@api/lib/emails-sender';
-import { json } from '@api/lib/utils';
+import { withApi } from '../middlewares/composer';
+import { parseBody, contactSchema } from '../lib/schemas';
+import { getEmailSender } from '../lib/emails-sender';
+import { json } from '../lib/utils';
 
 export const config: Config = {
   path: '/api/contact',
@@ -14,7 +14,7 @@ export default withApi(async (req) => {
   const { subject, message, email } = await parseBody(req, contactSchema);
 
   const sender = getEmailSender();
-  await sender.sendEmail({ subject, message, replyTo: email });
+  await sender.sendEmail({ subject: subject || 'Portfolio Contact Email', message, replyTo: email });
 
-  return json({ success: true }, 201);
+  return json({ message: 'Message sent' }, 201);
 });

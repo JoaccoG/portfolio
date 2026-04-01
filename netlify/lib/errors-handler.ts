@@ -1,4 +1,9 @@
-import { json } from '@api/lib/utils';
+import { json } from './utils';
+
+export interface FieldError {
+  field: string;
+  message: string;
+}
 
 const STATUS_MESSAGES: Record<number, string> = {
   400: 'Bad Request',
@@ -15,9 +20,9 @@ const STATUS_MESSAGES: Record<number, string> = {
 
 export class ApiError extends Error {
   readonly status: number;
-  readonly errors?: Record<string, string[]>;
+  readonly errors: FieldError[];
 
-  constructor(status: number, message?: string, errors?: Record<string, string[]>) {
+  constructor(status: number, message?: string, errors: FieldError[] = []) {
     super(message ?? STATUS_MESSAGES[status] ?? 'Internal Server Error');
     this.status = status;
     this.errors = errors;
@@ -26,10 +31,8 @@ export class ApiError extends Error {
 
 export const handleError = (error: unknown): Response => {
   if (error instanceof ApiError) {
-    const body: Record<string, unknown> = { message: error.message };
-    if (error.errors) body.errors = error.errors;
-    return json(body, error.status);
+    return json({ message: error.message, errors: error.errors }, error.status);
   }
 
-  return json({ message: 'Internal Server Error' }, 500);
+  return json({ message: 'Internal Server Error', errors: [] }, 500);
 };

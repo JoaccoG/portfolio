@@ -1,5 +1,5 @@
 import type { Context } from '@netlify/functions';
-import { withErrorHandler } from '@api/middlewares/withErrorHandler';
+import { withErrorHandler } from './withErrorHandler';
 
 export type Handler = (req: Request, context: Context) => Promise<Response>;
 

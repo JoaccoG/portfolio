@@ -1,4 +1,4 @@
-import { ApiError } from '@api/lib/errors-handler';
+import { ApiError } from './errors-handler';
 
 export const requireEnv = (key: string): string => {
   const value = process.env[key];
@@ -7,7 +7,7 @@ export const requireEnv = (key: string): string => {
 };
 
 export const json = (body: Record<string, unknown>, status = 200) =>
-  new Response(JSON.stringify(body), {
+  new Response(JSON.stringify({ status, ...body }), {
     status,
     headers: { 'Content-Type': 'application/json' }
   });

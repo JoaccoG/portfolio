@@ -1,8 +1,8 @@
 import type { Config } from '@netlify/functions';
-import { withApi } from '@api/middlewares/composer';
-import { parseBody, subscriberSchema } from '@api/lib/schemas';
-import { getEmailSender } from '@api/lib/emails-sender';
-import { json } from '@api/lib/utils';
+import { withApi } from '../middlewares/composer';
+import { parseBody, subscriberSchema } from '../lib/schemas';
+import { getEmailSender } from '../lib/emails-sender';
+import { json } from '../lib/utils';
 
 export const config: Config = {
   path: '/api/subscribers',
@@ -16,5 +16,5 @@ export default withApi(async (req) => {
   const sender = getEmailSender();
   await sender.addSubscriber({ email });
 
-  return json({ success: true }, 201);
+  return json({ message: 'Subscribed' }, 201);
 });

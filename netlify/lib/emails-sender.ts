@@ -1,6 +1,6 @@
 import { Resend } from 'resend';
-import { requireEnv } from '@api/lib/utils';
-import { ApiError } from '@api/lib/errors-handler';
+import { requireEnv } from './utils';
+import { ApiError } from './errors-handler';
 
 interface SendEmailParams {
   replyTo: string;

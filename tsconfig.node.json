@@ -6,11 +6,6 @@
     "module": "ESNext",
     "types": ["node", "vitest/globals"],
     "skipLibCheck": true,
-    "baseUrl": "./",
-    "paths": {
-      "@api/lib*": ["netlify/lib/*"],
-      "@api/middlewares*": ["netlify/middlewares/*"]
-    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",

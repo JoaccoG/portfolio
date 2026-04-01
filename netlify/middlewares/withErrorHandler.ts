@@ -1,5 +1,6 @@
-import { handleError } from '@api/lib/errors-handler';
-import type { Handler } from '@api/middlewares/composer';
+import { ApiError } from '../lib/errors-handler';
+import { json } from '../lib/utils';
+import type { Handler } from './composer';
 
 export const withErrorHandler =
   (handler: Handler): Handler =>
@@ -7,6 +8,8 @@ export const withErrorHandler =
     try {
       return await handler(req, context);
     } catch (error) {
-      return handleError(error);
+      if (error instanceof ApiError) return json({ message: error.message, errors: error.errors }, error.status);
+
+      return json({ message: 'Internal Server Error', errors: [] }, 500);
     }
   };
