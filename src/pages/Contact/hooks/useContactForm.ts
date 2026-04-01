@@ -11,7 +11,7 @@ export interface ContactFields {
 type FieldErrors = Partial<Record<keyof ContactFields, string>>;
 
 const INITIAL_FIELDS: ContactFields = { email: '', subject: '', message: '' };
-const STATUS_RESET_MS = 3500;
+const STATUS_RESET_MS = 2000;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const validate = (fields: ContactFields): FieldErrors => {
@@ -49,6 +49,7 @@ export const useContactForm = () => {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<FormStatus>('idle');
   const [serverError, setServerError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const resetTimer = useRef<ReturnType<typeof setTimeout>>(null);
 
   useEffect(() => {
@@ -108,6 +109,8 @@ export const useContactForm = () => {
         return;
       }
 
+      const body: ApiResponse = await res.json().catch(() => ({ status: res.status, message: 'Message sent!' }));
+      setSuccessMessage(body.message);
       setStatus('success');
       setFields(INITIAL_FIELDS);
     } catch {
@@ -116,5 +119,5 @@ export const useContactForm = () => {
     }
   }, [fields]);
 
-  return { fields, errors, status, serverError, handleChange, handleSubmit };
+  return { fields, errors, status, serverError, successMessage, handleChange, handleSubmit };
 };

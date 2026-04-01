@@ -16,7 +16,7 @@ export const FloatingField = ({ type, label, value, error, onChange }: FloatingF
 
   const borderColor = error ? 'var(--color-error)' : isFocused ? 'var(--color-primary)' : 'rgba(242, 235, 227, 0.12)';
 
-  const inputStyles: React.CSSProperties = {
+  const inputStyles: ResponsiveStyles = {
     ...resolve(inputStyle),
     borderBottomColor: borderColor,
     boxShadow: isFocused && !error ? '0 1px 0 0 rgba(236, 119, 83, 0.3)' : 'none',
@@ -49,13 +49,13 @@ export const FloatingField = ({ type, label, value, error, onChange }: FloatingF
         <textarea
           {...sharedProps}
           rows={4}
-          style={{ ...inputStyles, resize: 'vertical', minHeight: '100px', maxHeight: '200px' }}
+          style={{ ...resolve(inputStyles), resize: 'vertical', minHeight: '100px', maxHeight: '200px' }}
         />
       ) : (
-        <input {...sharedProps} type={type} style={inputStyles} />
+        <input {...sharedProps} type={type} style={resolve(inputStyles)} />
       )}
 
-      {error && <span style={resolve(errorTextStyle)}>{error}</span>}
+      <span style={resolve(errorTextStyle)}>{error ?? ''}</span>
     </div>
   );
 };
@@ -89,9 +89,10 @@ const inputStyle: ResponsiveStyles = {
 };
 
 const errorTextStyle: ResponsiveStyles = {
-  fontFamily: 'var(--font-mono)',
-  fontSize: '0.65rem',
+  height: '16px',
   color: 'var(--color-error)',
+  fontSize: '0.65rem',
+  fontFamily: 'var(--font-mono)',
   letterSpacing: '0.04em',
   marginTop: '0.25rem'
 };

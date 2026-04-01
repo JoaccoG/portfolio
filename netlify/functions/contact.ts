@@ -16,5 +16,5 @@ export default withApi(async (req) => {
   const sender = getEmailSender();
   await sender.sendEmail({ subject: subject || 'Portfolio Contact Email', message, replyTo: email });
 
-  return json({ message: 'Message sent' }, 201);
+  return json({ message: 'Message sent!' }, 200);
 });

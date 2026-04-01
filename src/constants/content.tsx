@@ -83,14 +83,9 @@ export const PROJECTS = {
 
 export const CONTACT = {
   title: 'Let\u2019s Talk',
-  subtitle: 'Got an idea, a project, some feedback, or just want to say hi? I\u2019m all ears.',
-  fields: {
-    email: 'Email',
-    subject: 'Subject (optional)',
-    message: 'Message'
-  },
-  send: 'Send Message',
-  sending: 'Sending...',
-  success: 'Sent!',
-  error: 'Something went wrong, please try again.'
+  subtitle:
+    'Got an idea in mind, a project to build together, some feedback, or just want to say hi? I\u2019m all ears.',
+  fields: { email: 'Email', subject: 'Subject (optional)', message: 'Message' },
+  submit: 'Send Message',
+  loading: 'Sending...'
 } as const;

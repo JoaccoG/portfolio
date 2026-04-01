@@ -14,7 +14,7 @@ export const Contact = () => {
   const headerRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const { fields, errors, status, serverError, handleChange, handleSubmit } = useContactForm();
+  const { fields, errors, status, serverError, successMessage, handleChange, handleSubmit } = useContactForm();
 
   useGSAP(
     () => {
@@ -75,7 +75,13 @@ export const Contact = () => {
             onChange={(v) => handleChange('message', v)}
           />
 
-          {serverError && <p style={serverErrorStyle}>{serverError}</p>}
+          <p
+            style={{
+              ...resolve(serverErrorStyle),
+              color: status === 'success' ? 'var(--color-success)' : 'var(--color-error)'
+            }}>
+            {status === 'success' ? (successMessage ?? '') : (serverError ?? '')}
+          </p>
 
           <SubmitButton status={status} />
         </form>
@@ -140,14 +146,15 @@ const subtitleStyle: ResponsiveStyles = {
 const formStyle: ResponsiveStyles = {
   display: 'flex',
   flexDirection: 'column',
-  gap: { base: '1.25rem', md: '1.5rem' },
+  gap: '0.5rem',
   width: '100%'
 };
 
-const serverErrorStyle: React.CSSProperties = {
+const serverErrorStyle: ResponsiveStyles = {
+  minHeight: '1em',
+  maxHeight: '1em',
   fontFamily: 'var(--font-mono)',
   fontSize: '0.7rem',
-  color: 'var(--color-error)',
   letterSpacing: '0.04em',
   textAlign: 'center'
 };
