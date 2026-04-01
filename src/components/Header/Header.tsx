@@ -14,7 +14,7 @@ export const Header = ({ scrollTo }: HeaderProps) => {
   const headerRef = useRef<HTMLElement>(null);
   const navLinksRef = useRef<HTMLDivElement>(null);
   const blogLinkRef = useRef<HTMLAnchorElement>(null);
-  const underlineRef = useRef<SVGSVGElement>(null);
+  const underlineRef = useRef<HTMLDivElement>(null);
 
   const hasScrollShrink = ['sm', 'md', 'lg', 'xl'].includes(breakpoint);
 
@@ -90,7 +90,7 @@ interface NavLinkProps {
   href: string;
   label: string;
   scrollTo?: (target: string) => void;
-  underlineRef?: React.RefObject<SVGSVGElement | null>;
+  underlineRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 const NavLink = ({
@@ -177,7 +177,7 @@ const navLinksStyle: ResponsiveStyles = {
 const underlineSvgStyle: ResponsiveStyles = {
   width: '150%',
   position: 'absolute',
-  bottom: '-6px',
+  bottom: '-12px',
   left: '-24px',
   color: 'var(--color-primary)',
   transition: 'color 0.3s ease',
