@@ -55,10 +55,9 @@ export const Projects = () => {
 
 const projectsSectionStyle: ResponsiveStyles = {
   height: 'auto',
-  // minHeight: { base: '100dvh', sm: 'auto' },
   minHeight: 'auto',
   justifyContent: 'center',
-  padding: { base: '4rem 0', xs: '4rem 0', md: '0' },
+  padding: '4rem 0',
   gap: '3rem',
   overflow: 'visible'
 };
