@@ -85,7 +85,7 @@ const inputStyle: ResponsiveStyles = {
   fontFamily: 'var(--font-body)',
   fontSize: { base: '0.875rem', md: '0.9375rem' },
   lineHeight: 1.2,
-  transition: 'border-color 0.3s ease, box-shadow 0.3s ease'
+  transition: 'border-color 0.3s ease, box-shadow 0.25s ease'
 };
 
 const errorTextStyle: ResponsiveStyles = {

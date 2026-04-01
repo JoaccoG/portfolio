@@ -6,11 +6,14 @@ import { Title } from '@components/Title/Title';
 import { useAboutAnimation } from './hooks/useAboutAnimation';
 import { useScrollHint } from './hooks/useScrollHint';
 import { AboutChapter } from './components/AboutChapter';
+import { ResumeDropdown } from './components/ResumeDropdown';
 import { ScrollHint } from './components/ScrollHint';
 
 export const About = () => {
   const sectionRef = useRef<HTMLElement>(null);
+  const titleGroupRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const resumeButtonRef = useRef<HTMLDivElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const lastChapterRef = useRef<HTMLDivElement | null>(null);
@@ -18,7 +21,16 @@ export const About = () => {
 
   const { breakpoint, resolve } = useBreakpoint();
   const { showHint } = useScrollHint({ sectionRef, innerRef });
-  useAboutAnimation({ sectionRef, titleRef, windowRef, innerRef, lastChapterRef, chapterRefs });
+  useAboutAnimation({
+    sectionRef,
+    titleGroupRef,
+    titleRef,
+    resumeButtonRef,
+    windowRef,
+    innerRef,
+    lastChapterRef,
+    chapterRefs
+  });
 
   const lastIdx = ABOUT.chapters.length - 1;
   const isDesktop = ['md', 'lg', 'xl'].includes(breakpoint);
@@ -26,9 +38,12 @@ export const About = () => {
   return (
     <>
       <Section ref={sectionRef} id="about" style={aboutSectionStyle}>
-        <Title ref={titleRef} as="h2" style={titleStyle}>
-          {ABOUT.title}
-        </Title>
+        <div ref={titleGroupRef} style={resolve(titleGroupStyle)}>
+          <Title ref={titleRef} as="h2" style={titleStyle}>
+            {ABOUT.title}
+          </Title>
+          <ResumeDropdown ref={resumeButtonRef} />
+        </div>
         <div ref={windowRef} style={resolve(windowStyle)}>
           <div ref={innerRef} style={resolve(innerStyle)}>
             {ABOUT.chapters.map((chapter, idx) => (
@@ -61,13 +76,20 @@ const aboutSectionStyle: ResponsiveStyles = {
   gap: { base: '3rem', md: '0' }
 };
 
-const titleStyle: ResponsiveStyles = {
-  width: 'max-content',
+const titleGroupStyle: ResponsiveStyles = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: { base: '1rem', md: 'none' },
   position: { base: 'relative', md: 'absolute' },
   left: { base: 'auto', md: '50%' },
   top: { base: 'auto', md: '50%' },
-  lineHeight: 1,
   zIndex: 10
+};
+
+const titleStyle: ResponsiveStyles = {
+  width: 'max-content',
+  lineHeight: 1
 };
 
 const windowStyle: ResponsiveStyles = {

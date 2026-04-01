@@ -94,5 +94,10 @@ describe('Given the About page', () => {
       const lastChapter = screen.getByTestId(`chapter-${ABOUT.chapters[ABOUT.chapters.length - 1].number}`);
       expect(lastChapter).toBeInTheDocument();
     });
+
+    it('Then it should render the resume dropdown button', () => {
+      render(<About />);
+      expect(screen.getByText(ABOUT.buttonLabel)).toBeInTheDocument();
+    });
   });
 });

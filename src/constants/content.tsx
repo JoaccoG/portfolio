@@ -28,6 +28,11 @@ export const HERO = {
 
 export const ABOUT = {
   title: 'ABOUT ME',
+  buttonLabel: 'Full Resume',
+  buttonOptions: [
+    { label: 'English', href: '/files/resume.pdf' },
+    { label: 'Spanish', href: '/files/cv.pdf' }
+  ],
   chapters: [
     {
       number: '01',

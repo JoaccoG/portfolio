@@ -8,6 +8,8 @@ import { SvgEmail } from './Email';
 import { SvgX } from './X';
 import { SvgBlogUnderline } from './BlogUnderline';
 import { SvgArrowDown } from './ArrowDown';
+import { SvgOpenNewWindow } from './OpenNewWindow';
+import { SvgChevronDown } from './ChevronDown';
 
 const svgIcons: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   github: SvgGithub,
@@ -17,7 +19,9 @@ const svgIcons: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   spotify: SvgSpotify,
   email: SvgEmail,
   blogUnderline: SvgBlogUnderline,
-  arrowDown: SvgArrowDown
+  arrowDown: SvgArrowDown,
+  chevronDown: SvgChevronDown,
+  openNewWindow: SvgOpenNewWindow
 } as const;
 
 interface SvgIconProps {

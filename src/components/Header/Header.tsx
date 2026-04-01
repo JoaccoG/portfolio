@@ -177,8 +177,8 @@ const navLinksStyle: ResponsiveStyles = {
 const underlineSvgStyle: ResponsiveStyles = {
   width: '150%',
   position: 'absolute',
-  bottom: '-12px',
-  left: '-24px',
+  bottom: '-16px',
+  left: '-20px',
   color: 'var(--color-primary)',
   transition: 'color 0.3s ease',
   pointerEvents: 'none',
