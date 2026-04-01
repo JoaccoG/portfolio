@@ -12,9 +12,10 @@ export const FOOTER = {
   socialLinks: [
     { icon: 'github', url: `${import.meta.env.LINKS__GITHUB}` },
     { icon: 'linkedin', url: `${import.meta.env.LINKS__LINKEDIN}` },
-    { icon: 'spotify', url: `${import.meta.env.LINKS__SPOTIFY}` },
+    { icon: 'x', url: `${import.meta.env.LINKS__X}` },
     { icon: 'instagram', url: `${import.meta.env.LINKS__INSTAGRAM}` },
-    { icon: 'email', url: `${import.meta.env.LINKS__EMAIL}` }
+    { icon: 'spotify', url: `${import.meta.env.LINKS__SPOTIFY}` },
+    { icon: 'email', url: `mailto:${import.meta.env.LINKS__EMAIL}` }
   ]
 } as const;
 
@@ -22,7 +23,7 @@ export const HERO = {
   title: 'Joaquin Godoy',
   subtitle: 'I turn coffee and messy ideas into real working products',
   status: 'Available',
-  traits: ['User-Focused', 'Practical', 'Analytical', 'Quality-Oriented']
+  traits: ['User-Focused', 'Analytical', 'Practical', 'Quality-Oriented']
 } as const;
 
 export const ABOUT = {
@@ -81,5 +82,15 @@ export const PROJECTS = {
 } as const;
 
 export const CONTACT = {
-  // TODO: Add contact constants
+  title: 'Let\u2019s Talk',
+  subtitle: 'Got an idea, a project, some feedback, or just want to say hi? I\u2019m all ears.',
+  fields: {
+    email: 'Email',
+    subject: 'Subject (optional)',
+    message: 'Message'
+  },
+  send: 'Send Message',
+  sending: 'Sending...',
+  success: 'Sent!',
+  error: 'Something went wrong, please try again.'
 } as const;

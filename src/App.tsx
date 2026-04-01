@@ -5,6 +5,7 @@ import { Footer } from '@components/Footer/Footer';
 import { Hero } from '@pages/Hero/Hero';
 import { About } from '@pages/About/About';
 import { Projects } from '@pages/Projects/Projects';
+import { Contact } from '@pages/Contact/Contact';
 
 export const App = () => {
   const { scrollTo } = useSmoothScroll();
@@ -17,6 +18,7 @@ export const App = () => {
         <Hero />
         <About />
         <Projects />
+        <Contact />
       </main>
       <Footer />
     </>
