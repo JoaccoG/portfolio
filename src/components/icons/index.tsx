@@ -1,19 +1,23 @@
 import { forwardRef, createElement, type Ref, type ComponentType, type SVGProps } from 'react';
 import { useBreakpoint, type ResponsiveStyles } from '@hooks/useBreakpoint';
-import { SvgBlogUnderline } from './BlogUnderline';
 import { SvgGithub } from './Github';
 import { SvgLinkedin } from './Linkedin';
 import { SvgSpotify } from './Spotify';
 import { SvgInstagram } from './Instagram';
 import { SvgEmail } from './Email';
+import { SvgX } from './X';
+import { SvgBlogUnderline } from './BlogUnderline';
+import { SvgArrowDown } from './ArrowDown';
 
 const svgIcons: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
-  blogUnderline: SvgBlogUnderline,
-  email: SvgEmail,
   github: SvgGithub,
-  instagram: SvgInstagram,
   linkedin: SvgLinkedin,
-  spotify: SvgSpotify
+  x: SvgX,
+  instagram: SvgInstagram,
+  spotify: SvgSpotify,
+  email: SvgEmail,
+  blogUnderline: SvgBlogUnderline,
+  arrowDown: SvgArrowDown
 } as const;
 
 interface SvgIconProps {
@@ -21,10 +25,14 @@ interface SvgIconProps {
   style?: ResponsiveStyles;
 }
 
-export const SvgIcon = forwardRef<SVGSVGElement, SvgIconProps>(({ icon, style = {} }, ref: Ref<SVGSVGElement>) => {
+export const SvgIcon = forwardRef<HTMLDivElement, SvgIconProps>(({ icon, style = {} }, ref: Ref<HTMLDivElement>) => {
   const { resolve } = useBreakpoint();
 
-  return <div style={resolve({ ...svgIconStyle, ...style })}>{createElement(svgIcons[icon], { ref })}</div>;
+  return (
+    <div ref={ref} style={resolve({ ...svgIconStyle, ...style })}>
+      {createElement(svgIcons[icon])}
+    </div>
+  );
 });
 
 const svgIconStyle: ResponsiveStyles = {
