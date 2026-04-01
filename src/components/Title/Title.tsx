@@ -40,6 +40,7 @@ const titleStyle: ResponsiveStyles = {
   letterSpacing: '0.03em',
   textTransform: 'uppercase',
   textAlign: 'center',
+  flexShrink: 0,
   pointerEvents: 'none',
   whiteSpace: 'normal',
   overflow: 'hidden',

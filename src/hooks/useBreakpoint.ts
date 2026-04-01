@@ -4,7 +4,7 @@ const BREAKPOINTS = {
   xs: 480, // mobile
   sm: 768, // tablet
   md: 1024, // laptop
-  lg: 1280, // small desktop
+  lg: 1280, // desktop
   xl: 1440 // large desktop
 } as const;
 

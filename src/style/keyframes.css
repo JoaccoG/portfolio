@@ -1,3 +1,5 @@
+/* StatusBadge Component */
+
 @keyframes statusPulse {
   0%,
   100% {
@@ -9,5 +11,49 @@
     opacity: 0.8;
     transform: scale(1.3);
     box-shadow: 0 0 8px 4px rgba(74, 222, 128, 0);
+  }
+}
+
+/* Tape Component */
+
+@keyframes tapeMarqueeLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes tapeMarqueeRight {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Contact - Submit Button */
+
+@keyframes drawCheck {
+  from {
+    stroke-dashoffset: 80;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes shakeError {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
   }
 }

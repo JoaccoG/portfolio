@@ -4,7 +4,7 @@ import { useBreakpoint, type ResponsiveStyles } from '@hooks/useBreakpoint';
 interface AboutChapterProps {
   number: string;
   title: string;
-  paragraphs: ReactNode[];
+  paragraphs: readonly ReactNode[];
 }
 
 export const AboutChapter = forwardRef<HTMLDivElement, AboutChapterProps>(({ number, title, paragraphs }, ref) => {

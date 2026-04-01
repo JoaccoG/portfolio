@@ -4,9 +4,10 @@ import { render } from '@testing-library/react';
 import ReactThreeTestRenderer from '@react-three/test-renderer';
 import { HeroScene } from './HeroScene';
 
-const { renderCanvas, frameCallbacks } = vi.hoisted(() => ({
+const { renderCanvas, frameCallbacks, fireFrameImmediately } = vi.hoisted(() => ({
   renderCanvas: { value: true },
-  frameCallbacks: [] as Array<(state: Record<string, unknown>, delta: number) => void>
+  frameCallbacks: [] as Array<(state: Record<string, unknown>, delta: number) => void>,
+  fireFrameImmediately: { value: false }
 }));
 
 vi.mock('@react-three/fiber', async () => {
@@ -22,6 +23,7 @@ vi.mock('@react-three/fiber', async () => {
     ),
     useFrame: (cb: (state: Record<string, unknown>, delta: number) => void) => {
       frameCallbacks.push(cb);
+      if (fireFrameImmediately.value) cb({}, 1 / 60);
     }
   };
 });
@@ -33,6 +35,7 @@ vi.mock('@react-three/drei', () => ({
 describe('Given the HeroScene component', () => {
   beforeEach(() => {
     renderCanvas.value = true;
+    fireFrameImmediately.value = false;
     frameCallbacks.length = 0;
   });
 
@@ -104,6 +107,13 @@ describe('Given the HeroScene component', () => {
       const r3fDiv = outerDiv.querySelector('[data-testid="r3f-canvas"]') as HTMLDivElement;
       expect(outerDiv.querySelector('canvas')).toBeNull();
       expect(r3fDiv.style.minWidth).toBe('');
+    });
+  });
+
+  describe('When useFrame fires before the mesh ref is committed', () => {
+    it('Then it should bail out safely without throwing', () => {
+      fireFrameImmediately.value = true;
+      expect(() => render(<HeroScene />)).not.toThrow();
     });
   });
 

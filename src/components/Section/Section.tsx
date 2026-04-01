@@ -18,6 +18,7 @@ export const Section = forwardRef<HTMLElement, SectionProps>(({ children, id, st
 });
 
 const sectionStyle: ResponsiveStyles = {
+  position: 'relative',
   width: '100%',
   maxWidth: '1400px',
   height: '100dvh',
