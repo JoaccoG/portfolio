@@ -5,10 +5,19 @@ import { About } from './About';
 vi.mock('gsap', () => ({
   default: {
     set: vi.fn(),
+    to: vi.fn(() => ({ kill: vi.fn() })),
     fromTo: vi.fn(),
     timeline: vi.fn(() => ({ fromTo: vi.fn().mockReturnThis(), to: vi.fn().mockReturnThis() })),
     matchMedia: vi.fn(() => ({ add: vi.fn(), revert: vi.fn() }))
   }
+}));
+
+vi.mock('./hooks/useScrollHint', () => ({
+  useScrollHint: () => ({ showHint: false })
+}));
+
+vi.mock('./components/ScrollHint', () => ({
+  ScrollHint: () => null
 }));
 
 vi.mock('@gsap/react', async () => {
