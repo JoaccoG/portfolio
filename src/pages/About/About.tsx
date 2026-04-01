@@ -4,10 +4,11 @@ import { ABOUT } from '@constants/content';
 import { Section } from '@components/Section/Section';
 import { Title } from '@components/Title/Title';
 import { useAboutAnimation } from './hooks/useAboutAnimation';
+import { useScrollHint } from './hooks/useScrollHint';
 import { AboutChapter } from './components/AboutChapter';
+import { ScrollHint } from './components/ScrollHint';
 
 export const About = () => {
-  const { resolve } = useBreakpoint();
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
@@ -15,32 +16,38 @@ export const About = () => {
   const lastChapterRef = useRef<HTMLDivElement | null>(null);
   const chapterRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  const { breakpoint, resolve } = useBreakpoint();
+  const { showHint } = useScrollHint({ sectionRef, innerRef });
   useAboutAnimation({ sectionRef, titleRef, windowRef, innerRef, lastChapterRef, chapterRefs });
 
   const lastIdx = ABOUT.chapters.length - 1;
+  const isDesktop = ['md', 'lg', 'xl'].includes(breakpoint);
 
   return (
-    <Section ref={sectionRef} id="about" style={aboutSectionStyle}>
-      <Title ref={titleRef} as="h2" style={titleStyle}>
-        {ABOUT.title}
-      </Title>
-      <div ref={windowRef} style={resolve(windowStyle)}>
-        <div ref={innerRef} style={resolve(innerStyle)}>
-          {ABOUT.chapters.map((chapter, idx) => (
-            <AboutChapter
-              key={chapter.number}
-              ref={(el) => {
-                chapterRefs.current[idx] = el;
-                if (idx === lastIdx) lastChapterRef.current = el;
-              }}
-              number={chapter.number}
-              title={chapter.title}
-              paragraphs={chapter.paragraphs as unknown as ReactNode[]}
-            />
-          ))}
+    <>
+      <Section ref={sectionRef} id="about" style={aboutSectionStyle}>
+        <Title ref={titleRef} as="h2" style={titleStyle}>
+          {ABOUT.title}
+        </Title>
+        <div ref={windowRef} style={resolve(windowStyle)}>
+          <div ref={innerRef} style={resolve(innerStyle)}>
+            {ABOUT.chapters.map((chapter, idx) => (
+              <AboutChapter
+                key={chapter.number}
+                ref={(el) => {
+                  chapterRefs.current[idx] = el;
+                  if (idx === lastIdx) lastChapterRef.current = el;
+                }}
+                number={chapter.number}
+                title={chapter.title}
+                paragraphs={chapter.paragraphs as unknown as ReactNode[]}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-    </Section>
+      </Section>
+      <ScrollHint isVisible={isDesktop && showHint} />
+    </>
   );
 };
 
