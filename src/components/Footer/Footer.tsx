@@ -35,7 +35,7 @@ const SocialLink = ({ icon, url }: SocialLinkProps) => {
       onMouseLeave={() => setIsHovered(false)}
       style={{
         ...socialLinkStyle,
-        color: isHovered ? 'var(--color-primary)' : 'var(--color-light-gray)'
+        color: isHovered ? 'var(--color-primary)' : '#3d3d3d'
       }}>
       <SvgIcon icon={icon} />
     </a>
@@ -48,12 +48,8 @@ const footerStyle: ResponsiveStyles = {
   alignItems: 'center',
   justifyContent: 'center',
   gap: '1rem',
-  padding: '2rem 4rem',
-  marginTop: { base: '2rem', md: '4rem' },
-  color: 'var(--color-white)',
-  borderTop: '1px solid var(--color-light-gray)',
-  backdropFilter: 'blur(4px)',
-  WebkitBackdropFilter: 'blur(4px)'
+  padding: '2rem',
+  color: 'var(--color-white)'
 };
 
 const copyrightStyle: ResponsiveStyles = {
