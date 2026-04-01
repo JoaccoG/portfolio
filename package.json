@@ -1,7 +1,7 @@
 {
-  "name": "portfolio-v2",
-  "description": "Joaquin Godoy's Portfolio v2",
-  "version": "0.0.1",
+  "name": "portfolio",
+  "description": "Joaquin Godoy's Portfolio",
+  "version": "1.0.0",
   "type": "module",
   "license": "MIT",
   "author": {
