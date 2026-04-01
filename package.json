@@ -12,8 +12,9 @@
   "packageManager": "pnpm@10.30.0+sha512.2b5753de015d480eeb88f5b5b61e0051f05b4301808a82ec8b840c9d2adf7748eb352c83f5c1593ca703ff1017295bc3fdd3119abb9686efc96b9fcb18200937",
   "scripts": {
     "dev": "vite",
+    "dev:server": "NODE_OPTIONS='--no-deprecation' netlify dev",
     "build": "tsc -b && vite build",
-    "build:icons": "svgr --out-dir src/components/icons --typescript --ref --no-prettier --no-index -- public/assets/icons",
+    "build:icons": "node scripts/build-icons.mjs",
     "preview": "vite preview",
     "test": "vitest --coverage --watch=false",
     "lint": "eslint . && prettier --check .",
@@ -62,6 +63,7 @@
     "husky": "^9.1.7",
     "jsdom": "^28.1.0",
     "lint-staged": "^16.2.7",
+    "netlify-cli": "^24.8.1",
     "prettier": "^3.8.1",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.48.0",
