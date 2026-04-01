@@ -5,14 +5,21 @@ import { Contact } from './Contact';
 const mockHandleChange = vi.fn();
 const mockHandleSubmit = vi.fn();
 let mockServerError: string | null = null;
+let mockSuccessMessage: string | null = null;
+let mockStatus = 'idle';
 
 vi.mock('./hooks/useContactForm', () => ({
   useContactForm: () => ({
     fields: { email: '', subject: '', message: '' },
     errors: {},
-    status: 'idle',
+    get status() {
+      return mockStatus;
+    },
     get serverError() {
       return mockServerError;
+    },
+    get successMessage() {
+      return mockSuccessMessage;
     },
     handleChange: mockHandleChange,
     handleSubmit: mockHandleSubmit
@@ -59,6 +66,8 @@ describe('Given the Contact page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockServerError = null;
+    mockSuccessMessage = null;
+    mockStatus = 'idle';
   });
 
   describe('When rendered', () => {
@@ -129,6 +138,15 @@ describe('Given the Contact page', () => {
       mockServerError = 'Something went wrong, please try again.';
       render(<Contact />);
       expect(screen.getByText('Something went wrong, please try again.')).toBeInTheDocument();
+    });
+  });
+
+  describe('When the form submission succeeds', () => {
+    it('Then it should render the success message', () => {
+      mockStatus = 'success';
+      mockSuccessMessage = 'Message sent!';
+      render(<Contact />);
+      expect(screen.getByText('Message sent!')).toBeInTheDocument();
     });
   });
 });

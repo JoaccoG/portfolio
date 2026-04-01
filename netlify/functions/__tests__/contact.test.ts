@@ -73,14 +73,14 @@ describe('Given the contact function', () => {
   });
 
   describe('When everything is valid', () => {
-    it('Then it should send the email and return 201', async () => {
+    it('Then it should send the email and return 200', async () => {
       mockSendEmail.mockResolvedValueOnce(undefined);
       const res = await handler(post(validBody), ctx);
 
-      expect(res.status).toBe(201);
+      expect(res.status).toBe(200);
       const body = (await res.json()) as ApiBody;
-      expect(body.status).toBe(201);
-      expect(body.message).toBe('Message sent');
+      expect(body.status).toBe(200);
+      expect(body.message).toBe('Message sent!');
       expect(mockSendEmail).toHaveBeenCalledWith({
         replyTo: 'user@example.com',
         subject: 'Hello',
@@ -96,6 +96,17 @@ describe('Given the contact function', () => {
         replyTo: 'user@example.com',
         subject: 'Hello',
         message: 'Hi'
+      });
+    });
+
+    it('Then it should fall back to the default subject when none is provided', async () => {
+      mockSendEmail.mockResolvedValueOnce(undefined);
+      await handler(post({ email: 'user@example.com', message: 'Hi there' }), ctx);
+
+      expect(mockSendEmail).toHaveBeenCalledWith({
+        replyTo: 'user@example.com',
+        subject: 'Portfolio Contact Email',
+        message: 'Hi there'
       });
     });
   });

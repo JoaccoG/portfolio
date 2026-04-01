@@ -14,7 +14,7 @@ afterEach(() => {
 
 const makeOkResponse = (body = {}) => ({
   ok: true,
-  json: () => Promise.resolve({ status: 201, ...body })
+  json: () => Promise.resolve({ status: 200, message: 'Message sent!', ...body })
 });
 
 const makeErrorResponse = (status: number, body: object) => ({
@@ -156,6 +156,21 @@ describe('Given the useContactForm hook', () => {
       expect(result.current.status).toBe('success');
     });
 
+    it('Then successMessage should be set from the API response', async () => {
+      mockFetch.mockResolvedValueOnce(makeOkResponse({ message: 'Message sent!' }));
+      const { result } = renderHook(() => useContactForm());
+
+      act(() => {
+        result.current.handleChange('email', 'test@example.com');
+        result.current.handleChange('message', 'Hello world');
+      });
+      await act(async () => {
+        await result.current.handleSubmit();
+      });
+
+      expect(result.current.successMessage).toBe('Message sent!');
+    });
+
     it('Then fields should be reset to empty', async () => {
       mockFetch.mockResolvedValueOnce(makeOkResponse());
       const { result } = renderHook(() => useContactForm());
@@ -186,7 +201,7 @@ describe('Given the useContactForm hook', () => {
       expect(result.current.status).toBe('success');
 
       act(() => {
-        vi.advanceTimersByTime(3500);
+        vi.advanceTimersByTime(2000);
       });
       expect(result.current.status).toBe('idle');
       vi.useRealTimers();
@@ -248,7 +263,7 @@ describe('Given the useContactForm hook', () => {
       expect(result.current.status).toBe('error');
 
       act(() => {
-        vi.advanceTimersByTime(3500);
+        vi.advanceTimersByTime(2000);
       });
       expect(result.current.status).toBe('idle');
       vi.useRealTimers();
@@ -292,6 +307,55 @@ describe('Given the useContactForm hook', () => {
       await waitFor(() => {
         expect(result.current.status).toBe('error');
       });
+    });
+  });
+
+  describe('When the subject field has a value', () => {
+    it('Then it should include subject in the fetch body', async () => {
+      mockFetch.mockResolvedValueOnce(makeOkResponse());
+      const { result } = renderHook(() => useContactForm());
+
+      act(() => {
+        result.current.handleChange('email', 'test@example.com');
+        result.current.handleChange('subject', 'My subject');
+        result.current.handleChange('message', 'Hello');
+      });
+      await act(async () => {
+        await result.current.handleSubmit();
+      });
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/contact',
+        expect.objectContaining({
+          body: JSON.stringify({ email: 'test@example.com', subject: 'My subject', message: 'Hello' })
+        })
+      );
+    });
+  });
+
+  describe('When the API error contains an unknown field', () => {
+    it('Then it should ignore unknown fields and not map them to form errors', async () => {
+      mockFetch.mockResolvedValueOnce(
+        makeErrorResponse(422, {
+          message: 'Validation failed',
+          errors: [
+            { field: 'email', message: 'Invalid email format' },
+            { field: 'unknownField', message: 'Some error' }
+          ]
+        })
+      );
+      const { result } = renderHook(() => useContactForm());
+
+      act(() => {
+        result.current.handleChange('email', 'test@example.com');
+        result.current.handleChange('message', 'Hello');
+      });
+      await act(async () => {
+        await result.current.handleSubmit();
+      });
+
+      expect(result.current.errors.email).toBe('Invalid email format');
+      expect(result.current.errors).not.toHaveProperty('unknownField');
     });
   });
 });
