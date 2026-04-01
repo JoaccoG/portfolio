@@ -1,5 +1,5 @@
-import { ApiError } from '@api/lib/errors-handler';
-import { requireEnv, json } from '@api/lib/utils';
+import { ApiError } from './errors-handler';
+import { requireEnv, json } from './utils';
 
 describe('Given requireEnv', () => {
   afterEach(() => {
@@ -23,21 +23,26 @@ describe('Given requireEnv', () => {
 });
 
 describe('Given json', () => {
-  it('Then it should return a Response with JSON body', async () => {
-    const res = json({ success: true });
-    expect(await res.json()).toEqual({ success: true });
+  it('Then it should inject status into the body', async () => {
+    const res = json({ message: 'OK' });
+    expect(await res.json()).toEqual({ status: 200, message: 'OK' });
   });
 
-  it('Then it should default to status 200', () => {
-    expect(json({ ok: true }).status).toBe(200);
+  it('Then it should inject the provided status into the body', async () => {
+    const res = json({ message: 'Created' }, 201);
+    expect(await res.json()).toEqual({ status: 201, message: 'Created' });
   });
 
-  it('Then it should use the provided status', () => {
-    expect(json({ error: 'Not found' }, 404).status).toBe(404);
+  it('Then it should default to HTTP status 200', () => {
+    expect(json({ message: 'OK' }).status).toBe(200);
+  });
+
+  it('Then it should use the provided HTTP status', () => {
+    expect(json({ message: 'Not found' }, 404).status).toBe(404);
   });
 
   it('Then it should set Content-Type to application/json', () => {
-    const res = json({ ok: true });
+    const res = json({ message: 'OK' });
     expect(res.headers.get('Content-Type')).toBe('application/json');
   });
 });

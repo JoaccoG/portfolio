@@ -1,7 +1,6 @@
 import type { Context } from '@netlify/functions';
-
-import { ApiError } from '@api/lib/errors-handler';
-import { withApi } from '@api/middlewares/composer';
+import { ApiError } from '../lib/errors-handler';
+import { withApi } from './composer';
 
 const ctx = {} as Context;
 
@@ -23,6 +22,6 @@ describe('Given withApi', () => {
     const res = await wrapped(new Request('https://test.com'), ctx);
 
     expect(res.status).toBe(400);
-    expect(await res.json()).toEqual({ message: 'Bad Request' });
+    expect(await res.json()).toEqual({ status: 400, message: 'Bad Request', errors: [] });
   });
 });

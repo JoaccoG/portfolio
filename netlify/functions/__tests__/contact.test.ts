@@ -1,8 +1,15 @@
 import type { Context } from '@netlify/functions';
+import type { FieldError } from '../../lib/errors-handler';
+
+interface ApiBody {
+  status: number;
+  message: string;
+  errors: FieldError[];
+}
 
 const mockSendEmail = vi.fn();
 
-vi.mock('@api/lib/emails-sender', () => ({
+vi.mock('../../lib/emails-sender', () => ({
   getEmailSender: () => ({ sendEmail: mockSendEmail })
 }));
 
@@ -21,7 +28,7 @@ describe('Given the contact function', () => {
   let handler: (req: Request, ctx: Context) => Promise<Response>;
 
   beforeAll(async () => {
-    handler = (await import('./contact')).default;
+    handler = (await import('../contact')).default;
   });
 
   beforeEach(() => {
@@ -29,29 +36,39 @@ describe('Given the contact function', () => {
   });
 
   describe('When the body is invalid JSON', () => {
-    it('Then it should return 400', async () => {
+    it('Then it should return 400 with status in body', async () => {
       const req = new Request('https://site.com/api/contact', { method: 'POST', body: 'not json' });
       const res = await handler(req, ctx);
       expect(res.status).toBe(400);
-      expect(await res.json()).toEqual({ message: 'Invalid JSON body' });
+      const body = (await res.json()) as ApiBody;
+      expect(body.status).toBe(400);
+      expect(body.message).toBe('Invalid JSON body');
+      expect(body.errors).toEqual([]);
     });
   });
 
   describe('When validation fails', () => {
-    it('Then it should return 422 with field errors', async () => {
+    it('Then it should return 422 with field errors as array', async () => {
       const res = await handler(post({ email: 'bad', subject: '', message: '' }), ctx);
       expect(res.status).toBe(422);
-      const body = (await res.json()) as { message: string; errors: Record<string, string[]> };
+      const body = (await res.json()) as ApiBody;
+      expect(body.status).toBe(422);
       expect(body.message).toBe('Validation failed');
-      expect(body.errors).toBeDefined();
+      expect(Array.isArray(body.errors)).toBe(true);
+      expect(body.errors.length).toBeGreaterThan(0);
+      expect(body.errors[0]).toHaveProperty('field');
+      expect(body.errors[0]).toHaveProperty('message');
     });
   });
 
   describe('When the email sender fails', () => {
-    it('Then it should return 502', async () => {
-      mockSendEmail.mockRejectedValueOnce({ status: 502, message: 'Failed to send email' });
+    it('Then it should return 500', async () => {
+      mockSendEmail.mockRejectedValueOnce(new Error('fail'));
       const res = await handler(post(validBody), ctx);
       expect(res.status).toBe(500);
+      const body = (await res.json()) as ApiBody;
+      expect(body.status).toBe(500);
+      expect(body.errors).toEqual([]);
     });
   });
 
@@ -61,7 +78,9 @@ describe('Given the contact function', () => {
       const res = await handler(post(validBody), ctx);
 
       expect(res.status).toBe(201);
-      expect(await res.json()).toEqual({ success: true });
+      const body = (await res.json()) as ApiBody;
+      expect(body.status).toBe(201);
+      expect(body.message).toBe('Message sent');
       expect(mockSendEmail).toHaveBeenCalledWith({
         replyTo: 'user@example.com',
         subject: 'Hello',

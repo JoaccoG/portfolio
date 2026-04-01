@@ -23,7 +23,7 @@ afterEach(() => {
 });
 
 const importSender = async () => {
-  const { getEmailSender } = await import('@api/lib/emails-sender');
+  const { getEmailSender } = await import('./emails-sender');
   return getEmailSender();
 };
 
@@ -36,7 +36,7 @@ describe('Given getEmailSender', () => {
   });
 
   it('Then it should return the same instance on subsequent calls (singleton)', async () => {
-    const { getEmailSender } = await import('@api/lib/emails-sender');
+    const { getEmailSender } = await import('./emails-sender');
     const first = getEmailSender();
     const second = getEmailSender();
     expect(first).toBe(second);

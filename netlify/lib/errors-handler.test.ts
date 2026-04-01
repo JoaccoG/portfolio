@@ -1,4 +1,4 @@
-import { ApiError, handleError } from '@api/lib/errors-handler';
+import { ApiError, handleError } from './errors-handler';
 
 describe('Given ApiError', () => {
   it('Then it should use the provided message', () => {
@@ -20,8 +20,12 @@ describe('Given ApiError', () => {
     expect(new ApiError(999).message).toBe('Internal Server Error');
   });
 
-  it('Then it should store the errors object when provided', () => {
-    const errors = { email: ['Invalid email format'] };
+  it('Then it should default errors to an empty array', () => {
+    expect(new ApiError(500).errors).toEqual([]);
+  });
+
+  it('Then it should store field errors when provided', () => {
+    const errors = [{ field: 'email', message: 'Invalid email format' }];
     const error = new ApiError(422, 'Validation failed', errors);
     expect(error.errors).toEqual(errors);
   });
@@ -33,30 +37,30 @@ describe('Given ApiError', () => {
 
 describe('Given handleError', () => {
   describe('When called with an ApiError', () => {
-    it('Then it should return a JSON response with the correct status and message', async () => {
-      const res = handleError(new ApiError(422, 'Validation failed'));
-      expect(res.status).toBe(422);
-      expect(await res.json()).toEqual({ message: 'Validation failed' });
+    it('Then it should return a JSON response with status, message, and empty errors', async () => {
+      const res = handleError(new ApiError(429));
+      expect(res.status).toBe(429);
+      expect(await res.json()).toEqual({ status: 429, message: 'Too Many Requests', errors: [] });
     });
 
-    it('Then it should include errors when present', async () => {
-      const errors = { email: ['Required'] };
+    it('Then it should include field errors when present', async () => {
+      const errors = [{ field: 'email', message: 'Required' }];
       const res = handleError(new ApiError(422, 'Validation failed', errors));
-      expect(await res.json()).toEqual({ message: 'Validation failed', errors });
+      expect(await res.json()).toEqual({ status: 422, message: 'Validation failed', errors });
     });
   });
 
   describe('When called with a non-ApiError', () => {
-    it('Then it should return 500 Internal Server Error', async () => {
+    it('Then it should return 500 with empty errors', async () => {
       const res = handleError(new Error('random'));
       expect(res.status).toBe(500);
-      expect(await res.json()).toEqual({ message: 'Internal Server Error' });
+      expect(await res.json()).toEqual({ status: 500, message: 'Internal Server Error', errors: [] });
     });
 
     it('Then it should handle non-Error values', async () => {
       const res = handleError('string error');
       expect(res.status).toBe(500);
-      expect(await res.json()).toEqual({ message: 'Internal Server Error' });
+      expect(await res.json()).toEqual({ status: 500, message: 'Internal Server Error', errors: [] });
     });
   });
 });

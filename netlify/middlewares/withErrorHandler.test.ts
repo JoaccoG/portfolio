@@ -1,7 +1,7 @@
 import type { Context } from '@netlify/functions';
 
-import { ApiError } from '@api/lib/errors-handler';
-import { withErrorHandler } from '@api/middlewares/withErrorHandler';
+import { ApiError } from '../lib/errors-handler';
+import { withErrorHandler } from './withErrorHandler';
 
 const ctx = {} as Context;
 
@@ -36,7 +36,7 @@ describe('Given withErrorHandler', () => {
       const res = await wrapped(new Request('https://test.com'), ctx);
 
       expect(res.status).toBe(422);
-      expect(await res.json()).toEqual({ message: 'Validation failed' });
+      expect(await res.json()).toEqual({ status: 422, message: 'Validation failed', errors: [] });
     });
   });
 
@@ -48,7 +48,7 @@ describe('Given withErrorHandler', () => {
       const res = await wrapped(new Request('https://test.com'), ctx);
 
       expect(res.status).toBe(500);
-      expect(await res.json()).toEqual({ message: 'Internal Server Error' });
+      expect(await res.json()).toEqual({ status: 500, message: 'Internal Server Error', errors: [] });
     });
   });
 });

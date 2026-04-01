@@ -1,5 +1,5 @@
-import { ApiError } from '@api/lib/errors-handler';
-import { parseBody, contactSchema, subscriberSchema } from '@api/lib/schemas';
+import { ApiError } from './errors-handler';
+import { parseBody, contactSchema, subscriberSchema } from './schemas';
 
 const makeRequest = (body: unknown) =>
   new Request('https://test.com', {
@@ -17,7 +17,7 @@ describe('Given parseBody', () => {
   });
 
   describe('When the body fails schema validation', () => {
-    it('Then it should throw ApiError(422) with field errors', async () => {
+    it('Then it should throw ApiError(422) with field errors as array', async () => {
       const req = makeRequest({ email: 'bad', subject: '', message: '' });
 
       try {
@@ -28,8 +28,8 @@ describe('Given parseBody', () => {
         const apiError = error as ApiError;
         expect(apiError.status).toBe(422);
         expect(apiError.message).toBe('Validation failed');
-        expect(apiError.errors).toBeDefined();
-        expect(apiError.errors?.email).toBeDefined();
+        expect(Array.isArray(apiError.errors)).toBe(true);
+        expect(apiError.errors.some((e) => e.field === 'email')).toBe(true);
       }
     });
   });
@@ -68,9 +68,14 @@ describe('Given contactSchema', () => {
     await expect(parseBody(req, contactSchema)).rejects.toThrow(ApiError);
   });
 
-  it('Then it should reject empty subject after trim', async () => {
-    const req = makeRequest({ email: 'user@example.com', subject: '   ', message: 'Msg' });
-    await expect(parseBody(req, contactSchema)).rejects.toThrow(ApiError);
+  it('Then it should default subject when empty or missing', async () => {
+    const req1 = makeRequest({ email: 'user@example.com', subject: '   ', message: 'Msg' });
+    const result1 = await parseBody(req1, contactSchema);
+    expect(result1.subject).toBe('');
+
+    const req2 = makeRequest({ email: 'user@example.com', message: 'Msg' });
+    const result2 = await parseBody(req2, contactSchema);
+    expect(result2.subject).toBe('Portfolio Contact Email');
   });
 });
 

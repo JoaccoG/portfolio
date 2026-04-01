@@ -1,8 +1,15 @@
 import type { Context } from '@netlify/functions';
+import type { FieldError } from '../../lib/errors-handler';
+
+interface ApiBody {
+  status: number;
+  message: string;
+  errors: FieldError[];
+}
 
 const mockAddSubscriber = vi.fn();
 
-vi.mock('@api/lib/emails-sender', () => ({
+vi.mock('../../lib/emails-sender', () => ({
   getEmailSender: () => ({ addSubscriber: mockAddSubscriber })
 }));
 
@@ -19,7 +26,7 @@ describe('Given the subscribers function', () => {
   let handler: (req: Request, ctx: Context) => Promise<Response>;
 
   beforeAll(async () => {
-    handler = (await import('./subscribers')).default;
+    handler = (await import('../subscribers')).default;
   });
 
   beforeEach(() => {
@@ -27,21 +34,25 @@ describe('Given the subscribers function', () => {
   });
 
   describe('When the body is invalid JSON', () => {
-    it('Then it should return 400', async () => {
+    it('Then it should return 400 with status in body', async () => {
       const req = new Request('https://site.com/api/subscribers', { method: 'POST', body: 'not json' });
       const res = await handler(req, ctx);
       expect(res.status).toBe(400);
-      expect(await res.json()).toEqual({ message: 'Invalid JSON body' });
+      const body = (await res.json()) as ApiBody;
+      expect(body.status).toBe(400);
+      expect(body.message).toBe('Invalid JSON body');
+      expect(body.errors).toEqual([]);
     });
   });
 
   describe('When validation fails', () => {
-    it('Then it should return 422 for invalid email', async () => {
+    it('Then it should return 422 with field errors', async () => {
       const res = await handler(post({ email: 'not-valid' }), ctx);
       expect(res.status).toBe(422);
-      const body = (await res.json()) as { message: string; errors: Record<string, string[]> };
+      const body = (await res.json()) as ApiBody;
+      expect(body.status).toBe(422);
       expect(body.message).toBe('Validation failed');
-      expect(body.errors?.email).toBeDefined();
+      expect(body.errors.some((e) => e.field === 'email')).toBe(true);
     });
 
     it('Then it should return 422 for missing email', async () => {
@@ -55,6 +66,9 @@ describe('Given the subscribers function', () => {
       mockAddSubscriber.mockRejectedValueOnce(new Error('fail'));
       const res = await handler(post({ email: 'user@example.com' }), ctx);
       expect(res.status).toBe(500);
+      const body = (await res.json()) as ApiBody;
+      expect(body.status).toBe(500);
+      expect(body.errors).toEqual([]);
     });
   });
 
@@ -64,7 +78,9 @@ describe('Given the subscribers function', () => {
       const res = await handler(post({ email: 'user@example.com' }), ctx);
 
       expect(res.status).toBe(201);
-      expect(await res.json()).toEqual({ success: true });
+      const body = (await res.json()) as ApiBody;
+      expect(body.status).toBe(201);
+      expect(body.message).toBe('Subscribed');
       expect(mockAddSubscriber).toHaveBeenCalledWith({ email: 'user@example.com' });
     });
 
