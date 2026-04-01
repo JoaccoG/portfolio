@@ -1,46 +1,68 @@
 import { useRef } from 'react';
 import { useBreakpoint, type ResponsiveStyles } from '@hooks/useBreakpoint';
-import { ABOUT_CHAPTERS } from '@constants/content';
+import { ABOUT } from '@constants/content';
 import { Section } from '@components/Section/Section';
 import { Title } from '@components/Title/Title';
 import { useAboutAnimation } from './hooks/useAboutAnimation';
+import { useScrollHint } from './hooks/useScrollHint';
 import { AboutChapter } from './components/AboutChapter';
+import { ResumeDropdown } from './components/ResumeDropdown';
+import { ScrollHint } from './components/ScrollHint';
 
 export const About = () => {
-  const { resolve } = useBreakpoint();
   const sectionRef = useRef<HTMLElement>(null);
+  const titleGroupRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const resumeButtonRef = useRef<HTMLDivElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const lastChapterRef = useRef<HTMLDivElement | null>(null);
   const chapterRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  useAboutAnimation({ sectionRef, titleRef, windowRef, innerRef, lastChapterRef, chapterRefs });
+  const { breakpoint, resolve } = useBreakpoint();
+  const { showHint } = useScrollHint({ sectionRef, innerRef });
+  useAboutAnimation({
+    sectionRef,
+    titleGroupRef,
+    titleRef,
+    resumeButtonRef,
+    windowRef,
+    innerRef,
+    lastChapterRef,
+    chapterRefs
+  });
 
-  const lastIdx = ABOUT_CHAPTERS.length - 1;
+  const lastIdx = ABOUT.chapters.length - 1;
+  const isDesktop = ['md', 'lg', 'xl'].includes(breakpoint);
 
   return (
-    <Section ref={sectionRef} id="about" style={aboutSectionStyle}>
-      <Title ref={titleRef} as="h2" style={titleStyle}>
-        ABOUT ME
-      </Title>
-      <div ref={windowRef} style={resolve(windowStyle)}>
-        <div ref={innerRef} style={resolve(innerStyle)}>
-          {ABOUT_CHAPTERS.map((chapter, idx) => (
-            <AboutChapter
-              key={chapter.number}
-              ref={(el) => {
-                chapterRefs.current[idx] = el;
-                if (idx === lastIdx) lastChapterRef.current = el;
-              }}
-              number={chapter.number}
-              title={chapter.title}
-              paragraphs={chapter.paragraphs}
-            />
-          ))}
+    <>
+      <Section ref={sectionRef} id="about" style={aboutSectionStyle}>
+        <div ref={titleGroupRef} style={resolve(titleGroupStyle)}>
+          <Title ref={titleRef} as="h2" style={titleStyle}>
+            {ABOUT.title}
+          </Title>
+          <ResumeDropdown ref={resumeButtonRef} />
         </div>
-      </div>
-    </Section>
+        <div ref={windowRef} style={resolve(windowStyle)}>
+          <div ref={innerRef} style={resolve(innerStyle)}>
+            {ABOUT.chapters.map((chapter, idx) => (
+              <AboutChapter
+                key={chapter.number}
+                ref={(el) => {
+                  chapterRefs.current[idx] = el;
+                  if (idx === lastIdx) lastChapterRef.current = el;
+                }}
+                number={chapter.number}
+                title={chapter.title}
+                paragraphs={chapter.paragraphs}
+              />
+            ))}
+          </div>
+        </div>
+      </Section>
+      <ScrollHint isVisible={isDesktop && showHint} />
+    </>
   );
 };
 
@@ -54,13 +76,20 @@ const aboutSectionStyle: ResponsiveStyles = {
   gap: { base: '3rem', md: '0' }
 };
 
-const titleStyle: ResponsiveStyles = {
-  width: 'max-content',
+const titleGroupStyle: ResponsiveStyles = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: { base: '1rem', md: '0' },
   position: { base: 'relative', md: 'absolute' },
   left: { base: 'auto', md: '50%' },
   top: { base: 'auto', md: '50%' },
-  lineHeight: 1,
   zIndex: 10
+};
+
+const titleStyle: ResponsiveStyles = {
+  width: 'max-content',
+  lineHeight: 1
 };
 
 const windowStyle: ResponsiveStyles = {

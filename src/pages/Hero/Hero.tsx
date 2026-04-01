@@ -87,7 +87,7 @@ const centerStyle: ResponsiveStyles = {
   flex: 1
 };
 
-const sceneLayerStyle: React.CSSProperties = {
+const sceneLayerStyle: ResponsiveStyles = {
   width: '100%',
   height: '100%',
   gridRow: 1,

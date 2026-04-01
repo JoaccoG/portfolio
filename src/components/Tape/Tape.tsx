@@ -57,6 +57,8 @@ export const Tape = forwardRef<HTMLDivElement, TapeProps>(
 
 const tapeStyle: ResponsiveStyles = {
   position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
   width: '120%',
   left: '-10%',
   overflow: 'hidden',
@@ -71,6 +73,8 @@ const tapeStyle: ResponsiveStyles = {
 
 const trackStyle: ResponsiveStyles = {
   display: 'flex',
+  alignItems: 'center',
+  gap: { base: '1.5rem', lg: '1.75rem' },
   width: 'max-content',
   willChange: 'transform'
 };
@@ -79,8 +83,7 @@ const itemStyle: ResponsiveStyles = {
   display: 'flex',
   alignItems: 'center',
   gap: { base: '1.5rem', lg: '1.75rem' },
-  flexShrink: 0,
-  padding: { base: '0 1.5rem', lg: '0 1.75rem' }
+  flexShrink: 0
 };
 
 const textStyle: ResponsiveStyles = {

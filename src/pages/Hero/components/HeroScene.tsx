@@ -2,6 +2,7 @@ import { useRef, useEffect, forwardRef } from 'react';
 import { Vector2, Vector3, type Mesh } from 'three';
 import { Float } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
+import { useBreakpoint, type ResponsiveStyles } from '@hooks/useBreakpoint';
 
 const AUTO_SPEED = 0.25; // base rotation speed for the idle drift
 const DIRECTION_CHANGE_RATE = 0.05; // how quickly the drift direction randomizes
@@ -16,6 +17,7 @@ const onMouseMove = (e: MouseEvent) => {
 };
 
 export const HeroScene = forwardRef<HTMLDivElement>((_, ref) => {
+  const { resolve } = useBreakpoint();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,7 +52,7 @@ export const HeroScene = forwardRef<HTMLDivElement>((_, ref) => {
   }, [containerRef]);
 
   return (
-    <div ref={setRef} style={canvasContainerStyle}>
+    <div ref={setRef} style={resolve(canvasContainerStyle)}>
       <Canvas
         camera={{ position: [0, 0, 7], fov: 60 }}
         gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
@@ -120,7 +122,7 @@ const Scene = () => (
   </>
 );
 
-const canvasContainerStyle: React.CSSProperties = {
+const canvasContainerStyle: ResponsiveStyles = {
   width: '100%',
   height: '100%',
   display: 'flex',

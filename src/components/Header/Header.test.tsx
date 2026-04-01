@@ -1,11 +1,10 @@
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import gsap from 'gsap';
+import userEvent from '@testing-library/user-event';
+import { render, screen } from '@testing-library/react';
 import { Header } from './Header';
 
-let callGsapBeforeMount = false;
 let currentBreakpoint = 'base';
-let renderUnderlinePath = true;
+let callGsapBeforeMount = false;
 
 vi.mock('gsap', () => ({
   default: { timeline: vi.fn(() => ({ fromTo: vi.fn().mockReturnThis(), to: vi.fn().mockReturnThis() })), set: vi.fn() }
@@ -29,14 +28,6 @@ vi.mock('@hooks/useBreakpoint', () => ({
   })
 }));
 
-vi.mock('@components/icons/BlogUnderline', async () => {
-  const { createSvgIconMock } = await vi.importActual<typeof import('@test/helpers/svg')>('@test/helpers/svg');
-
-  return {
-    BlogUnderline: createSvgIconMock({ testId: 'blog-underline', renderPath: () => renderUnderlinePath })
-  };
-});
-
 describe('Given the Header component', () => {
   const scrollTo = vi.fn();
 
@@ -51,15 +42,6 @@ describe('Given the Header component', () => {
       render(<Header scrollTo={scrollTo} />);
       callGsapBeforeMount = false;
       expect(screen.getByRole('banner')).toBeInTheDocument();
-    });
-  });
-
-  describe('When the underline SVG has no path element', () => {
-    it('Then it should skip the underline animation', () => {
-      renderUnderlinePath = false;
-      render(<Header scrollTo={scrollTo} />);
-      renderUnderlinePath = true;
-      expect(gsap.set).not.toHaveBeenCalled();
     });
   });
 
@@ -86,7 +68,7 @@ describe('Given the Header component', () => {
 
     it('Then the blog underline SVG should be rendered', () => {
       render(<Header scrollTo={scrollTo} />);
-      expect(screen.getByTestId('blog-underline')).toBeInTheDocument();
+      expect(screen.getByTestId('svg-icon-blogUnderline')).toBeInTheDocument();
     });
 
     it('Then it should NOT create a scroll-triggered timeline', () => {
@@ -161,7 +143,7 @@ describe('Given the Header component', () => {
       const user = userEvent.setup();
       render(<Header scrollTo={scrollTo} />);
       const blogLink = screen.getByText('BLOG').closest('a')!;
-      const underline = screen.getByTestId('blog-underline');
+      const underline = screen.getByTestId('svg-icon-blogUnderline');
 
       const colorBefore = underline.style.color;
       await user.hover(blogLink);

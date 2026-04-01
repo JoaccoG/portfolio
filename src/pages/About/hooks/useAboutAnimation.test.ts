@@ -11,6 +11,7 @@ const mockRevert = vi.fn();
 vi.mock('gsap', () => ({
   default: {
     set: vi.fn(),
+    to: vi.fn(),
     fromTo: vi.fn(),
     timeline: vi.fn(() => mockTimeline),
     matchMedia: vi.fn(() => ({
@@ -39,7 +40,9 @@ const createMockElement = (overrides: Record<string, unknown> = {}) =>
 
 const createPopulatedRefs = () => {
   const section = createMockElement({ offsetWidth: 1400 });
+  const titleGroup = createMockElement();
   const title = createMockElement();
+  const resumeButton = createMockElement();
   const windowEl = createMockElement({ clientHeight: 800, offsetLeft: 840 });
   const inner = createMockElement();
   const lastChapter = createMockElement({ offsetTop: 400, offsetHeight: 200 });
@@ -47,7 +50,9 @@ const createPopulatedRefs = () => {
 
   return {
     sectionRef: { current: section as HTMLElement },
+    titleGroupRef: { current: titleGroup as HTMLDivElement },
     titleRef: { current: title as HTMLHeadingElement },
+    resumeButtonRef: { current: resumeButton as HTMLDivElement },
     windowRef: { current: windowEl as HTMLDivElement },
     innerRef: { current: inner as HTMLDivElement },
     lastChapterRef: { current: lastChapter as HTMLDivElement },
@@ -65,6 +70,13 @@ describe('Given the useAboutAnimation hook', () => {
     it('Then it should bail out without creating matchMedia', () => {
       const refs = createPopulatedRefs();
       refs.sectionRef.current = null as unknown as HTMLElement;
+      renderHook(() => useAboutAnimation(refs));
+      expect(gsap.matchMedia).not.toHaveBeenCalled();
+    });
+
+    it('Then it should bail out when titleGroupRef is null', () => {
+      const refs = createPopulatedRefs();
+      refs.titleGroupRef.current = null as unknown as HTMLDivElement;
       renderHook(() => useAboutAnimation(refs));
       expect(gsap.matchMedia).not.toHaveBeenCalled();
     });
@@ -96,6 +108,13 @@ describe('Given the useAboutAnimation hook', () => {
       renderHook(() => useAboutAnimation(refs));
       expect(gsap.matchMedia).not.toHaveBeenCalled();
     });
+
+    it('Then it should NOT bail out when resumeButtonRef is null', () => {
+      const refs = createPopulatedRefs();
+      refs.resumeButtonRef.current = null as unknown as HTMLDivElement;
+      renderHook(() => useAboutAnimation(refs));
+      expect(gsap.matchMedia).toHaveBeenCalled();
+    });
   });
 
   describe('When all refs are populated', () => {
@@ -115,10 +134,16 @@ describe('Given the useAboutAnimation hook', () => {
   });
 
   describe('When the desktop media query callback fires', () => {
-    it('Then it should set title centering transforms', () => {
+    it('Then it should set titleGroup centering transforms', () => {
       renderHook(() => useAboutAnimation(createPopulatedRefs()));
       capturedMediaCallbacks.get('(min-width: 1024px)')!();
       expect(gsap.set).toHaveBeenCalledWith(expect.anything(), { xPercent: -50, yPercent: -50 });
+    });
+
+    it('Then it should set the resume button to hidden initially', () => {
+      renderHook(() => useAboutAnimation(createPopulatedRefs()));
+      capturedMediaCallbacks.get('(min-width: 1024px)')!();
+      expect(gsap.set).toHaveBeenCalledWith(expect.anything(), { opacity: 0 });
     });
 
     it('Then it should create a pinned ScrollTrigger timeline', () => {
@@ -131,10 +156,20 @@ describe('Given the useAboutAnimation hook', () => {
       );
     });
 
-    it('Then the timeline should animate title and inner content', () => {
+    it('Then the ScrollTrigger should have an onUpdate callback', () => {
       renderHook(() => useAboutAnimation(createPopulatedRefs()));
       capturedMediaCallbacks.get('(min-width: 1024px)')!();
-      expect(mockTimeline.fromTo).toHaveBeenCalledTimes(2);
+      expect(gsap.timeline).toHaveBeenCalledWith(
+        expect.objectContaining({
+          scrollTrigger: expect.objectContaining({ onUpdate: expect.any(Function) })
+        })
+      );
+    });
+
+    it('Then the timeline should animate titleGroup, title scale, and inner content', () => {
+      renderHook(() => useAboutAnimation(createPopulatedRefs()));
+      capturedMediaCallbacks.get('(min-width: 1024px)')!();
+      expect(mockTimeline.fromTo).toHaveBeenCalledTimes(3);
     });
 
     it('Then it should calculate moveX dynamically from DOM measurements', () => {
@@ -142,8 +177,16 @@ describe('Given the useAboutAnimation hook', () => {
       renderHook(() => useAboutAnimation(refs));
       capturedMediaCallbacks.get('(min-width: 1024px)')!();
       const expectedMoveX = 840 / 2 - 1400 / 2;
-      const titleFromTo = mockTimeline.fromTo.mock.calls[0];
-      expect(titleFromTo[2]).toEqual(expect.objectContaining({ x: expectedMoveX }));
+      const titleGroupFromTo = mockTimeline.fromTo.mock.calls[0];
+      expect(titleGroupFromTo[2]).toEqual(expect.objectContaining({ x: expectedMoveX }));
+    });
+
+    it('Then the title should be animated with scale only', () => {
+      renderHook(() => useAboutAnimation(createPopulatedRefs()));
+      capturedMediaCallbacks.get('(min-width: 1024px)')!();
+      const titleScaleFromTo = mockTimeline.fromTo.mock.calls[1];
+      expect(titleScaleFromTo[1]).toEqual({ scale: 1 });
+      expect(titleScaleFromTo[2]).toEqual(expect.objectContaining({ scale: 0.6 }));
     });
 
     it('Then contentDuration should be at least 2', () => {
@@ -169,6 +212,16 @@ describe('Given the useAboutAnimation hook', () => {
       );
     });
 
+    it('Then it should animate the resume button with a delayed fade-in', () => {
+      renderHook(() => useAboutAnimation(createPopulatedRefs()));
+      capturedMediaCallbacks.get('(max-width: 1023px)')!();
+      expect(gsap.fromTo).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({ y: 15, opacity: 0 }),
+        expect.objectContaining({ y: 0, opacity: 1, delay: 0.3, scrollTrigger: expect.any(Object) })
+      );
+    });
+
     it('Then it should animate chapter elements with stagger', () => {
       const refs = createPopulatedRefs();
       renderHook(() => useAboutAnimation(refs));
@@ -184,6 +237,15 @@ describe('Given the useAboutAnimation hook', () => {
 
     it('Then it should skip null chapters in the array', () => {
       const refs = createPopulatedRefs();
+      refs.chapterRefs.current = [null as unknown as HTMLDivElement];
+      renderHook(() => useAboutAnimation(refs));
+      capturedMediaCallbacks.get('(max-width: 1023px)')!();
+      expect(gsap.fromTo).toHaveBeenCalledTimes(2);
+    });
+
+    it('Then it should skip resume button animation when resumeButtonRef is null', () => {
+      const refs = createPopulatedRefs();
+      refs.resumeButtonRef.current = null as unknown as HTMLDivElement;
       refs.chapterRefs.current = [null as unknown as HTMLDivElement];
       renderHook(() => useAboutAnimation(refs));
       capturedMediaCallbacks.get('(max-width: 1023px)')!();

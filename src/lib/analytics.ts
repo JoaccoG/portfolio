@@ -16,10 +16,10 @@ const flushQueue = (): void => {
 };
 
 export const loadUmami = (): void => {
-  if (import.meta.env.VITE_ENVIRONMENT !== 'production') return;
+  if (import.meta.env.ENVIRONMENT !== 'production') return;
 
-  const scriptUrl = import.meta.env.VITE_UMAMI__SCRIPT_URL;
-  const websiteId = import.meta.env.VITE_UMAMI__WEBSITE_ID;
+  const scriptUrl = import.meta.env.UMAMI__SCRIPT_URL;
+  const websiteId = import.meta.env.UMAMI__WEBSITE_ID;
   if (!scriptUrl || !websiteId) return;
 
   const script = document.createElement('script');
