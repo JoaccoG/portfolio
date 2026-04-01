@@ -20,7 +20,7 @@ export const FloatingField = ({ type, label, value, error, onChange }: FloatingF
     ...resolve(inputStyle),
     borderBottomColor: borderColor,
     boxShadow: isFocused && !error ? '0 1px 0 0 rgba(236, 119, 83, 0.3)' : 'none',
-    paddingTop: type === 'textarea' ? '16px' : '16px'
+    paddingTop: '16px'
   };
 
   const labelColor = error ? 'var(--color-error)' : isFocused ? 'var(--color-primary)' : 'var(--color-light-gray)';

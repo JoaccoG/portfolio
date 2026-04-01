@@ -18,7 +18,7 @@ abstract class EmailSender {
 }
 
 class ResendEmailSender extends EmailSender {
-  #client: Resend;
+  readonly #client: Resend;
 
   constructor(apiKey: string) {
     super();

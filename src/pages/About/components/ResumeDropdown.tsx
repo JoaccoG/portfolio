@@ -13,7 +13,7 @@ export const ResumeDropdown = forwardRef<HTMLDivElement>(function ResumeDropdown
     (node: HTMLDivElement | null) => {
       containerRef.current = node;
       if (typeof forwardedRef === 'function') forwardedRef(node);
-      else if (forwardedRef) (forwardedRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      else if (forwardedRef) (forwardedRef as React.RefObject<HTMLDivElement | null>).current = node;
     },
     [forwardedRef]
   );
