@@ -29,8 +29,8 @@ export type ContactInput = InferOutput<typeof contactSchema>;
 
 export const contactSchema = object({
   email: pipe(string(), trim(), email('Invalid email format')),
-  subject: optional(pipe(string(), trim(), maxLength(200, 'Subject too long')), 'Portfolio Contact Email'),
-  message: pipe(string(), trim(), minLength(1, 'Required'), maxLength(5000, 'Message too long'))
+  subject: optional(pipe(string(), trim(), maxLength(200, 'Maximum 200 characters')), 'Portfolio Contact Email'),
+  message: pipe(string(), trim(), minLength(1, 'Required'), maxLength(5000, 'Maximum 5000 characters'))
 });
 
 export type SubscriberInput = InferOutput<typeof subscriberSchema>;
