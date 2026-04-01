@@ -24,12 +24,31 @@ vi.mock('./src/lib/analytics', () => ({
   track: vi.fn()
 }));
 
-vi.mock('./src/hooks/useBreakpoint', () => ({
-  useBreakpoint: () => ({
-    breakpoint: 'base',
-    resolve: vi.fn((_input: unknown, fallback?: unknown) => fallback ?? {})
-  })
-}));
+vi.mock('./src/hooks/useBreakpoint', () => {
+  const resolveResponsiveValue = (value: unknown): unknown => {
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      const map = value as Record<string, unknown>;
+      for (const bp of ['base', 'xs', 'sm', 'md', 'lg', 'xl']) {
+        if (map[bp] !== undefined) return map[bp];
+      }
+      return undefined;
+    }
+    return value;
+  };
+
+  return {
+    useBreakpoint: () => ({
+      breakpoint: 'base' as const,
+      resolve: vi.fn((input: unknown, fallback?: unknown) => {
+        if (fallback !== undefined) return resolveResponsiveValue(input) ?? fallback;
+        if (typeof input !== 'object' || input === null) return {};
+        return Object.fromEntries(
+          Object.entries(input as Record<string, unknown>).map(([k, v]) => [k, resolveResponsiveValue(v)])
+        );
+      })
+    })
+  };
+});
 
 vi.mock('./src/components/icons', async () => {
   const { forwardRef, useRef, useEffect, createElement } = await vi.importActual<typeof import('react')>('react');
