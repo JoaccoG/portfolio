@@ -5,10 +5,12 @@ const getProperty = () => document.documentElement.style.getPropertyValue('--sta
 
 describe('Given the useStableViewport hook', () => {
   const originalInnerHeight = window.innerHeight;
+  const originalMatchMedia = window.matchMedia;
 
   afterEach(() => {
     document.documentElement.style.removeProperty('--stable-vh');
     Object.defineProperty(window, 'innerHeight', { value: originalInnerHeight, writable: true });
+    Object.defineProperty(window, 'matchMedia', { value: originalMatchMedia, writable: true });
   });
 
   describe('When mounted', () => {
@@ -55,15 +57,12 @@ describe('Given the useStableViewport hook', () => {
 
   describe('When matchMedia is not available', () => {
     it('Then it should still set --stable-vh but skip the listener', () => {
-      const original = window.matchMedia;
       Object.defineProperty(window, 'matchMedia', { value: undefined, writable: true });
 
       Object.defineProperty(window, 'innerHeight', { value: 700, writable: true });
       const { unmount } = renderHook(() => useStableViewport());
       expect(getProperty()).toBe('700px');
       unmount();
-
-      Object.defineProperty(window, 'matchMedia', { value: original, writable: true });
     });
   });
 });

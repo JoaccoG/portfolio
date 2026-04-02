@@ -5,7 +5,7 @@ import Lenis from 'lenis';
 
 const SCROLL_DURATION = 1.2;
 const EXPONENTIAL_DECAY = -10;
-const FOCUSABLE_INPUTS = 'input, textarea, select, [contenteditable="true"]';
+const FOCUSABLE_INPUTS = 'input, textarea, select, [contenteditable]:not([contenteditable="false"])';
 
 const exponentialEaseOut = (t: number) => Math.min(1, 1.001 - Math.pow(2, EXPONENTIAL_DECAY * t));
 

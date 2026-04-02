@@ -112,5 +112,14 @@ describe('Given the useSmoothScroll hook', () => {
       expect(mockLenisInstance.off).toHaveBeenCalledWith('scroll', expect.any(Function));
       expect(mockLenisInstance.destroy).toHaveBeenCalledOnce();
     });
+
+    it('Then it should remove document focusin and focusout listeners', () => {
+      const removeSpy = vi.spyOn(document, 'removeEventListener');
+      const { unmount } = renderHook(() => useSmoothScroll());
+      unmount();
+      expect(removeSpy).toHaveBeenCalledWith('focusin', expect.any(Function));
+      expect(removeSpy).toHaveBeenCalledWith('focusout', expect.any(Function));
+      removeSpy.mockRestore();
+    });
   });
 });
