@@ -7,7 +7,9 @@ const { mockLenisInstance, capturedLenisOptions, mockTicker } = vi.hoisted(() =>
     off: vi.fn(),
     raf: vi.fn(),
     destroy: vi.fn(),
-    scrollTo: vi.fn()
+    scrollTo: vi.fn(),
+    stop: vi.fn(),
+    start: vi.fn()
   },
   capturedLenisOptions: { current: {} },
   mockTicker: { add: vi.fn(), remove: vi.fn(), lagSmoothing: vi.fn() }
@@ -20,6 +22,8 @@ vi.mock('lenis', () => ({
     raf = mockLenisInstance.raf;
     destroy = mockLenisInstance.destroy;
     scrollTo = mockLenisInstance.scrollTo;
+    stop = mockLenisInstance.stop;
+    start = mockLenisInstance.start;
     constructor(opts: Record<string, unknown>) {
       capturedLenisOptions.current = opts;
     }
@@ -71,12 +75,51 @@ describe('Given the useSmoothScroll hook', () => {
     });
   });
 
+  describe('When a focusable input receives focus', () => {
+    it('Then it should stop Lenis', () => {
+      renderHook(() => useSmoothScroll());
+      const input = document.createElement('input');
+      document.body.appendChild(input);
+      input.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+      expect(mockLenisInstance.stop).toHaveBeenCalledOnce();
+      document.body.removeChild(input);
+    });
+
+    it('Then it should restart Lenis when the input loses focus', () => {
+      renderHook(() => useSmoothScroll());
+      const textarea = document.createElement('textarea');
+      document.body.appendChild(textarea);
+      textarea.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+      textarea.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+      expect(mockLenisInstance.start).toHaveBeenCalledOnce();
+      document.body.removeChild(textarea);
+    });
+
+    it('Then it should not stop Lenis for non-input elements', () => {
+      renderHook(() => useSmoothScroll());
+      const button = document.createElement('button');
+      document.body.appendChild(button);
+      button.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+      expect(mockLenisInstance.stop).not.toHaveBeenCalled();
+      document.body.removeChild(button);
+    });
+  });
+
   describe('When unmounted', () => {
     it('Then it should clean up Lenis and GSAP listeners', () => {
       const { unmount } = renderHook(() => useSmoothScroll());
       unmount();
       expect(mockLenisInstance.off).toHaveBeenCalledWith('scroll', expect.any(Function));
       expect(mockLenisInstance.destroy).toHaveBeenCalledOnce();
+    });
+
+    it('Then it should remove document focusin and focusout listeners', () => {
+      const removeSpy = vi.spyOn(document, 'removeEventListener');
+      const { unmount } = renderHook(() => useSmoothScroll());
+      unmount();
+      expect(removeSpy).toHaveBeenCalledWith('focusin', expect.any(Function));
+      expect(removeSpy).toHaveBeenCalledWith('focusout', expect.any(Function));
+      removeSpy.mockRestore();
     });
   });
 });
