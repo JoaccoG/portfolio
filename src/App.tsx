@@ -1,4 +1,5 @@
 import { useSmoothScroll } from '@hooks/useSmoothScroll';
+import { useStableViewport } from '@hooks/useStableViewport';
 import { Overlay } from '@components/Overlay/Overlay';
 import { Header } from '@components/Header/Header';
 import { Footer } from '@components/Footer/Footer';
@@ -8,6 +9,7 @@ import { Projects } from '@pages/Projects/Projects';
 import { Contact } from '@pages/Contact/Contact';
 
 export const App = () => {
+  useStableViewport();
   const { scrollTo } = useSmoothScroll();
 
   return (

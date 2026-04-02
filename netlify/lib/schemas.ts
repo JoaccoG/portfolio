@@ -26,7 +26,6 @@ export const parseBody = async <TSchema extends BaseSchema<unknown, unknown, Bas
 };
 
 export type ContactInput = InferOutput<typeof contactSchema>;
-
 export const contactSchema = object({
   email: pipe(string(), trim(), email('Invalid email format')),
   subject: optional(pipe(string(), trim(), maxLength(200, 'Maximum 200 characters')), 'Portfolio Contact Email'),

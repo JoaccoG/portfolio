@@ -57,7 +57,7 @@ html.lenis body {
 }
 
 body {
-  min-height: 100dvh;
+  min-height: var(--stable-vh, 100svh);
   color: var(--color-white);
   background-color: var(--color-black);
   font-family: var(--font-body);
@@ -74,7 +74,10 @@ body::before {
   content: '';
   position: fixed;
   pointer-events: none;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--stable-vh, 100svh);
   z-index: -2;
   background-image: radial-gradient(ellipse 100% 100% at 50% -20%, var(--color-background), transparent);
 }

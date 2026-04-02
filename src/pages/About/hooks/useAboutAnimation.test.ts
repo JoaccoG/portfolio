@@ -189,6 +189,51 @@ describe('Given the useAboutAnimation hook', () => {
       expect(titleScaleFromTo[2]).toEqual(expect.objectContaining({ scale: 0.6 }));
     });
 
+    it('Then the onUpdate callback should show the resume button when title animation completes', () => {
+      renderHook(() => useAboutAnimation(createPopulatedRefs()));
+      capturedMediaCallbacks.get('(min-width: 1024px)')!();
+
+      const { onUpdate } = (gsap.timeline as ReturnType<typeof vi.fn>).mock.calls[0][0].scrollTrigger;
+      onUpdate({ progress: 1 });
+
+      expect(gsap.to).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ opacity: 1, duration: 0.3 }));
+    });
+
+    it('Then the onUpdate callback should hide the resume button when scrolling back', () => {
+      renderHook(() => useAboutAnimation(createPopulatedRefs()));
+      capturedMediaCallbacks.get('(min-width: 1024px)')!();
+
+      const { onUpdate } = (gsap.timeline as ReturnType<typeof vi.fn>).mock.calls[0][0].scrollTrigger;
+      onUpdate({ progress: 1 });
+      onUpdate({ progress: 0 });
+
+      expect(gsap.to).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ opacity: 0, duration: 0.15 }));
+    });
+
+    it('Then the onUpdate callback should not toggle when state has not changed', () => {
+      renderHook(() => useAboutAnimation(createPopulatedRefs()));
+      capturedMediaCallbacks.get('(min-width: 1024px)')!();
+
+      const { onUpdate } = (gsap.timeline as ReturnType<typeof vi.fn>).mock.calls[0][0].scrollTrigger;
+      onUpdate({ progress: 1 });
+      (gsap.to as ReturnType<typeof vi.fn>).mockClear();
+      onUpdate({ progress: 1 });
+
+      expect(gsap.to).not.toHaveBeenCalled();
+    });
+
+    it('Then the onUpdate callback should bail out when resumeButton is null', () => {
+      const refs = createPopulatedRefs();
+      refs.resumeButtonRef.current = null as unknown as HTMLDivElement;
+      renderHook(() => useAboutAnimation(refs));
+      capturedMediaCallbacks.get('(min-width: 1024px)')!();
+
+      const { onUpdate } = (gsap.timeline as ReturnType<typeof vi.fn>).mock.calls[0][0].scrollTrigger;
+      onUpdate({ progress: 1 });
+
+      expect(gsap.to).not.toHaveBeenCalled();
+    });
+
     it('Then contentDuration should be at least 2', () => {
       const refs = createPopulatedRefs();
       (refs.lastChapterRef.current as unknown as Record<string, number>).offsetTop = 0;

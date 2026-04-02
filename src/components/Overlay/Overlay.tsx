@@ -34,7 +34,10 @@ export const Overlay = () => {
 
 const canvasStyle: ResponsiveStyles = {
   position: 'fixed',
-  inset: 0,
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: 'var(--stable-vh, 100svh)',
   pointerEvents: 'none',
   zIndex: -1
 };

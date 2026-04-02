@@ -99,7 +99,7 @@ const inputStyle: ResponsiveStyles = {
   outline: 'none',
   color: 'var(--color-white)',
   fontFamily: 'var(--font-body)',
-  fontSize: { base: '0.875rem', md: '0.9375rem' },
+  fontSize: '1rem',
   lineHeight: 1.2,
   transition: 'border-color 0.3s ease, box-shadow 0.25s ease'
 };
