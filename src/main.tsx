@@ -19,6 +19,7 @@ if (import.meta.env.ENVIRONMENT === 'production') {
 loadUmami();
 
 gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

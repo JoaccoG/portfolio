@@ -5,6 +5,7 @@ import Lenis from 'lenis';
 
 const SCROLL_DURATION = 1.2;
 const EXPONENTIAL_DECAY = -10;
+const FOCUSABLE_INPUTS = 'input, textarea, select, [contenteditable="true"]';
 
 const exponentialEaseOut = (t: number) => Math.min(1, 1.001 - Math.pow(2, EXPONENTIAL_DECAY * t));
 
@@ -27,7 +28,20 @@ export const useSmoothScroll = () => {
     gsap.ticker.add(tickerFn);
     gsap.ticker.lagSmoothing(0);
 
+    const onFocusIn = (e: FocusEvent) => {
+      if ((e.target as Element)?.matches(FOCUSABLE_INPUTS)) lenis.stop();
+    };
+
+    const onFocusOut = (e: FocusEvent) => {
+      if ((e.target as Element)?.matches(FOCUSABLE_INPUTS)) lenis.start();
+    };
+
+    document.addEventListener('focusin', onFocusIn);
+    document.addEventListener('focusout', onFocusOut);
+
     return () => {
+      document.removeEventListener('focusin', onFocusIn);
+      document.removeEventListener('focusout', onFocusOut);
       lenis.off('scroll', onScroll);
       gsap.ticker.remove(tickerFn);
       lenis.destroy();
