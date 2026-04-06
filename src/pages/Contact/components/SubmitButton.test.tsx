@@ -28,32 +28,28 @@ describe('Given the SubmitButton component', () => {
   });
 
   describe('When status is "success"', () => {
-    it('Then it should render an SVG icon instead of text', () => {
+    it('Then it should render the success icon instead of text', () => {
       render(<SubmitButton status="success" />);
-      const button = screen.getByRole('button');
-      expect(button.querySelector('svg')).toBeInTheDocument();
-      expect(button).not.toHaveTextContent(CONTACT.submit);
+      expect(screen.getByTestId('svg-icon-success')).toBeInTheDocument();
+      expect(screen.getByRole('button')).not.toHaveTextContent(CONTACT.submit);
     });
 
-    it('Then the icon should use the success color', () => {
+    it('Then the icon wrapper should use the success color', () => {
       render(<SubmitButton status="success" />);
-      const svg = screen.getByRole('button').querySelector('svg');
-      expect(svg).toHaveStyle({ color: 'var(--color-success)' });
+      expect(screen.getByTestId('svg-icon-success')).toHaveStyle({ color: 'var(--color-success)' });
     });
   });
 
   describe('When status is "error"', () => {
-    it('Then it should render an SVG icon instead of text', () => {
+    it('Then it should render the error icon instead of text', () => {
       render(<SubmitButton status="error" />);
-      const button = screen.getByRole('button');
-      expect(button.querySelector('svg')).toBeInTheDocument();
-      expect(button).not.toHaveTextContent(CONTACT.submit);
+      expect(screen.getByTestId('svg-icon-error')).toBeInTheDocument();
+      expect(screen.getByRole('button')).not.toHaveTextContent(CONTACT.submit);
     });
 
-    it('Then the icon should use the error color', () => {
+    it('Then the icon wrapper should use the error color', () => {
       render(<SubmitButton status="error" />);
-      const svg = screen.getByRole('button').querySelector('svg');
-      expect(svg).toHaveStyle({ color: 'var(--color-error)' });
+      expect(screen.getByTestId('svg-icon-error')).toHaveStyle({ color: 'var(--color-error)' });
     });
   });
 
@@ -61,17 +57,17 @@ describe('Given the SubmitButton component', () => {
     it('Then it should show the success icon after transitioning from idle', () => {
       const { rerender } = render(<SubmitButton status="idle" />);
       rerender(<SubmitButton status="success" />);
-      const button = screen.getByRole('button');
-      expect(button.querySelector('svg')).toBeInTheDocument();
-      expect(button.querySelector('svg')).toHaveStyle({ color: 'var(--color-success)' });
+      const icon = screen.getByTestId('svg-icon-success');
+      expect(icon).toBeInTheDocument();
+      expect(icon).toHaveStyle({ color: 'var(--color-success)' });
     });
 
     it('Then it should show the error icon after transitioning from sending', () => {
       const { rerender } = render(<SubmitButton status="sending" />);
       rerender(<SubmitButton status="error" />);
-      const button = screen.getByRole('button');
-      expect(button.querySelector('svg')).toBeInTheDocument();
-      expect(button.querySelector('svg')).toHaveStyle({ color: 'var(--color-error)' });
+      const icon = screen.getByTestId('svg-icon-error');
+      expect(icon).toBeInTheDocument();
+      expect(icon).toHaveStyle({ color: 'var(--color-error)' });
     });
   });
 
