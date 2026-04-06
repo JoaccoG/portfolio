@@ -85,7 +85,7 @@ export const ResumeDropdown = forwardRef<HTMLDivElement>(function ResumeDropdown
             href={href}
             isVisible={isOpen}
             onSelect={() => {
-              track('resume-dropdown-option-selected', { language: label.toLowerCase() });
+              track('resume-viewed', { language: label.toLowerCase() });
               setIsOpen(false);
             }}
           />
