@@ -66,8 +66,13 @@ class ResendEmailSender extends EmailSender {
   }
 
   async addSubscriber({ email }: AddSubscriberParams): Promise<void> {
+    const audienceId = requireEnv('RESEND__AUDIENCE_ID');
+
+    const { data: existing } = await this.#client.contacts.get({ audienceId, email });
+    if (existing) throw new ApiError(409, 'Email already subscribed.');
+
     const { error } = await this.#client.contacts.create({
-      audienceId: requireEnv('RESEND__AUDIENCE_ID'),
+      audienceId,
       email,
       unsubscribed: false
     });
