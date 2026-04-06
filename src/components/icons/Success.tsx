@@ -9,6 +9,9 @@ export const SvgSuccess = forwardRef((props: SVGProps<SVGSVGElement>, ref: Ref<S
       strokeLinecap="round"
       strokeLinejoin="round"
       fill="none"
+      strokeDasharray="80"
+      strokeDashoffset="80"
+      style={{ animation: 'drawCheck 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards' }}
     />
   </svg>
 ));
