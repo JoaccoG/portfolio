@@ -28,6 +28,15 @@ vi.mock('@hooks/useBreakpoint', () => ({
   })
 }));
 
+vi.mock('@components/NewsletterModal/NewsletterModal', () => ({
+  NewsletterModal: ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
+    isOpen ? (
+      <div data-testid="newsletter-modal">
+        <button onClick={onClose}>Close modal</button>
+      </div>
+    ) : null
+}));
+
 describe('Given the Header component', () => {
   const scrollTo = vi.fn();
 
@@ -118,11 +127,45 @@ describe('Given the Header component', () => {
   });
 
   describe('When the blog link is clicked', () => {
-    it('Then it should not call scrollTo since it is a path href', async () => {
+    it('Then it should not call scrollTo', async () => {
       const user = userEvent.setup();
       render(<Header scrollTo={scrollTo} />);
       await user.click(screen.getByText('BLOG'));
       expect(scrollTo).not.toHaveBeenCalled();
+    });
+
+    it('Then it should prevent default navigation', async () => {
+      const user = userEvent.setup();
+      render(<Header scrollTo={scrollTo} />);
+      const blogLink = screen.getByText('BLOG').closest('a')!;
+
+      const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+      const preventDefaultSpy = vi.spyOn(clickEvent, 'preventDefault');
+
+      blogLink.dispatchEvent(clickEvent);
+      await user.click(screen.getByText('BLOG'));
+
+      expect(preventDefaultSpy).toHaveBeenCalled();
+    });
+
+    it('Then it should open the newsletter modal', async () => {
+      const user = userEvent.setup();
+      render(<Header scrollTo={scrollTo} />);
+
+      expect(screen.queryByTestId('newsletter-modal')).not.toBeInTheDocument();
+      await user.click(screen.getByText('BLOG'));
+      expect(screen.getByTestId('newsletter-modal')).toBeInTheDocument();
+    });
+
+    it('Then the newsletter modal should close when onClose is called', async () => {
+      const user = userEvent.setup();
+      render(<Header scrollTo={scrollTo} />);
+
+      await user.click(screen.getByText('BLOG'));
+      expect(screen.getByTestId('newsletter-modal')).toBeInTheDocument();
+
+      await user.click(screen.getByText('Close modal'));
+      expect(screen.queryByTestId('newsletter-modal')).not.toBeInTheDocument();
     });
   });
 

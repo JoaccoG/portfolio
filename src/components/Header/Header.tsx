@@ -1,9 +1,11 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { track } from '@lib/analytics';
 import { useBreakpoint, type ResponsiveStyles } from '@hooks/useBreakpoint';
 import { HEADER } from '@constants/content';
 import { SvgIcon } from '@components/icons';
+import { NewsletterModal } from '@components/NewsletterModal/NewsletterModal';
 
 interface HeaderProps {
   scrollTo: (target: string) => void;
@@ -15,8 +17,14 @@ export const Header = ({ scrollTo }: HeaderProps) => {
   const navLinksRef = useRef<HTMLDivElement>(null);
   const blogLinkRef = useRef<HTMLAnchorElement>(null);
   const underlineRef = useRef<HTMLDivElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const hasScrollShrink = ['sm', 'md', 'lg', 'xl'].includes(breakpoint);
+
+  const handleBlogClick = useCallback(() => {
+    track('blog-button-clicked');
+    setIsModalOpen(true);
+  }, []);
 
   useGSAP(
     () => {
@@ -80,8 +88,10 @@ export const Header = ({ scrollTo }: HeaderProps) => {
           href={HEADER.blogLink.target}
           label={HEADER.blogLink.label}
           underlineRef={underlineRef}
+          onIntercept={handleBlogClick}
         />
       </nav>
+      <NewsletterModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </header>
   );
 };
@@ -91,6 +101,7 @@ interface NavLinkProps {
   label: string;
   scrollTo?: (target: string) => void;
   underlineRef?: React.RefObject<HTMLDivElement | null>;
+  onIntercept?: () => void;
 }
 
 const NavLink = ({
@@ -98,12 +109,20 @@ const NavLink = ({
   href,
   label,
   scrollTo,
-  underlineRef
+  underlineRef,
+  onIntercept
 }: NavLinkProps & { ref?: React.Ref<HTMLAnchorElement> }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { resolve } = useBreakpoint();
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (onIntercept) {
+      e.preventDefault();
+      onIntercept();
+
+      return;
+    }
+
     if (href.startsWith('#') && scrollTo) {
       e.preventDefault();
       scrollTo(href.slice(1));
