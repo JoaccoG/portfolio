@@ -148,5 +148,15 @@ describe('Given the Contact page', () => {
       render(<Contact />);
       expect(screen.getByText('Message sent!')).toBeInTheDocument();
     });
+
+    it('Then it should render an empty string when successMessage is null', () => {
+      mockStatus = 'success';
+      mockSuccessMessage = null;
+      render(<Contact />);
+      const messageParagraphs = document.querySelectorAll('p');
+      const statusP = Array.from(messageParagraphs).find((p) => p.style.color === 'var(--color-success)');
+      expect(statusP).toBeDefined();
+      expect(statusP!.textContent).toBe('');
+    });
   });
 });

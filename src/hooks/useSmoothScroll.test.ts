@@ -103,6 +103,15 @@ describe('Given the useSmoothScroll hook', () => {
       expect(mockLenisInstance.stop).not.toHaveBeenCalled();
       document.body.removeChild(button);
     });
+
+    it('Then it should not restart Lenis when a non-input element loses focus', () => {
+      renderHook(() => useSmoothScroll());
+      const button = document.createElement('button');
+      document.body.appendChild(button);
+      button.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+      expect(mockLenisInstance.start).not.toHaveBeenCalled();
+      document.body.removeChild(button);
+    });
   });
 
   describe('When unmounted', () => {

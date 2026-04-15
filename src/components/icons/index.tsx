@@ -10,6 +10,8 @@ import { SvgBlogUnderline } from './BlogUnderline';
 import { SvgArrowDown } from './ArrowDown';
 import { SvgOpenNewWindow } from './OpenNewWindow';
 import { SvgChevronDown } from './ChevronDown';
+import { SvgSuccess } from './Success';
+import { SvgError } from './Error';
 
 const svgIcons: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   github: SvgGithub,
@@ -21,7 +23,9 @@ const svgIcons: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   blogUnderline: SvgBlogUnderline,
   arrowDown: SvgArrowDown,
   chevronDown: SvgChevronDown,
-  openNewWindow: SvgOpenNewWindow
+  openNewWindow: SvgOpenNewWindow,
+  success: SvgSuccess,
+  error: SvgError
 } as const;
 
 interface SvgIconProps {
@@ -33,7 +37,7 @@ export const SvgIcon = forwardRef<HTMLDivElement, SvgIconProps>(({ icon, style =
   const { resolve } = useBreakpoint();
 
   return (
-    <div ref={ref} style={resolve({ ...svgIconStyle, ...style })}>
+    <div ref={ref} style={resolve({ ...svgIconStyle, ...style })} data-testid={`svg-icon-${icon}`}>
       {createElement(svgIcons[icon], { width: '100%', height: '100%' })}
     </div>
   );

@@ -1,10 +1,11 @@
 const mockSend = vi.fn();
 const mockCreate = vi.fn();
+const mockGet = vi.fn();
 
 vi.mock('resend', () => ({
   Resend: class {
     emails = { send: mockSend };
-    contacts = { create: mockCreate };
+    contacts = { create: mockCreate, get: mockGet };
   }
 }));
 
@@ -15,6 +16,8 @@ beforeEach(() => {
   vi.stubEnv('RESEND__AUDIENCE_ID', 'test-audience-id');
   mockSend.mockReset();
   mockCreate.mockReset();
+  mockGet.mockReset();
+  mockGet.mockResolvedValue({ data: null, error: { name: 'not_found', message: 'Not found', statusCode: 404 } });
 });
 
 afterEach(() => {
@@ -99,6 +102,30 @@ describe('Given addSubscriber', () => {
       email: 'user@example.com',
       unsubscribed: false
     });
+  });
+
+  it('Then it should check if the contact already exists before creating', async () => {
+    mockCreate.mockResolvedValueOnce({ data: { id: 'contact-id' }, error: null });
+    const sender = await importSender();
+
+    await sender.addSubscriber({ email: 'user@example.com' });
+
+    expect(mockGet).toHaveBeenCalledWith({ audienceId: 'test-audience-id', email: 'user@example.com' });
+    expect(mockGet.mock.invocationCallOrder[0]).toBeLessThan(mockCreate.mock.invocationCallOrder[0]);
+  });
+
+  it('Then it should throw ApiError(409) when the contact already exists', async () => {
+    mockGet.mockResolvedValueOnce({
+      data: { id: 'existing-id', email: 'u@e.com', created_at: '2026-01-01', unsubscribed: false },
+      error: null
+    });
+    const sender = await importSender();
+
+    await expect(sender.addSubscriber({ email: 'u@e.com' })).rejects.toMatchObject({
+      status: 409,
+      message: 'Email already subscribed.'
+    });
+    expect(mockCreate).not.toHaveBeenCalled();
   });
 
   it('Then it should throw ApiError(502) when Resend returns an error', async () => {
