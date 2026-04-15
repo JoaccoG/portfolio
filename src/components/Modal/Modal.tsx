@@ -84,7 +84,14 @@ export const Modal = ({ isOpen, onClose, ariaLabel, children }: ModalProps) => {
   };
 
   return createPortal(
-    <div style={resolve(backdropStyle)} onClick={handleBackdropClick} data-testid="modal-backdrop">
+    <div
+      style={resolve(backdropStyle)}
+      onClick={handleBackdropClick}
+      onKeyDown={(e: React.KeyboardEvent) => {
+        if (e.key === 'Escape' && e.target === e.currentTarget) onClose();
+      }}
+      role="presentation"
+      data-testid="modal-backdrop">
       <div
         ref={dialogRef}
         role="dialog"

@@ -13,7 +13,7 @@ type FieldErrors = Partial<Record<keyof ContactFields, string>>;
 
 const INITIAL_FIELDS: ContactFields = { email: '', subject: '', message: '' };
 const STATUS_RESET_MS = 2000;
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
 
 const validate = (fields: ContactFields): FieldErrors => {
   const errors: FieldErrors = {};
@@ -79,11 +79,9 @@ export const useContactForm = () => {
     if (status !== 'idle') return;
 
     track('contact-attempted', {
-      fields: JSON.stringify({
-        email: fields.email.trim() || 'empty',
-        subject: fields.subject.trim() || 'empty',
-        message: fields.message.trim() || 'empty'
-      })
+      hasEmail: String(fields.email.trim().length > 0),
+      hasSubject: String(fields.subject.trim().length > 0),
+      messageLength: String(fields.message.trim().length)
     });
 
     const fieldErrors = validate(fields);

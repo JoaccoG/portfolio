@@ -15,23 +15,24 @@ export const NewsletterModal = ({ isOpen, onClose }: NewsletterModalProps) => {
   const { resolve } = useBreakpoint();
   const { email, error, status, serverError, warning, handleChange, handleSubmit, reset } = useNewsletterForm();
 
+  const feedbackMessage = warning ?? serverError ?? '';
+
   useEffect(() => {
     if (!isOpen) reset();
   }, [isOpen, reset]);
-
-  const feedbackMessage = warning ?? serverError ?? '';
-
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleSubmit();
-  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} ariaLabel={NEWSLETTER.title}>
       {status === 'success' ? (
         <SuccessView message={NEWSLETTER.success} onClose={onClose} />
       ) : (
-        <form onSubmit={onSubmit} noValidate style={resolve(formStyle)}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+          noValidate
+          style={resolve(formStyle)}>
           <h2 style={resolve(titleStyle)}>{NEWSLETTER.title}</h2>
           <p style={resolve(subtitleStyle)}>{NEWSLETTER.subtitle}</p>
 
@@ -64,7 +65,7 @@ const SuccessView = ({ message, onClose }: { message: string; onClose: () => voi
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div style={resolve(successContainerStyle)} role="status">
+    <output style={resolve(successContainerStyle)}>
       <SvgIcon icon="success" style={successIconStyle} />
       <p style={resolve(successTextStyle)}>{message}</p>
       <button
@@ -79,7 +80,7 @@ const SuccessView = ({ message, onClose }: { message: string; onClose: () => voi
         }}>
         {NEWSLETTER.done}
       </button>
-    </div>
+    </output>
   );
 };
 

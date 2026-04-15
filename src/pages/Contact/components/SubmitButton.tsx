@@ -34,6 +34,7 @@ export const SubmitButton = ({ status }: { status: FormStatus }) => {
     <button
       type="submit"
       disabled={status === 'sending'}
+      aria-label={isIcon ? (status === 'success' ? 'Message sent' : 'Send failed') : undefined}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{

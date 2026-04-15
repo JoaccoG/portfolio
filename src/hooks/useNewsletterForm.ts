@@ -5,7 +5,7 @@ export type NewsletterStatus = 'idle' | 'sending' | 'success' | 'error';
 
 const ERROR_RESET_MS = 2000;
 const ALREADY_SUBSCRIBED_STATUS = 409;
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
 
 interface ApiResponse {
   status: number;
@@ -65,7 +65,7 @@ export const useNewsletterForm = () => {
     setStatus('sending');
 
     try {
-      track('newsletter-subscribed', { email: trimmed });
+      track('newsletter-subscribe-attempted', { email: trimmed });
       const res = await fetch('/api/subscribers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -96,6 +96,7 @@ export const useNewsletterForm = () => {
       setSuccessMessage(body.message);
       setStatus('success');
       setEmail('');
+      track('newsletter-subscribed', { email: trimmed });
     } catch {
       setServerError('Something went wrong. Try again.');
       setStatus('error');

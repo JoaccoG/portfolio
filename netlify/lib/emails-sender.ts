@@ -68,7 +68,8 @@ class ResendEmailSender extends EmailSender {
   async addSubscriber({ email }: AddSubscriberParams): Promise<void> {
     const audienceId = requireEnv('RESEND__AUDIENCE_ID');
 
-    const { data: existing } = await this.#client.contacts.get({ audienceId, email });
+    const { data: existing, error: getError } = await this.#client.contacts.get({ audienceId, email });
+    if (getError && getError.name !== 'not_found') throwIfResendError(getError, 'Failed to check subscription status');
     if (existing) throw new ApiError(409, 'Email already subscribed.');
 
     const { error } = await this.#client.contacts.create({

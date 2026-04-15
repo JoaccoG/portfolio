@@ -37,7 +37,7 @@ export const SvgIcon = forwardRef<HTMLDivElement, SvgIconProps>(({ icon, style =
   const { resolve } = useBreakpoint();
 
   return (
-    <div ref={ref} style={resolve({ ...svgIconStyle, ...style })}>
+    <div ref={ref} style={resolve({ ...svgIconStyle, ...style })} data-testid={`svg-icon-${icon}`}>
       {createElement(svgIcons[icon], { width: '100%', height: '100%' })}
     </div>
   );
