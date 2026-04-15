@@ -13,7 +13,7 @@ type FieldErrors = Partial<Record<keyof ContactFields, string>>;
 
 const INITIAL_FIELDS: ContactFields = { email: '', subject: '', message: '' };
 const STATUS_RESET_MS = 2000;
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
 
 const validate = (fields: ContactFields): FieldErrors => {
   const errors: FieldErrors = {};
@@ -78,6 +78,12 @@ export const useContactForm = () => {
   const handleSubmit = useCallback(async () => {
     if (status !== 'idle') return;
 
+    track('contact-attempted', {
+      hasEmail: String(fields.email.trim().length > 0),
+      hasSubject: String(fields.subject.trim().length > 0),
+      messageLength: String(fields.message.trim().length)
+    });
+
     const fieldErrors = validate(fields);
     if (hasErrors(fieldErrors)) {
       setErrors(fieldErrors);
@@ -90,7 +96,6 @@ export const useContactForm = () => {
     setStatus('sending');
 
     try {
-      track('contact-form-submitted', { email: fields.email.trim(), subject: fields.subject.trim() || 'default' });
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -109,6 +114,7 @@ export const useContactForm = () => {
         else setServerError(body.message || 'Something went wrong. Try again.');
 
         setStatus('error');
+        track('contact-failed', { error: JSON.stringify({ status: body.status, message: body.message }) });
 
         return;
       }
@@ -117,6 +123,7 @@ export const useContactForm = () => {
       setSuccessMessage(body.message);
       setStatus('success');
       setFields(INITIAL_FIELDS);
+      track('contact-succeeded', { email: fields.email.trim() });
     } catch {
       setServerError('Something went wrong. Try again.');
       setStatus('error');

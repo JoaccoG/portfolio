@@ -1,8 +1,7 @@
 import { useState, useRef } from 'react';
 import { useBreakpoint, type ResponsiveStyles } from '@hooks/useBreakpoint';
 import { CONTACT } from '@constants/content';
-import { SvgSuccess } from '@components/icons/Success';
-import { SvgError } from '@components/icons/Error';
+import { SvgIcon } from '@components/icons';
 import type { FormStatus } from '../hooks/useContactForm';
 
 const BUTTON_LABELS: Record<'idle' | 'sending', string> = {
@@ -35,6 +34,7 @@ export const SubmitButton = ({ status }: { status: FormStatus }) => {
     <button
       type="submit"
       disabled={status === 'sending'}
+      aria-label={isIcon ? (status === 'success' ? 'Message sent' : 'Send failed') : undefined}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
@@ -45,11 +45,11 @@ export const SubmitButton = ({ status }: { status: FormStatus }) => {
         opacity: status === 'sending' ? 0.7 : 1
       }}>
       {isIcon ? (
-        status === 'success' ? (
-          <SvgSuccess key={animationKey.current} width={22} height={22} style={resolve(successIconStyle)} />
-        ) : (
-          <SvgError key={animationKey.current} width={22} height={22} style={resolve(errorIconStyle)} />
-        )
+        <SvgIcon
+          key={animationKey.current}
+          icon={status === 'success' ? 'success' : 'error'}
+          style={status === 'success' ? successIconStyle : errorIconStyle}
+        />
       ) : (
         BUTTON_LABELS[status]
       )}
@@ -79,13 +79,14 @@ const buttonStyle: ResponsiveStyles = {
 };
 
 const successIconStyle: ResponsiveStyles = {
-  color: 'var(--color-success)',
-  strokeDasharray: 80,
-  strokeDashoffset: 80,
-  animation: 'drawCheck 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards'
+  width: '22px',
+  height: '22px',
+  color: 'var(--color-success)'
 };
 
 const errorIconStyle: ResponsiveStyles = {
+  width: '22px',
+  height: '22px',
   color: 'var(--color-error)',
   animation: 'shakeError 0.35s ease-in-out'
 };

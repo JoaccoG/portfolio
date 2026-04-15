@@ -109,5 +109,16 @@ describe('Given the contact function', () => {
         message: 'Hi there'
       });
     });
+
+    it('Then it should fall back to the default subject when an empty string is provided', async () => {
+      mockSendEmail.mockResolvedValueOnce(undefined);
+      await handler(post({ email: 'user@example.com', subject: '', message: 'Hi there' }), ctx);
+
+      expect(mockSendEmail).toHaveBeenCalledWith({
+        replyTo: 'user@example.com',
+        subject: 'Portfolio Contact Email',
+        message: 'Hi there'
+      });
+    });
   });
 });

@@ -94,3 +94,13 @@ export const CONTACT = {
   submit: 'Send Message',
   loading: 'Sending...'
 } as const;
+
+export const NEWSLETTER = {
+  title: 'Blog Coming Soon',
+  subtitle: 'I\u2019m currently working on my blog, subscribe to get notified when it\u2019s live.',
+  field: 'Email',
+  submit: 'Subscribe',
+  loading: 'Subscribing...',
+  success: 'Email subscribed! You will get notified once my Blog is available.',
+  done: 'Done'
+} as const;

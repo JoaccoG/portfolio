@@ -12,12 +12,14 @@ vi.mock('gsap', () => ({
   }
 }));
 
+const mockShowHint = vi.hoisted(() => ({ current: false }));
+
 vi.mock('./hooks/useScrollHint', () => ({
-  useScrollHint: () => ({ showHint: false })
+  useScrollHint: () => ({ showHint: mockShowHint.current })
 }));
 
 vi.mock('./components/ScrollHint', () => ({
-  ScrollHint: () => null
+  ScrollHint: ({ isVisible }: { isVisible: boolean }) => <div data-testid="scroll-hint" data-visible={isVisible} />
 }));
 
 vi.mock('@gsap/react', async () => {
@@ -26,9 +28,11 @@ vi.mock('@gsap/react', async () => {
   return { useGSAP: (cb: () => void) => useEffect(() => cb(), []) };
 });
 
+const mockBreakpoint = vi.hoisted(() => ({ current: 'base' }));
+
 vi.mock('@hooks/useBreakpoint', () => ({
   useBreakpoint: () => ({
-    breakpoint: 'base',
+    breakpoint: mockBreakpoint.current,
     resolve: vi.fn((_input: unknown, fallback?: unknown) => fallback ?? {})
   })
 }));
@@ -68,7 +72,11 @@ vi.mock('./components/AboutChapter', async () => {
 });
 
 describe('Given the About page', () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockBreakpoint.current = 'base';
+    mockShowHint.current = false;
+  });
 
   describe('When rendered', () => {
     it('Then it should render a section with id "about"', () => {
@@ -98,6 +106,36 @@ describe('Given the About page', () => {
     it('Then it should render the resume dropdown button', () => {
       render(<About />);
       expect(screen.getByText(ABOUT.buttonLabel)).toBeInTheDocument();
+    });
+  });
+
+  describe('When rendered at a desktop breakpoint with showHint true', () => {
+    it('Then ScrollHint should receive isVisible true', () => {
+      mockBreakpoint.current = 'md';
+      mockShowHint.current = true;
+      render(<About />);
+      const hint = screen.getByTestId('scroll-hint');
+      expect(hint).toHaveAttribute('data-visible', 'true');
+    });
+  });
+
+  describe('When rendered at a desktop breakpoint with showHint false', () => {
+    it('Then ScrollHint should receive isVisible false', () => {
+      mockBreakpoint.current = 'lg';
+      mockShowHint.current = false;
+      render(<About />);
+      const hint = screen.getByTestId('scroll-hint');
+      expect(hint).toHaveAttribute('data-visible', 'false');
+    });
+  });
+
+  describe('When rendered at a mobile breakpoint with showHint true', () => {
+    it('Then ScrollHint should receive isVisible false', () => {
+      mockBreakpoint.current = 'base';
+      mockShowHint.current = true;
+      render(<About />);
+      const hint = screen.getByTestId('scroll-hint');
+      expect(hint).toHaveAttribute('data-visible', 'false');
     });
   });
 });
