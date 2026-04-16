@@ -3,7 +3,7 @@
 # Joaquín Godoy
 
 [![Live Site](https://img.shields.io/badge/LIVE-joaquingodoy.com-ec7753?style=for-the-badge&logo=netlify&logoColor=white)](https://joaquingodoy.com)
-![Version](https://img.shields.io/badge/v2.1.0-ec7753?style=flat-square)
+![Version](https://img.shields.io/github/package-json/v/JoaccoG/portfolio?style=flat-square&color=ec7753)
 
 [![Build](https://img.shields.io/github/actions/workflow/status/JoaccoG/portfolio/build.yaml?branch=main&label=SonarQube&style=flat-square&logo=sonarqube)](https://github.com/JoaccoG/portfolio/actions/workflows/build.yaml)
 [![Tests](https://img.shields.io/github/actions/workflow/status/JoaccoG/portfolio/test.yaml?branch=main&label=Tests&style=flat-square&logo=vitest)](https://github.com/JoaccoG/portfolio/actions/workflows/test.yaml)
@@ -18,7 +18,7 @@
   <a href="#architecture">Architecture</a> ·
   <a href="#structure">Structure</a> ·
   <a href="#infrastructure">Infrastructure</a> ·
-  <a href="#api-reference">API</a> ·
+  <a href="#api">API</a> ·
   <a href="#license">License</a>
 </div>
 
@@ -70,7 +70,7 @@ scene, scroll-driven GSAP animations, and a serverless backend for contact forms
 
 ```bash
 # Clone the repository
-git clone https://github.com/joaquingodoy/portfolio.git
+git clone https://github.com/JoaccoG/portfolio.git
 
 # Navigate to the project directory
 cd portfolio
